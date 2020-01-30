@@ -32,16 +32,10 @@ let coremlModel = Model(version: 4,
                         author: "Jacopo Mangiavacchi",
                         license: "MIT",
                         userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-                            Inputs {
-                                InputOutputDescription(name: "dense_input", shape: [1], type: Double.Type)
-                            }
-                            Outputs {
-                                InputOutputDescription(name: "output", shape: [1], type: Double.Type)
-                            }
-                            TrainingInputs {
-                                InputOutputDescription(name: "dense_input", shape: [1], type: Double.Type)
-                                InputOutputDescription(name: "output_true", shape: [1], type: Double.Type)
-                            }
+                            Input(name: "dense_input", shape: [1], featureType: .Double)
+                            Output(name: "output", shape: [1], featureType: .Double)
+                            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
+                            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
                             NeuralNetwork {
                                 InnerProductLayer(name: "dense_1",
                                                   input: ["dense_input"],
