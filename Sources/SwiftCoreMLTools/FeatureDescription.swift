@@ -3,9 +3,9 @@ public enum FeatureType {
 }
 
 public struct InputOutputDescription {
-    let name: String
-    let shape: [Int]
-    let type: FeatureType = .Double
+    public let name: String
+    public let shape: [Int]
+    public let type: FeatureType
 }
 
 public enum FeatureDescriptionType {
@@ -13,25 +13,65 @@ public enum FeatureDescriptionType {
 }
 
 public struct FeatureDescription {
-    let type: FeatureDescriptionType
-    let inputOutputDescription: InputOutputDescription
+    public let type: FeatureDescriptionType
+    public let inputOutputDescription: InputOutputDescription
 }
 
 @_functionBuilder
 public struct InputOutputDescriptionBuilder {
-    static func buildBlock(_ children: InputOutputDescription...) -> [InputOutputDescription] {
+    public static func buildBlock(_ children: InputOutputDescription...) -> [InputOutputDescription] {
         children.compactMap{ $0 }
     }
 }
 
-func Inputs(@InputOutputDescriptionBuilder _ makeInput: () -> [InputOutputDescription]) -> [FeatureDescription] {
-    makeInput().map{ FeatureDescription(type: .Input, inputOutputDescription: $0) }
+// public func Inputs(@InputOutputDescriptionBuilder _ makeInput: () -> [InputOutputDescription]) -> [FeatureDescription] {
+//     makeInput().map{ FeatureDescription(type: .Input, inputOutputDescription: $0) }
+// }
+
+// public func Outputs(@InputOutputDescriptionBuilder _ makeInput: () -> [InputOutputDescription]) -> [FeatureDescription] {
+//     makeInput().map{ FeatureDescription(type: .Outupt, inputOutputDescription: $0) }
+// }
+
+// public func TrainingInputs(@InputOutputDescriptionBuilder _ makeInput: () -> [InputOutputDescription]) -> [FeatureDescription] {
+//     makeInput().map{ FeatureDescription(type: .TrainingInput, inputOutputDescription: $0) }
+// }
+
+public protocol DescriptionProtocol {
+    var descriptions: [FeatureDescription] { get }
 }
 
-func Outputs(@InputOutputDescriptionBuilder _ makeInput: () -> [InputOutputDescription]) -> [FeatureDescription] {
-    makeInput().map{ FeatureDescription(type: .Outupt, inputOutputDescription: $0) }
+public struct Inputs : DescriptionProtocol {
+    public let descriptions: [FeatureDescription]
+
+    public init(@InputOutputDescriptionBuilder _ builder: () -> [InputOutputDescription]) {
+        self.descriptions = builder().map{ FeatureDescription(type: .Input, inputOutputDescription: $0) }
+    }
+
+    init(@InputOutputDescriptionBuilder _ builder: () -> InputOutputDescription) {
+        self.descriptions = [builder()].map{ FeatureDescription(type: .Input, inputOutputDescription: $0) }
+    }
 }
 
-func TrainingInputs(@InputOutputDescriptionBuilder _ makeInput: () -> [InputOutputDescription]) -> [FeatureDescription] {
-    makeInput().map{ FeatureDescription(type: .TrainingInput, inputOutputDescription: $0) }
+public struct Outputs : DescriptionProtocol {
+    public let descriptions: [FeatureDescription]
+
+    public init(@InputOutputDescriptionBuilder _ builder: () -> [InputOutputDescription]) {
+        self.descriptions = builder().map{ FeatureDescription(type: .Outupt, inputOutputDescription: $0) }
+    }
+
+    public init(@InputOutputDescriptionBuilder _ builder: () -> InputOutputDescription) {
+        self.descriptions = [builder()].map{ FeatureDescription(type: .Outupt, inputOutputDescription: $0) }
+    }
+}
+
+public struct TrainingInputs : DescriptionProtocol {
+    public let descriptions: [FeatureDescription]
+
+    public init(@InputOutputDescriptionBuilder _ builder: () -> [InputOutputDescription]) {
+        self.descriptions = builder().map{ FeatureDescription(type: .TrainingInput, inputOutputDescription: $0) }
+    }
+
+    public init(@InputOutputDescriptionBuilder _ builder: () -> InputOutputDescription) {
+        self.descriptions = [builder()].map{ FeatureDescription(type: .TrainingInput, inputOutputDescription: $0) }
+    }
 }
