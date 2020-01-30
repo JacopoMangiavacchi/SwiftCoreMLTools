@@ -47,6 +47,39 @@ let coremlModel = Model(version: 4,
 }
 ```
 
+### Export a CoreML personalizable (re-trainable) model using this DSL approach
+```
+let coremlModel = Model(version: 4,
+                        shortDescription: "Trivial linear classifier",
+                        author: "Jacopo Mangiavacchi",
+                        license: "MIT",
+                        userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
+    Input(name: "dense_input", shape: [1], featureType: .Double)
+    Output(name: "output", shape: [1], featureType: .Double)
+    TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
+    TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+    NeuralNetwork(loss: [MSE(name: "lossLayer",
+                             input: "output",
+                             target: "output_true")],
+                  optimizer: SGD(learningRateDefault: 0.01,
+                                 learningRateMax: 0.3,
+                                 miniBatchSizeDefault: 5,
+                                 miniBatchSizeRange: [5],
+                                 momentumDefault: 0,
+                                 momentumMax: 1.0),
+                  epochDefault: 2,
+                  epochSet: [2],
+                  shuffle: true) {
+        InnerProductLayer(name: "dense_1",
+                          input: ["dense_input"],
+                          output: ["output"],
+                          updatable: true,
+                          weights: s4tfModel.layer1.weight[0],
+                          bias: s4tfModel.layer1.bias)
+    }
+}
+```
+
 ### Verbouse alternative approach to explicitly use Swift version of the CoreML ProtoBuf data structure to export the model
 ```
 func convertToCoreML(weights: Float, bias: Float) -> CoreML_Specification_Model {
