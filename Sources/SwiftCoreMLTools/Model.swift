@@ -42,13 +42,52 @@ public struct InputOutputDescriptionBuilder {
 }
 
 public struct Model {
-    public let descriptions: [InputOutputDescriptionProtocol]
+    public let version: Int
+    public let shortDescription: String?
+    public let author: String?
+    public let license: String?
+    public let userDefined: [String : String]?
+    public let descriptions: [InputOutputDescriptionProtocol]?
 
-    public init(@InputOutputDescriptionBuilder _ builder: () -> InputOutputDescriptionProtocol) {
-        self.descriptions = [builder()]
+    init(version: Int,
+         shortDescription: String?,
+         author: String?,
+         license: String?,
+         userDefined: [String : String]?,
+         descriptions: [InputOutputDescriptionProtocol]) {
+        self.descriptions = descriptions
+        self.version = version
+        self.shortDescription = shortDescription
+        self.author = author
+        self.license = license
+        self.userDefined = userDefined
     }
 
-    public init(@InputOutputDescriptionBuilder _ builder: () -> [InputOutputDescriptionProtocol]) {
-        self.descriptions = builder()
+    public init(version: Int = 4,
+                shortDescription: String? = nil,
+                author: String? = nil,
+                license: String? = nil,
+                userDefined: [String : String]? = [:],
+                @InputOutputDescriptionBuilder _ builder: () -> InputOutputDescriptionProtocol) {
+        self.init(version: version,
+                  shortDescription: shortDescription,
+                  author: author,
+                  license: license,
+                  userDefined: userDefined,
+                  descriptions: [builder()])
+    }
+
+    public init(version: Int = 4,
+                shortDescription: String? = nil,
+                author: String? = nil,
+                license: String? = nil,
+                userDefined: [String : String]? = [:],
+                @InputOutputDescriptionBuilder _ builder: () -> [InputOutputDescriptionProtocol]) {
+        self.init(version: version,
+                  shortDescription: shortDescription,
+                  author: author,
+                  license: license,
+                  userDefined: userDefined,
+                  descriptions: builder())
     }
 }
