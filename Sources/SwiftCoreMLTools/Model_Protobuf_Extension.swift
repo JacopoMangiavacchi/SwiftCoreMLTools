@@ -12,7 +12,7 @@ extension Model {
 
     func convertToCoreML() -> CoreML_Specification_Model {
         return CoreML_Specification_Model.with {
-            $0.specificationVersion = 4
+            $0.specificationVersion = Int32(self.version)
             $0.description_p = CoreML_Specification_ModelDescription.with {
                 $0.input = [CoreML_Specification_FeatureDescription.with {
                     $0.name = "dense_input"

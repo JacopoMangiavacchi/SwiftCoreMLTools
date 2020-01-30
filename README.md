@@ -25,7 +25,7 @@ var s4tfModel = LinearRegression()
 // Training Loop ...
 ```
 
-### Export a CoreML personalizable (re-trainable) model using this DSL approach
+### Export to CoreML using this DSL approach
 ```
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
