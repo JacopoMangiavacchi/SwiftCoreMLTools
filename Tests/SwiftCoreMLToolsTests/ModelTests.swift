@@ -7,7 +7,7 @@ final class ModelTests: XCTestCase {
             Input(name: "dense_input1", shape: [1], featureType: .Double)
         }
 
-        XCTAssertEqual(model.descriptions?.count, 1)
+        XCTAssertEqual(model.items?.count, 1)
     }
 
     func testMultipleInputs() {
@@ -19,7 +19,7 @@ final class ModelTests: XCTestCase {
             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
         }
 
-        XCTAssertEqual(model.descriptions?.count, 5)
+        XCTAssertEqual(model.items?.count, 5)
     }
 
     func testWithMetadata() {
@@ -34,7 +34,7 @@ final class ModelTests: XCTestCase {
                             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
         }
 
-        XCTAssertEqual(model.descriptions?.count, 4)
+        XCTAssertEqual(model.items?.count, 4)
     }
 
     static var allTests = [

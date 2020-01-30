@@ -6,28 +6,24 @@ public enum FeatureDescriptionType {
     case Input, Outupt, TrainingInput
 }
 
-public protocol InputOutputDescriptionProtocol {
-    var name: String { get }
-    var shape: [Int] { get }
-    var featureType: FeatureType { get }
-    var descriptionType: FeatureDescriptionType { get }
+public protocol ModelItems {
 }
 
-public struct Input : InputOutputDescriptionProtocol {
+public struct Input : ModelItems {
     public let name: String
     public let shape: [Int]
     public let featureType: FeatureType
     public let descriptionType = FeatureDescriptionType.Input
 }
 
-public struct Output : InputOutputDescriptionProtocol {
+public struct Output : ModelItems {
     public let name: String
     public let shape: [Int]
     public let featureType: FeatureType
     public let descriptionType = FeatureDescriptionType.Outupt
 }
 
-public struct TrainingInput : InputOutputDescriptionProtocol {
+public struct TrainingInput : ModelItems {
     public let name: String
     public let shape: [Int]
     public let featureType: FeatureType
@@ -36,7 +32,7 @@ public struct TrainingInput : InputOutputDescriptionProtocol {
 
 @_functionBuilder
 public struct InputOutputDescriptionBuilder {
-    public static func buildBlock(_ children: InputOutputDescriptionProtocol...) -> [InputOutputDescriptionProtocol] {
+    public static func buildBlock(_ children: ModelItems...) -> [ModelItems] {
         children.compactMap{ $0 }
     }
 }
@@ -47,15 +43,15 @@ public struct Model {
     public let author: String?
     public let license: String?
     public let userDefined: [String : String]?
-    public let descriptions: [InputOutputDescriptionProtocol]?
+    let items: [ModelItems]?
 
     init(version: Int,
          shortDescription: String?,
          author: String?,
          license: String?,
          userDefined: [String : String]?,
-         descriptions: [InputOutputDescriptionProtocol]) {
-        self.descriptions = descriptions
+         items: [ModelItems]) {
+        self.items = items
         self.version = version
         self.shortDescription = shortDescription
         self.author = author
@@ -68,13 +64,13 @@ public struct Model {
                 author: String? = nil,
                 license: String? = nil,
                 userDefined: [String : String]? = [:],
-                @InputOutputDescriptionBuilder _ builder: () -> InputOutputDescriptionProtocol) {
+                @InputOutputDescriptionBuilder _ builder: () -> ModelItems) {
         self.init(version: version,
                   shortDescription: shortDescription,
                   author: author,
                   license: license,
                   userDefined: userDefined,
-                  descriptions: [builder()])
+                  items: [builder()])
     }
 
     public init(version: Int = 4,
@@ -82,12 +78,12 @@ public struct Model {
                 author: String? = nil,
                 license: String? = nil,
                 userDefined: [String : String]? = [:],
-                @InputOutputDescriptionBuilder _ builder: () -> [InputOutputDescriptionProtocol]) {
+                @InputOutputDescriptionBuilder _ builder: () -> [ModelItems]) {
         self.init(version: version,
                   shortDescription: shortDescription,
                   author: author,
                   license: license,
                   userDefined: userDefined,
-                  descriptions: builder())
+                  items: builder())
     }
 }
