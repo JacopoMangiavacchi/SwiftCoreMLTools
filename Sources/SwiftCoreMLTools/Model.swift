@@ -31,7 +31,7 @@ public struct TrainingInput : ModelItems {
 }
 
 @_functionBuilder
-public struct InputOutputDescriptionBuilder {
+public struct ItemBuilder {
     public static func buildBlock(_ children: ModelItems...) -> [ModelItems] {
         children.compactMap{ $0 }
     }
@@ -64,7 +64,7 @@ public struct Model {
                 author: String? = nil,
                 license: String? = nil,
                 userDefined: [String : String]? = [:],
-                @InputOutputDescriptionBuilder _ builder: () -> ModelItems) {
+                @ItemBuilder _ builder: () -> ModelItems) {
         self.init(version: version,
                   shortDescription: shortDescription,
                   author: author,
@@ -78,7 +78,7 @@ public struct Model {
                 author: String? = nil,
                 license: String? = nil,
                 userDefined: [String : String]? = [:],
-                @InputOutputDescriptionBuilder _ builder: () -> [ModelItems]) {
+                @ItemBuilder _ builder: () -> [ModelItems]) {
         self.init(version: version,
                   shortDescription: shortDescription,
                   author: author,
