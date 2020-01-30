@@ -48,8 +48,12 @@ final class ModelTests: XCTestCase {
             TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
             NeuralNetwork {
-                InnerProductLayer(name: "layer1")
-                InnerProductLayer(name: "layer2")
+                InnerProductLayer(name: "layer1",
+                                  input: ["dense_input"],
+                                  output: ["output"],
+                                  updatable: true,
+                                  weights: [0.0],
+                                  bias: [0.0])
             }
         }
 

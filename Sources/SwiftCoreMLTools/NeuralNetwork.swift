@@ -3,6 +3,11 @@ public protocol NetworkLayers {
 
 public struct InnerProductLayer : NetworkLayers {
     public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let updatable: Bool
+    public let weights: [Double]
+    public let bias: [Double]
 }
 
 @_functionBuilder

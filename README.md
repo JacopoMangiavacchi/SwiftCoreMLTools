@@ -38,11 +38,11 @@ let coremlModel = Model(version: 4,
     TrainingInput(name: "output_true", shape: [1], featureType: .Double)
     NeuralNetwork {
         InnerProductLayer(name: "dense_1",
-                            input: ["dense_input"],
-                            output: ["output"],
-                            updatable: true,
-                            weights: s4tfModel.layer1.weight[0],
-                            bias: s4tfModel.layer1.bias)
+                          input: ["dense_input"],
+                          output: ["output"],
+                          updatable: true,
+                          weights: s4tfModel.layer1.weight[0],
+                          bias: s4tfModel.layer1.bias)
     }
 }
 ```
