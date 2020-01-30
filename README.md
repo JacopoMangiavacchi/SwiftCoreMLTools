@@ -1,5 +1,7 @@
 # SwiftCoreMLTools
 
+![Swift](https://github.com/JacopoMangiavacchi/SwiftCoreMLTools/workflows/Swift/badge.svg)
+
 This is a Proof of Concept for a Swift Library defining a (function builder based) DSL for creating and exporting CoreML Models in Swift.
 
 **Work in progress**
