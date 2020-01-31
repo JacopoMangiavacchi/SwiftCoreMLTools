@@ -14,6 +14,9 @@ extension Model {
         return CoreML_Specification_Model.with {
             $0.specificationVersion = Int32(self.version)
             $0.description_p = CoreML_Specification_ModelDescription.with {
+                let inputItems = self.items?.filter{ $0 is Input }
+
+
                 $0.input = [CoreML_Specification_FeatureDescription.with {
                     $0.name = "dense_input"
                     $0.type = CoreML_Specification_FeatureType.with {

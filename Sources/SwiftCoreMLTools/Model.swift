@@ -2,10 +2,6 @@ public enum FeatureType {
     case Double
 }
 
-public enum FeatureDescriptionType {
-    case Input, Outupt, TrainingInput
-}
-
 public protocol ModelItems {
 }
 
@@ -13,21 +9,18 @@ public struct Input : ModelItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
-    public let descriptionType = FeatureDescriptionType.Input
 }
 
 public struct Output : ModelItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
-    public let descriptionType = FeatureDescriptionType.Outupt
 }
 
 public struct TrainingInput : ModelItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
-    public let descriptionType = FeatureDescriptionType.TrainingInput
 }
 
 @_functionBuilder
