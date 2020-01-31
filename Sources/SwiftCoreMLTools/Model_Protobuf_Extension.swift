@@ -12,6 +12,8 @@ extension Model {
 
     func convertToCoreML() -> CoreML_Specification_Model {
         guard let items = self.items else { return CoreML_Specification_Model() }
+        guard let neuralNetwork = (items.filter{ $0 is NeuralNetwork } as! [NeuralNetwork]).first else { return CoreML_Specification_Model() }
+        guard let layers = neuralNetwork.layers else { return CoreML_Specification_Model() }
 
         let trainable:Bool = items.filter{ $0 is TrainingInput }.count > 0
 
@@ -66,27 +68,30 @@ extension Model {
             if trainable {
                 model.isUpdatable = true
             }
-            
+
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = [CoreML_Specification_NeuralNetworkLayer.with {
-                    $0.name = "dense_1"
-                    $0.input = ["dense_input"]
-                    $0.output = ["output"]
-                    $0.isUpdatable = true
-                    $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
-                        $0.inputChannels = 1
-                        $0.outputChannels = 1
-                        $0.hasBias_p = true
-                        $0.weights = CoreML_Specification_WeightParams.with {
-                            $0.floatValue = [0.0]
-                            $0.isUpdatable = true
-                        }
-                        $0.bias = CoreML_Specification_WeightParams.with {
-                            $0.floatValue = [0.0]
-                            $0.isUpdatable = true
+                $0.layers = (layers.filter{ $0 is InnerProductLayer } as! [InnerProductLayer]).map{ layer in 
+                    CoreML_Specification_NeuralNetworkLayer.with {
+                        $0.name = layer.name
+                        $0.input = layer.input
+                        $0.output = layer.output
+                        $0.isUpdatable = layer.updatable
+                        $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
+                            $0.inputChannels = 1
+                            $0.outputChannels = 1
+                            $0.hasBias_p = true
+                            $0.weights = CoreML_Specification_WeightParams.with {
+                                $0.floatValue = layer.weights
+                                $0.isUpdatable = layer.updatable
+                            }
+                            $0.bias = CoreML_Specification_WeightParams.with {
+                                $0.floatValue = layer.bias
+                                $0.isUpdatable = layer.updatable
+                            }
                         }
                     }
-                }]
+                }
+
                 $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
                     $0.lossLayers = [CoreML_Specification_LossLayer.with {
                         $0.name = "lossLayer"

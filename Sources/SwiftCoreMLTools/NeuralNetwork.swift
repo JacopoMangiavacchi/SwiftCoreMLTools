@@ -6,8 +6,8 @@ public struct InnerProductLayer : NetworkLayers {
     public let input: [String]
     public let output: [String]
     public let updatable: Bool
-    public let weights: [Double]
-    public let bias: [Double]
+    public let weights: [Float]
+    public let bias: [Float]
 }
 
 @_functionBuilder
