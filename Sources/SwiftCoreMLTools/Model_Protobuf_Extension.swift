@@ -11,57 +11,63 @@ extension Model {
     }
 
     func convertToCoreML() -> CoreML_Specification_Model {
-        return CoreML_Specification_Model.with {
-            $0.specificationVersion = Int32(self.version)
-            $0.description_p = CoreML_Specification_ModelDescription.with {
-                let inputItems = self.items?.filter{ $0 is Input }
+        guard let items = self.items else { return CoreML_Specification_Model() }
 
+        let trainable:Bool = items.filter{ $0 is TrainingInput }.count > 0
 
-                $0.input = [CoreML_Specification_FeatureDescription.with {
-                    $0.name = "dense_input"
-                    $0.type = CoreML_Specification_FeatureType.with {
-                        $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                            $0.shape = [1]
-                            $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                        }
-                    }
-                }]
-                $0.output = [CoreML_Specification_FeatureDescription.with {
-                    $0.name = "output"
-                    $0.type = CoreML_Specification_FeatureType.with {
-                        $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                            $0.shape = [1]
-                            $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                        }
-                    }
-                }]
-                $0.trainingInput = [CoreML_Specification_FeatureDescription.with {
-                    $0.name = "dense_input"
-                    $0.type = CoreML_Specification_FeatureType.with {
-                        $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                            $0.shape = [1]
-                            $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                        }
-                    }
-                }, CoreML_Specification_FeatureDescription.with {
-                    $0.name = "output_true"
-                    $0.type = CoreML_Specification_FeatureType.with {
-                        $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                            $0.shape = [1]
-                            $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                        }
-                    }
+        return CoreML_Specification_Model.with { model in 
+            model.specificationVersion = Int32(self.version)
 
-                }]
+            model.description_p = CoreML_Specification_ModelDescription.with {
+                $0.input = (items.filter{ $0 is Input } as! [Input]).map{ input in 
+                    CoreML_Specification_FeatureDescription.with {
+                        $0.name = input.name
+                        $0.type = CoreML_Specification_FeatureType.with {
+                            $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
+                                $0.shape = input.shape.map{ Int64($0) }
+                                $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
+                            }
+                        }
+                    }
+                }
+
+                $0.output = (items.filter{ $0 is Output } as! [Output]).map{ output in 
+                    CoreML_Specification_FeatureDescription.with {
+                        $0.name = output.name
+                        $0.type = CoreML_Specification_FeatureType.with {
+                            $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
+                                $0.shape = output.shape.map{ Int64($0) }
+                                $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
+                            }
+                        }
+                    }
+                }
+
+                $0.trainingInput = (items.filter{ $0 is TrainingInput } as! [TrainingInput]).map{ trainingInput in 
+                    CoreML_Specification_FeatureDescription.with {
+                        $0.name = trainingInput.name
+                        $0.type = CoreML_Specification_FeatureType.with {
+                            $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
+                                $0.shape = trainingInput.shape.map{ Int64($0) }
+                                $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
+                            }
+                        }
+                    }
+                }
+
                 $0.metadata = CoreML_Specification_Metadata.with {
-                    $0.shortDescription = "Trivial linear classifier"
-                    $0.author = "Jacopo Mangiavacchi"
-                    $0.license = "MIT"
-                    $0.userDefined = ["coremltoolsVersion" : "3.1"]
+                    $0.shortDescription = self.shortDescription ?? ""
+                    $0.author = self.author ?? ""
+                    $0.license = self.license ?? ""
+                    $0.userDefined = self.userDefined ?? [:]
                 }
             }
-            $0.isUpdatable = true
-            $0.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
+
+            if trainable {
+                model.isUpdatable = true
+            }
+            
+            model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
                 $0.layers = [CoreML_Specification_NeuralNetworkLayer.with {
                     $0.name = "dense_1"
                     $0.input = ["dense_input"]

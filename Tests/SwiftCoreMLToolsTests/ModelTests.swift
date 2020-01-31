@@ -126,6 +126,7 @@ final class ModelTests: XCTestCase {
         }
 
         XCTAssert(model.coreMLData != nil, "Failed exporting CoreML protobuf")
+        XCTAssert(model.coreMLData!.count > 0, "Exporting CoreML protobuf empty")
     }
 
     static var allTests = [
