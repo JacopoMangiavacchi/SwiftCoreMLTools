@@ -19,7 +19,7 @@ The library is not "official" - it is not part of Apple CoreML, and it is not ma
 ## Export Swift for TensorFlow sample scenario
 
 ### Trivial Swift for TensorFlow model
-```
+```swift
 struct LinearRegression: Layer {
     var layer1 = Dense<Float>(inputSize: 1, outputSize: 1, activation: identity)
     
@@ -34,7 +34,7 @@ var s4tfModel = LinearRegression()
 ```
 
 ### Export to CoreML using this DSL approach
-```
+```swift
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
                         author: "Jacopo Mangiavacchi",
@@ -56,7 +56,7 @@ let coremlModel = Model(version: 4,
 ```
 
 ### Export a CoreML personalizable (re-trainable) model using this DSL approach
-```
+```swift
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
                         author: "Jacopo Mangiavacchi",
@@ -89,7 +89,7 @@ let coremlModel = Model(version: 4,
 ```
 
 ### Verbouse alternative approach to explicitly use Swift version of the CoreML ProtoBuf data structure to export the model
-```
+```swift
 func convertToCoreML(weights: Float, bias: Float) -> CoreML_Specification_Model {
     return CoreML_Specification_Model.with {
         $0.specificationVersion = 4
