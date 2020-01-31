@@ -24,12 +24,12 @@ public struct MSE {
 }
 
 public struct SGD {
-    public let learningRateDefault: Float
-    public let learningRateMax: Float
+    public let learningRateDefault: Double
+    public let learningRateMax: Double
     public let miniBatchSizeDefault: UInt
     public let miniBatchSizeRange: [UInt]
-    public let momentumDefault: Float
-    public let momentumMax: Float
+    public let momentumDefault: Double
+    public let momentumMax: Double
 }
 
 public struct NeuralNetwork : ModelItems {

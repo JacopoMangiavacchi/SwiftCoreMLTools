@@ -92,44 +92,56 @@ extension Model {
                     }
                 }
 
-                $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
-                    $0.lossLayers = [CoreML_Specification_LossLayer.with {
-                        $0.name = "lossLayer"
-                        $0.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with {
-                            $0.input = "output"
-                            $0.target = "output_true"
-                        }
-                    }]
-                    $0.optimizer = CoreML_Specification_Optimizer.with {
-                        $0.sgdOptimizer = CoreML_Specification_SGDOptimizer.with {
-                            $0.learningRate = CoreML_Specification_DoubleParameter.with {
-                                $0.defaultValue = 0.01
-                                $0.range = CoreML_Specification_DoubleRange.with {
-                                    $0.maxValue = 1.0
-                                }
-                            }
-                            $0.miniBatchSize = CoreML_Specification_Int64Parameter.with {
-                                $0.defaultValue = 5
-                                $0.set = CoreML_Specification_Int64Set.with {
-                                    $0.values = [5]
-                                }
-                            }
-                            $0.momentum = CoreML_Specification_DoubleParameter.with {
-                                $0.defaultValue = 0
-                                $0.range = CoreML_Specification_DoubleRange.with {
-                                    $0.maxValue = 1.0
+                if trainable, 
+                   let loss = neuralNetwork.loss,
+                   let optimizer = neuralNetwork.optimizer,
+                   let epochDefault = neuralNetwork.epochDefault,
+                   let epochSet = neuralNetwork.epochSet,
+                   let shuffle = neuralNetwork.shuffle {
+                    $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
+                        $0.lossLayers = loss.map{ loss in 
+                            CoreML_Specification_LossLayer.with {
+                                $0.name = loss.name
+                                $0.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with {
+                                    $0.input = loss.input
+                                    $0.target = loss.target
                                 }
                             }
                         }
-                    }
-                    $0.epochs = CoreML_Specification_Int64Parameter.with {
-                        $0.defaultValue = 2
-                        $0.set = CoreML_Specification_Int64Set.with {
-                            $0.values = [2]
+                                                
+                        $0.optimizer = CoreML_Specification_Optimizer.with {
+                            $0.sgdOptimizer = CoreML_Specification_SGDOptimizer.with {
+                                $0.learningRate = CoreML_Specification_DoubleParameter.with {
+                                    $0.defaultValue = optimizer.learningRateDefault
+                                    $0.range = CoreML_Specification_DoubleRange.with {
+                                        $0.maxValue = optimizer.learningRateMax
+                                    }
+                                }
+                                $0.miniBatchSize = CoreML_Specification_Int64Parameter.with {
+                                    $0.defaultValue = Int64(optimizer.miniBatchSizeDefault)
+                                    $0.set = CoreML_Specification_Int64Set.with {
+                                        $0.values = optimizer.miniBatchSizeRange.map{ Int64($0) }
+                                    }
+                                }
+                                $0.momentum = CoreML_Specification_DoubleParameter.with {
+                                    $0.defaultValue = optimizer.momentumDefault
+                                    $0.range = CoreML_Specification_DoubleRange.with {
+                                        $0.maxValue = optimizer.momentumMax
+                                    }
+                                }
+                            }
                         }
-                    }
-                    $0.shuffle = CoreML_Specification_BoolParameter.with {
-                        $0.defaultValue = true
+                        
+                        $0.epochs = CoreML_Specification_Int64Parameter.with {
+                            $0.defaultValue = Int64(epochDefault)
+                            $0.set = CoreML_Specification_Int64Set.with {
+                                $0.values = epochSet.map{ Int64($0) }
+                            }
+                        }
+                        
+                        $0.shuffle = CoreML_Specification_BoolParameter.with {
+                            $0.defaultValue = shuffle
+                        }
                     }
                 }
             }
