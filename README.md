@@ -12,6 +12,8 @@ This package could be used to export Swift For TensorFlow models or to generate 
 
 CoreML models generated with this library could be potentially personalized (trained) partially or entirely using the CoreML runtime.
 
+CoreML support much more then Neural Network models but this experimental library is only focused, at the moment, on Neural Network support.
+
 The library is not "official" - it is not part of Apple CoreML, and it is not maintained.
 
 ## Export Swift for TensorFlow sample scenario
@@ -65,8 +67,8 @@ let coremlModel = Model(version: 4,
     TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
     TrainingInput(name: "output_true", shape: [1], featureType: .Double)
     NeuralNetwork(loss: [MSE(name: "lossLayer",
-                  input: "output",
-                  target: "output_true")],
+                             input: "output",
+                             target: "output_true")],
                   optimizer: SGD(learningRateDefault: 0.01,
                                  learningRateMax: 0.3,
                                  miniBatchSizeDefault: 5,

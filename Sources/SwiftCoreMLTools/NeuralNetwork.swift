@@ -17,14 +17,68 @@ public struct LayerBuilder {
     }
 }
 
+public struct MSE {
+    public let name: String
+    public let input: String
+    public let target: String
+}
+
+public struct SGD {
+    public let learningRateDefault: Float
+    public let learningRateMax: Float
+    public let miniBatchSizeDefault: UInt
+    public let miniBatchSizeRange: [UInt]
+    public let momentumDefault: Float
+    public let momentumMax: Float
+}
+
 public struct NeuralNetwork : ModelItems {
+    public let loss: [MSE]?
+    public let optimizer: SGD?
+    public let epochDefault: UInt?
+    public let epochSet: [UInt]?
+    public let shuffle: Bool?
     let layers: [NetworkLayers]?
 
-    public init(@LayerBuilder _ builder: () -> NetworkLayers) {
-        self.layers = [builder()]
+    init(loss: [MSE]?,
+         optimizer: SGD?,
+         epochDefault: UInt?,
+         epochSet: [UInt]?,
+         shuffle: Bool?,
+         layers: [NetworkLayers]) {
+        self.layers = layers
+        self.loss = loss
+        self.optimizer = optimizer
+        self.epochDefault = epochDefault
+        self.epochSet = epochSet
+        self.shuffle = shuffle
     }
 
-    public init(@LayerBuilder _ builder: () -> [NetworkLayers]) {
-        self.layers = builder()
+    public init(loss: [MSE]? = nil,
+                optimizer: SGD? = nil,
+                epochDefault: UInt? = nil,
+                epochSet: [UInt]? = nil,
+                shuffle: Bool? = nil,
+                @LayerBuilder _ builder: () -> NetworkLayers) {
+        self.init(loss: loss,
+                  optimizer: optimizer,
+                  epochDefault: epochDefault,
+                  epochSet: epochSet,
+                  shuffle: shuffle,
+                  layers: [builder()])
+    }
+
+    public init(loss: [MSE]? = nil,
+                optimizer: SGD? = nil,
+                epochDefault: UInt? = nil,
+                epochSet: [UInt]? = nil,
+                shuffle: Bool? = nil,
+                @LayerBuilder _ builder: () -> [NetworkLayers]) {
+        self.init(loss: loss,
+                  optimizer: optimizer,
+                  epochDefault: epochDefault,
+                  epochSet: epochSet,
+                  shuffle: shuffle,
+                  layers: builder())
     }
 }

@@ -11,21 +11,21 @@ public protocol ModelItems {
 
 public struct Input : ModelItems {
     public let name: String
-    public let shape: [Int]
+    public let shape: [UInt]
     public let featureType: FeatureType
     public let descriptionType = FeatureDescriptionType.Input
 }
 
 public struct Output : ModelItems {
     public let name: String
-    public let shape: [Int]
+    public let shape: [UInt]
     public let featureType: FeatureType
     public let descriptionType = FeatureDescriptionType.Outupt
 }
 
 public struct TrainingInput : ModelItems {
     public let name: String
-    public let shape: [Int]
+    public let shape: [UInt]
     public let featureType: FeatureType
     public let descriptionType = FeatureDescriptionType.TrainingInput
 }
@@ -38,14 +38,14 @@ public struct ItemBuilder {
 }
 
 public struct Model {
-    public let version: Int
+    public let version: UInt
     public let shortDescription: String?
     public let author: String?
     public let license: String?
     public let userDefined: [String : String]?
     let items: [ModelItems]?
 
-    init(version: Int,
+    init(version: UInt,
          shortDescription: String?,
          author: String?,
          license: String?,
@@ -59,7 +59,7 @@ public struct Model {
         self.userDefined = userDefined
     }
 
-    public init(version: Int = 4,
+    public init(version: UInt = 4,
                 shortDescription: String? = nil,
                 author: String? = nil,
                 license: String? = nil,
@@ -73,7 +73,7 @@ public struct Model {
                   items: [builder()])
     }
 
-    public init(version: Int = 4,
+    public init(version: UInt = 4,
                 shortDescription: String? = nil,
                 author: String? = nil,
                 license: String? = nil,
