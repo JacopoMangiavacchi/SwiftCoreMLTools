@@ -124,15 +124,15 @@ public struct Model {
                   items: builder())
     }
 
-    public mutating func AddInput(_ input: Input) {
+    public mutating func addInput(_ input: Input) {
         inputs[input.name] = input
     }
 
-    public mutating func AddOutput(_ output: Output) {
+    public mutating func addOutput(_ output: Output) {
         outputs[output.name] = output
     }
 
-    public mutating func AddTrainingInput(_ trainingInput: TrainingInput) {
+    public mutating func addTrainingInput(_ trainingInput: TrainingInput) {
         trainingInputs[trainingInput.name] = trainingInput
     }
 }

@@ -98,7 +98,7 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(model.items.count, 5)
     }
 
-    func testRealModelExport() {
+    func testModelExtraction() {
         let model = Model(version: 4,
                           shortDescription: "Trivial linear classifier",
                           author: "Jacopo Mangiavacchi",
@@ -131,10 +131,88 @@ final class ModelTests: XCTestCase {
             }
         }
 
-        let coreMLData = model.coreMLData
+        XCTAssert(model.inputs.count == 1, "Failed extracting Input")
+        XCTAssert(model.outputs.count == 1, "Failed extracting Output")
+        XCTAssert(model.trainingInputs.count == 2, "Failed extracting TrainingInput")
+        XCTAssert(model.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork")
+    }
 
-        XCTAssert(coreMLData != nil, "Failed exporting CoreML protobuf")
-        XCTAssert(coreMLData!.count > 0, "Exporting CoreML protobuf empty")
+    func testModelAPI() {
+        let model = Model(version: 4,
+                          shortDescription: "Trivial linear classifier",
+                          author: "Jacopo Mangiavacchi",
+                          license: "MIT",
+                          userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
+            Input(name: "dense_input", shape: [1], featureType: .Double)
+            Output(name: "output", shape: [1], featureType: .Double)
+            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
+            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            NeuralNetwork(loss: [MSE(name: "lossLayer",
+                                     input: "output",
+                                     target: "output_true")],
+                          optimizer: SGD(learningRateDefault: 0.01,
+                                         learningRateMax: 0.3,
+                                         miniBatchSizeDefault: 5,
+                                         miniBatchSizeRange: [5],
+                                         momentumDefault: 0,
+                                         momentumMax: 1.0),
+                          epochDefault: 2,
+                          epochSet: [2],
+                          shuffle: true) {
+                InnerProductLayer(name: "layer1",
+                                  input: ["dense_input"],
+                                  output: ["output"],
+                                  inputChannels: 1,
+                                  outputChannels: 1,
+                                  updatable: true,
+                                  weights: [0.0],
+                                  bias: [0.0])
+            }
+        }
+
+        XCTAssert(model.inputs.count == 1, "Failed extracting Input")
+        XCTAssert(model.outputs.count == 1, "Failed extracting Output")
+        XCTAssert(model.trainingInputs.count == 2, "Failed extracting TrainingInput")
+        XCTAssert(model.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork")
+    }
+
+    func testRealModelExport() {
+        var model = Model(version: 4,
+                          shortDescription: "Trivial linear classifier",
+                          author: "Jacopo Mangiavacchi",
+                          license: "MIT",
+                          userDefined: ["SwiftCoremltoolsVersion" : "0.1"])
+                          
+        model.addInput(Input(name: "dense_input", shape: [1], featureType: .Double))
+        model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
+        model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
+        model.addTrainingInput(TrainingInput(name: "output_true", shape: [1], featureType: .Double))
+        model.neuralNetwork = NeuralNetwork(loss: [MSE(name: "lossLayer",
+                                                       input: "output",
+                                                       target: "output_true")],
+                                            optimizer: SGD(learningRateDefault: 0.01,
+                                                           learningRateMax: 0.3,
+                                                           miniBatchSizeDefault: 5,
+                                                           miniBatchSizeRange: [5],
+                                                           momentumDefault: 0,
+                                                           momentumMax: 1.0),
+                                            epochDefault: 2,
+                                            epochSet: [2],
+                                            shuffle: true)
+                                            
+        model.neuralNetwork.addLayer(InnerProductLayer(name: "layer1",
+                                                       input: ["dense_input"],
+                                                       output: ["output"],
+                                                       inputChannels: 1,
+                                                       outputChannels: 1,
+                                                       updatable: true,
+                                                       weights: [0.0],
+                                                       bias: [0.0]))
+
+        XCTAssert(model.inputs.count == 1, "Failed extracting Input")
+        XCTAssert(model.outputs.count == 1, "Failed extracting Output")
+        XCTAssert(model.trainingInputs.count == 2, "Failed extracting TrainingInput")
+        XCTAssert(model.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork")
     }
 
     static var allTests = [
@@ -143,6 +221,8 @@ final class ModelTests: XCTestCase {
         ("testWithMetadata", testWithMetadata),
         ("testWithNeuralNetwork", testWithNeuralNetwork),
         ("testWithPersonazibleNeuralNetwork", testWithPersonazibleNeuralNetwork),
+        ("testModelExtraction", testModelExtraction),
+        ("testModelAPI", testModelAPI),
         ("testRealModelExport", testRealModelExport),
     ]
 }
