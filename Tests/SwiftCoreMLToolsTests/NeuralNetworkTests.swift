@@ -14,7 +14,7 @@ final class NeuralNetworkTests: XCTestCase {
                               bias: [0.0])
         }
 
-        XCTAssertEqual(network.layers?.count, 1)
+        XCTAssertEqual(network.layers.count, 1)
     }
 
     func testMultipleLayers() {
@@ -37,7 +37,7 @@ final class NeuralNetworkTests: XCTestCase {
                               bias: [0.0])
         }
 
-        XCTAssertEqual(network.layers?.count, 2)
+        XCTAssertEqual(network.layers.count, 2)
     }
 
     static var allTests = [

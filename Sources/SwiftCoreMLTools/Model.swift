@@ -36,9 +36,40 @@ public struct Model {
     public let author: String?
     public let license: String?
     public let userDefined: [String : String]?
-    let items: [ModelItems]?
 
-    init(version: UInt,
+    public var inputs = [String : Input]()
+    public var outputs = [String : Output]()
+    public var trainingInputs = [String : TrainingInput]()
+    public var neuralNetwork = NeuralNetwork()
+
+    var items: [ModelItems] {
+        didSet {
+            inputs.removeAll()
+            outputs.removeAll()
+            trainingInputs.removeAll()
+            neuralNetwork = NeuralNetwork()
+            for item in items {
+                switch item {
+                case let input as Input:
+                    self.inputs[input.name] = input
+
+                case let output as Output:
+                    self.outputs[output.name] = output
+
+                case let trainingInput as TrainingInput:
+                    self.trainingInputs[trainingInput.name] = trainingInput
+
+                case let neuralNetwork as NeuralNetwork:
+                    self.neuralNetwork = neuralNetwork
+
+                default:
+                    break
+                }
+            }
+        }
+    }
+
+    fileprivate init(version: UInt,
          shortDescription: String?,
          author: String?,
          license: String?,
@@ -50,6 +81,19 @@ public struct Model {
         self.author = author
         self.license = license
         self.userDefined = userDefined
+    }
+
+    public init(version: UInt = 4,
+                shortDescription: String? = nil,
+                author: String? = nil,
+                license: String? = nil,
+                userDefined: [String : String]? = [:]) {
+        self.init(version: version,
+                  shortDescription: shortDescription,
+                  author: author,
+                  license: license,
+                  userDefined: userDefined,
+                  items: [ModelItems]())
     }
 
     public init(version: UInt = 4,
@@ -78,5 +122,17 @@ public struct Model {
                   license: license,
                   userDefined: userDefined,
                   items: builder())
+    }
+
+    public mutating func AddInput(_ input: Input) {
+        inputs[input.name] = input
+    }
+
+    public mutating func AddOutput(_ output: Output) {
+        outputs[output.name] = output
+    }
+
+    public mutating func AddTrainingInput(_ trainingInput: TrainingInput) {
+        trainingInputs[trainingInput.name] = trainingInput
     }
 }

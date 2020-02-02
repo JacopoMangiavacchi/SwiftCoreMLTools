@@ -46,9 +46,9 @@ public struct NeuralNetwork : ModelItems {
     public let epochDefault: UInt?
     public let epochSet: [UInt]?
     public let shuffle: Bool?
-    let layers: [NetworkLayer]?
+    public var layers: [NetworkLayer]
 
-    init(loss: [Loss]?,
+    fileprivate init(loss: [Loss]?,
          optimizer: Optimizer?,
          epochDefault: UInt?,
          epochSet: [UInt]?,
@@ -60,6 +60,15 @@ public struct NeuralNetwork : ModelItems {
         self.epochDefault = epochDefault
         self.epochSet = epochSet
         self.shuffle = shuffle
+    }
+
+    public init() {
+        self.init(loss: nil,
+                  optimizer: nil,
+                  epochDefault: nil,
+                  epochSet: nil,
+                  shuffle: nil,
+                  layers: [NetworkLayer]())
     }
 
     public init(loss: [Loss]? = nil,
@@ -88,5 +97,9 @@ public struct NeuralNetwork : ModelItems {
                   epochSet: epochSet,
                   shuffle: shuffle,
                   layers: builder())
+    }
+
+    public mutating func AddLayer(_ layer: NetworkLayer) {
+        layers.append(layer)
     }
 }
