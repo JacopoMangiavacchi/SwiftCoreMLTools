@@ -4,14 +4,14 @@ import XCTest
 final class NeuralNetworkTests: XCTestCase {
     func testSingleLayer() {
         let network = NeuralNetwork {
-            InnerProductLayer(name: "layer1",
-                              input: ["dense_input"],
-                              output: ["output"],
-                              inputChannels: 1,
-                              outputChannels: 1,
-                              updatable: true,
-                              weights: [0.0],
-                              bias: [0.0])
+            InnerProduct(name: "layer1",
+                         input: ["dense_input"],
+                         output: ["output"],
+                         inputChannels: 1,
+                         outputChannels: 1,
+                         updatable: true,
+                         weights: [0.0],
+                         bias: [0.0])
         }
 
         XCTAssertEqual(network.layers.count, 1)
@@ -19,22 +19,22 @@ final class NeuralNetworkTests: XCTestCase {
 
     func testMultipleLayers() {
         let network = NeuralNetwork {
-            InnerProductLayer(name: "layer1",
-                              input: ["dense_input"],
-                              output: ["output"],
-                              inputChannels: 1,
-                              outputChannels: 1,
-                              updatable: true,
-                              weights: [0.0],
-                              bias: [0.0])
-            InnerProductLayer(name: "layer2",
-                              input: ["dense_input"],
-                              output: ["output"],
-                              inputChannels: 1,
-                              outputChannels: 1,
-                              updatable: true,
-                              weights: [0.0],
-                              bias: [0.0])
+            InnerProduct(name: "layer1",
+                         input: ["dense_input"],
+                         output: ["output"],
+                         inputChannels: 1,
+                         outputChannels: 1,
+                         updatable: true,
+                         weights: [0.0],
+                         bias: [0.0])
+            InnerProduct(name: "layer2",
+                         input: ["dense_input"],
+                         output: ["output"],
+                         inputChannels: 1,
+                         outputChannels: 1,
+                         updatable: true,
+                         weights: [0.0],
+                         bias: [0.0])
         }
 
         XCTAssertEqual(network.layers.count, 2)

@@ -1,7 +1,7 @@
 public protocol NetworkLayer {
 }
 
-public struct InnerProductLayer : NetworkLayer {
+public struct InnerProduct : NetworkLayer {
     public let name: String
     public let input: [String]
     public let output: [String]

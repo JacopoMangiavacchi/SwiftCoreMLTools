@@ -70,7 +70,7 @@ extension Model {
             }
 
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = (neuralNetwork.layers.filter{ $0 is InnerProductLayer } as! [InnerProductLayer]).map{ layer in 
+                $0.layers = (neuralNetwork.layers.filter{ $0 is InnerProduct } as! [InnerProduct]).map{ layer in 
                     CoreML_Specification_NeuralNetworkLayer.with {
                         $0.name = layer.name
                         $0.input = layer.input

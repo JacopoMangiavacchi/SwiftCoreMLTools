@@ -48,14 +48,14 @@ final class ModelTests: XCTestCase {
             TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
             NeuralNetwork {
-                InnerProductLayer(name: "layer1",
-                                  input: ["dense_input"],
-                                  output: ["output"],
-                                  inputChannels: 1,
-                                  outputChannels: 1,
-                                  updatable: true,
-                                  weights: [0.0],
-                                  bias: [0.0])
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true,
+                             weights: [0.0],
+                             bias: [0.0])
             }
         }
 
@@ -84,14 +84,14 @@ final class ModelTests: XCTestCase {
                           epochDefault: 2,
                           epochSet: [2],
                           shuffle: true) {
-                InnerProductLayer(name: "layer1",
-                                  input: ["dense_input"],
-                                  output: ["output"],
-                                  inputChannels: 1,
-                                  outputChannels: 1,
-                                  updatable: true,
-                                  weights: [0.0],
-                                  bias: [0.0])
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true,
+                             weights: [0.0],
+                             bias: [0.0])
             }
         }
 
@@ -120,14 +120,14 @@ final class ModelTests: XCTestCase {
                           epochDefault: 2,
                           epochSet: [2],
                           shuffle: true) {
-                InnerProductLayer(name: "layer1",
-                                  input: ["dense_input"],
-                                  output: ["output"],
-                                  inputChannels: 1,
-                                  outputChannels: 1,
-                                  updatable: true,
-                                  weights: [0.0],
-                                  bias: [0.0])
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true,
+                             weights: [0.0],
+                             bias: [0.0])
             }
         }
 
@@ -159,14 +159,14 @@ final class ModelTests: XCTestCase {
                           epochDefault: 2,
                           epochSet: [2],
                           shuffle: true) {
-                InnerProductLayer(name: "layer1",
-                                  input: ["dense_input"],
-                                  output: ["output"],
-                                  inputChannels: 1,
-                                  outputChannels: 1,
-                                  updatable: true,
-                                  weights: [0.0],
-                                  bias: [0.0])
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true,
+                             weights: [0.0],
+                             bias: [0.0])
             }
         }
 
@@ -200,14 +200,14 @@ final class ModelTests: XCTestCase {
                                             epochSet: [2],
                                             shuffle: true)
                                             
-        model.neuralNetwork.addLayer(InnerProductLayer(name: "layer1",
-                                                       input: ["dense_input"],
-                                                       output: ["output"],
-                                                       inputChannels: 1,
-                                                       outputChannels: 1,
-                                                       updatable: true,
-                                                       weights: [0.0],
-                                                       bias: [0.0]))
+        model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
+                                                 input: ["dense_input"],
+                                                 output: ["output"],
+                                                 inputChannels: 1,
+                                                 outputChannels: 1,
+                                                 updatable: true,
+                                                 weights: [0.0],
+                                                 bias: [0.0]))
 
         XCTAssert(model.inputs.count == 1, "Failed extracting Input")
         XCTAssert(model.outputs.count == 1, "Failed extracting Output")
