@@ -37,37 +37,12 @@ public struct Model {
     public let license: String?
     public let userDefined: [String : String]?
 
-    public var inputs = [String : Input]()
-    public var outputs = [String : Output]()
-    public var trainingInputs = [String : TrainingInput]()
-    public var neuralNetwork = NeuralNetwork()
+    public var inputs: [String : Input]
+    public var outputs: [String : Output]
+    public var trainingInputs: [String : TrainingInput]
+    public var neuralNetwork: NeuralNetwork
 
-    var items: [ModelItems] {
-        didSet {
-            inputs.removeAll()
-            outputs.removeAll()
-            trainingInputs.removeAll()
-            neuralNetwork = NeuralNetwork()
-            for item in items {
-                switch item {
-                case let input as Input:
-                    self.inputs[input.name] = input
-
-                case let output as Output:
-                    self.outputs[output.name] = output
-
-                case let trainingInput as TrainingInput:
-                    self.trainingInputs[trainingInput.name] = trainingInput
-
-                case let neuralNetwork as NeuralNetwork:
-                    self.neuralNetwork = neuralNetwork
-
-                default:
-                    break
-                }
-            }
-        }
-    }
+    let items: [ModelItems]
 
     fileprivate init(version: UInt,
          shortDescription: String?,
@@ -75,12 +50,35 @@ public struct Model {
          license: String?,
          userDefined: [String : String]?,
          items: [ModelItems]) {
-        self.items = items
         self.version = version
         self.shortDescription = shortDescription
         self.author = author
         self.license = license
         self.userDefined = userDefined
+        self.items = items
+        self.inputs = [String : Input]()
+        self.outputs = [String : Output]()
+        self.trainingInputs = [String : TrainingInput]()
+        self.neuralNetwork = NeuralNetwork()
+
+        for item in items {
+            switch item {
+            case let input as Input:
+                self.inputs[input.name] = input
+
+            case let output as Output:
+                self.outputs[output.name] = output
+
+            case let trainingInput as TrainingInput:
+                self.trainingInputs[trainingInput.name] = trainingInput
+
+            case let neuralNetwork as NeuralNetwork:
+                self.neuralNetwork = neuralNetwork
+
+            default:
+                break
+            }
+        }
     }
 
     public init(version: UInt = 4,
