@@ -1,7 +1,7 @@
-public protocol NetworkLayers {
+public protocol NetworkLayer {
 }
 
-public struct InnerProductLayer : NetworkLayers {
+public struct InnerProductLayer : NetworkLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
@@ -12,18 +12,24 @@ public struct InnerProductLayer : NetworkLayers {
 
 @_functionBuilder
 public struct LayerBuilder {
-    public static func buildBlock(_ children: NetworkLayers...) -> [NetworkLayers] {
+    public static func buildBlock(_ children: NetworkLayer...) -> [NetworkLayer] {
         children.compactMap{ $0 }
     }
 }
 
-public struct MSE {
+public protocol Loss {
+}
+
+public struct MSE : Loss {
     public let name: String
     public let input: String
     public let target: String
 }
 
-public struct SGD {
+public protocol Optimizer {
+}
+
+public struct SGD : Optimizer {
     public let learningRateDefault: Double
     public let learningRateMax: Double
     public let miniBatchSizeDefault: UInt
@@ -33,19 +39,19 @@ public struct SGD {
 }
 
 public struct NeuralNetwork : ModelItems {
-    public let loss: [MSE]?
-    public let optimizer: SGD?
+    public let loss: [Loss]?
+    public let optimizer: Optimizer?
     public let epochDefault: UInt?
     public let epochSet: [UInt]?
     public let shuffle: Bool?
-    let layers: [NetworkLayers]?
+    let layers: [NetworkLayer]?
 
-    init(loss: [MSE]?,
-         optimizer: SGD?,
+    init(loss: [Loss]?,
+         optimizer: Optimizer?,
          epochDefault: UInt?,
          epochSet: [UInt]?,
          shuffle: Bool?,
-         layers: [NetworkLayers]) {
+         layers: [NetworkLayer]) {
         self.layers = layers
         self.loss = loss
         self.optimizer = optimizer
@@ -54,12 +60,12 @@ public struct NeuralNetwork : ModelItems {
         self.shuffle = shuffle
     }
 
-    public init(loss: [MSE]? = nil,
-                optimizer: SGD? = nil,
+    public init(loss: [Loss]? = nil,
+                optimizer: Optimizer? = nil,
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil,
-                @LayerBuilder _ builder: () -> NetworkLayers) {
+                @LayerBuilder _ builder: () -> NetworkLayer) {
         self.init(loss: loss,
                   optimizer: optimizer,
                   epochDefault: epochDefault,
@@ -68,12 +74,12 @@ public struct NeuralNetwork : ModelItems {
                   layers: [builder()])
     }
 
-    public init(loss: [MSE]? = nil,
-                optimizer: SGD? = nil,
+    public init(loss: [Loss]? = nil,
+                optimizer: Optimizer? = nil,
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil,
-                @LayerBuilder _ builder: () -> [NetworkLayers]) {
+                @LayerBuilder _ builder: () -> [NetworkLayer]) {
         self.init(loss: loss,
                   optimizer: optimizer,
                   epochDefault: epochDefault,

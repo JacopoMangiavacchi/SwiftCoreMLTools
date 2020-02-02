@@ -101,34 +101,44 @@ extension Model {
                     $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
                         $0.lossLayers = loss.map{ loss in 
                             CoreML_Specification_LossLayer.with {
-                                $0.name = loss.name
-                                $0.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with {
-                                    $0.input = loss.input
-                                    $0.target = loss.target
+                                switch loss {
+                                case let mse as MSE:
+                                    $0.name = mse.name
+                                    $0.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with {
+                                        $0.input = mse.input
+                                        $0.target = mse.target
+                                    }
+                                default:
+                                    break
                                 }
                             }
                         }
                                                 
                         $0.optimizer = CoreML_Specification_Optimizer.with {
-                            $0.sgdOptimizer = CoreML_Specification_SGDOptimizer.with {
-                                $0.learningRate = CoreML_Specification_DoubleParameter.with {
-                                    $0.defaultValue = optimizer.learningRateDefault
-                                    $0.range = CoreML_Specification_DoubleRange.with {
-                                        $0.maxValue = optimizer.learningRateMax
+                            switch optimizer {
+                            case let sgd as SGD:
+                                $0.sgdOptimizer = CoreML_Specification_SGDOptimizer.with {
+                                    $0.learningRate = CoreML_Specification_DoubleParameter.with {
+                                        $0.defaultValue = sgd.learningRateDefault
+                                        $0.range = CoreML_Specification_DoubleRange.with {
+                                            $0.maxValue = sgd.learningRateMax
+                                        }
+                                    }
+                                    $0.miniBatchSize = CoreML_Specification_Int64Parameter.with {
+                                        $0.defaultValue = Int64(sgd.miniBatchSizeDefault)
+                                        $0.set = CoreML_Specification_Int64Set.with {
+                                            $0.values = sgd.miniBatchSizeRange.map{ Int64($0) }
+                                        }
+                                    }
+                                    $0.momentum = CoreML_Specification_DoubleParameter.with {
+                                        $0.defaultValue = sgd.momentumDefault
+                                        $0.range = CoreML_Specification_DoubleRange.with {
+                                            $0.maxValue = sgd.momentumMax
+                                        }
                                     }
                                 }
-                                $0.miniBatchSize = CoreML_Specification_Int64Parameter.with {
-                                    $0.defaultValue = Int64(optimizer.miniBatchSizeDefault)
-                                    $0.set = CoreML_Specification_Int64Set.with {
-                                        $0.values = optimizer.miniBatchSizeRange.map{ Int64($0) }
-                                    }
-                                }
-                                $0.momentum = CoreML_Specification_DoubleParameter.with {
-                                    $0.defaultValue = optimizer.momentumDefault
-                                    $0.range = CoreML_Specification_DoubleRange.with {
-                                        $0.maxValue = optimizer.momentumMax
-                                    }
-                                }
+                            default:
+                                break
                             }
                         }
                         
