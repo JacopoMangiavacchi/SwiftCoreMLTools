@@ -2,9 +2,13 @@
 
 ![Swift](https://github.com/JacopoMangiavacchi/SwiftCoreMLTools/workflows/Swift/badge.svg)
 
-This is a Proof of Concept for a Swift Library defining a (function builder based) DSL for creating and exporting CoreML Models in Swift.
+A Swift Library for creating CoreML models in Swift.
 
 **Work in progress**
+
+This library expose a (function builder based) DSL as well as a programmatic API (see examples below).
+
+**The library is not "official" - it is not part of Apple CoreML and it is not maintained.**
 
 This library use the Apple Swift Protocol Buffer package and compile and import to Swift the CoreML ProtoBuf datastructures defined from the GitHub Apple CoreMLTools repo - https://github.com/apple/coremltools/tree/master/mlmodel/format
 
@@ -13,8 +17,6 @@ This package could be used to export Swift For TensorFlow models or to generate 
 CoreML models generated with this library could be potentially personalized (trained) partially or entirely using the CoreML runtime.
 
 CoreML support much more then Neural Network models but this experimental library is only focused, at the moment, on Neural Network support.
-
-The library is not "official" - it is not part of Apple CoreML, and it is not maintained.
 
 ## Export Swift for TensorFlow sample scenario
 
@@ -33,7 +35,7 @@ var s4tfModel = LinearRegression()
 // Training Loop ...
 ```
 
-### Export to CoreML using this DSL approach
+### Export to CoreML using DSL approach
 ```swift
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
@@ -42,22 +44,20 @@ let coremlModel = Model(version: 4,
                         userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
     Input(name: "dense_input", shape: [1], featureType: .Double)
     Output(name: "output", shape: [1], featureType: .Double)
-    TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-    TrainingInput(name: "output_true", shape: [1], featureType: .Double)
     NeuralNetwork {
-        InnerProductLayer(name: "dense_1",
-                          input: ["dense_input"],
-                          output: ["output"],
-                          inputChannels: 1,
-                          outputChannels: 1,
-                          updatable: true,
-                          weights: s4tfModel.layer1.weight[0],
-                          bias: s4tfModel.layer1.bias)
+        InnerProduct(name: "dense_1",
+                     input: ["dense_input"],
+                     output: ["output"],
+                     inputChannels: 1,
+                     outputChannels: 1,
+                     updatable: true,
+                     weights: s4tfModel.layer1.weight[0],
+                     bias: s4tfModel.layer1.bias)
     }
 }
 ```
 
-### Export a CoreML personalizable (re-trainable) model using this DSL approach
+### Export a CoreML personalizable (re-trainable) model using DSL approach
 ```swift
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
@@ -80,19 +80,54 @@ let coremlModel = Model(version: 4,
                   epochDefault: 2,
                   epochSet: [2],
                   shuffle: true) {
-        InnerProductLayer(name: "dense_1",
-                          input: ["dense_input"],
-                          output: ["output"],
-                          inputChannels: 1,
-                          outputChannels: 1,
-                          updatable: true,
-                          weights: s4tfModel.layer1.weight[0],
-                          bias: s4tfModel.layer1.bias)
+        InnerProduct(name: "dense_1",
+                     input: ["dense_input"],
+                     output: ["output"],
+                     inputChannels: 1,
+                     outputChannels: 1,
+                     updatable: true,
+                     weights: s4tfModel.layer1.weight[0],
+                     bias: s4tfModel.layer1.bias)
     }
 }
 ```
 
-### Verbouse alternative approach to explicitly use Swift version of the CoreML ProtoBuf data structure to export the model
+## CoreML model creation with programmatic API
+```swift
+var model = Model(version: 4,
+                  shortDescription: "Trivial linear classifier",
+                  author: "Jacopo Mangiavacchi",
+                  license: "MIT",
+                  userDefined: ["SwiftCoremltoolsVersion" : "0.1"])
+                    
+model.addInput(Input(name: "dense_input", shape: [1], featureType: .Double))
+model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
+model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
+model.addTrainingInput(TrainingInput(name: "output_true", shape: [1], featureType: .Double))
+model.neuralNetwork = NeuralNetwork(loss: [MSE(name: "lossLayer",
+                                               input: "output",
+                                               target: "output_true")],
+                                    optimizer: SGD(learningRateDefault: 0.01,
+                                                   learningRateMax: 0.3,
+                                                   miniBatchSizeDefault: 5,
+                                                   miniBatchSizeRange: [5],
+                                                   momentumDefault: 0,
+                                                   momentumMax: 1.0),
+                                    epochDefault: 2,
+                                    epochSet: [2],
+                                    shuffle: true)
+                                    
+model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
+                                         input: ["dense_input"],
+                                         output: ["output"],
+                                         inputChannels: 1,
+                                         outputChannels: 1,
+                                         updatable: true,
+                                         weights: [0.0],
+                                         bias: [0.0]))
+```
+
+## Verbouse alternative approach to explicitly use Swift version of the CoreML ProtoBuf data structure to export the model
 ```swift
 func convertToCoreML(weights: Float, bias: Float) -> CoreML_Specification_Model {
     return CoreML_Specification_Model.with {
@@ -206,4 +241,3 @@ func convertToCoreML(weights: Float, bias: Float) -> CoreML_Specification_Model 
     }
 }
 ```
-

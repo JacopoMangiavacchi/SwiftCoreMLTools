@@ -1,7 +1,7 @@
 public protocol NetworkLayer {
 }
 
-public struct InnerProductLayer : NetworkLayer {
+public struct InnerProduct : NetworkLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
@@ -46,9 +46,9 @@ public struct NeuralNetwork : ModelItems {
     public let epochDefault: UInt?
     public let epochSet: [UInt]?
     public let shuffle: Bool?
-    let layers: [NetworkLayer]?
+    public var layers: [NetworkLayer]
 
-    init(loss: [Loss]?,
+    fileprivate init(loss: [Loss]?,
          optimizer: Optimizer?,
          epochDefault: UInt?,
          epochSet: [UInt]?,
@@ -60,6 +60,19 @@ public struct NeuralNetwork : ModelItems {
         self.epochDefault = epochDefault
         self.epochSet = epochSet
         self.shuffle = shuffle
+    }
+
+    public init(loss: [Loss]? = nil,
+                optimizer: Optimizer? = nil,
+                epochDefault: UInt? = nil,
+                epochSet: [UInt]? = nil,
+                shuffle: Bool? = nil) {
+        self.init(loss: loss,
+                  optimizer: optimizer,
+                  epochDefault: epochDefault,
+                  epochSet: epochSet,
+                  shuffle: shuffle,
+                  layers: [NetworkLayer]())
     }
 
     public init(loss: [Loss]? = nil,
@@ -88,5 +101,9 @@ public struct NeuralNetwork : ModelItems {
                   epochSet: epochSet,
                   shuffle: shuffle,
                   layers: builder())
+    }
+
+    public mutating func addLayer(_ layer: NetworkLayer) {
+        layers.append(layer)
     }
 }
