@@ -5,6 +5,8 @@ public struct InnerProductLayer : NetworkLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
     public let updatable: Bool
     public let weights: [Float]
     public let bias: [Float]

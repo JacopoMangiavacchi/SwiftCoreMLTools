@@ -51,6 +51,8 @@ final class ModelTests: XCTestCase {
                 InnerProductLayer(name: "layer1",
                                   input: ["dense_input"],
                                   output: ["output"],
+                                  inputChannels: 1,
+                                  outputChannels: 1,
                                   updatable: true,
                                   weights: [0.0],
                                   bias: [0.0])
@@ -85,6 +87,8 @@ final class ModelTests: XCTestCase {
                 InnerProductLayer(name: "layer1",
                                   input: ["dense_input"],
                                   output: ["output"],
+                                  inputChannels: 1,
+                                  outputChannels: 1,
                                   updatable: true,
                                   weights: [0.0],
                                   bias: [0.0])
@@ -119,6 +123,8 @@ final class ModelTests: XCTestCase {
                 InnerProductLayer(name: "layer1",
                                   input: ["dense_input"],
                                   output: ["output"],
+                                  inputChannels: 1,
+                                  outputChannels: 1,
                                   updatable: true,
                                   weights: [0.0],
                                   bias: [0.0])

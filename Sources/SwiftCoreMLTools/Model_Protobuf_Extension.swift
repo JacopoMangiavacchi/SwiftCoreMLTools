@@ -77,8 +77,8 @@ extension Model {
                         $0.output = layer.output
                         $0.isUpdatable = layer.updatable
                         $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
-                            $0.inputChannels = 1
-                            $0.outputChannels = 1
+                            $0.inputChannels = UInt64(layer.inputChannels)
+                            $0.outputChannels = UInt64(layer.outputChannels)
                             $0.hasBias_p = true
                             $0.weights = CoreML_Specification_WeightParams.with {
                                 $0.floatValue = layer.weights
@@ -94,6 +94,7 @@ extension Model {
 
                 if trainable, 
                    let loss = neuralNetwork.loss,
+                   loss.count > 0,
                    let optimizer = neuralNetwork.optimizer,
                    let epochDefault = neuralNetwork.epochDefault,
                    let epochSet = neuralNetwork.epochSet,
