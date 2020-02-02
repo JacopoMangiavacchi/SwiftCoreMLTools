@@ -11,17 +11,19 @@ extension Model {
     }
 
     func convertToCoreML() -> CoreML_Specification_Model {
-        guard self.items.count > 0 else { return CoreML_Specification_Model() }
-        guard let neuralNetwork = (self.items.filter{ $0 is NeuralNetwork } as! [NeuralNetwork]).first else { return CoreML_Specification_Model() }
-        guard neuralNetwork.layers.count > 0 else { return CoreML_Specification_Model() }
+        guard self.inputs.count > 0 &&
+              self.outputs.count > 0 &&
+              self.neuralNetwork.layers.count > 0 else { 
+            return CoreML_Specification_Model() 
+        }
 
-        let trainable:Bool = self.items.filter{ $0 is TrainingInput }.count > 0
+        let trainable:Bool = self.trainingInputs.count > 0
 
         return CoreML_Specification_Model.with { model in 
             model.specificationVersion = Int32(self.version)
 
             model.description_p = CoreML_Specification_ModelDescription.with {
-                $0.input = (self.items.filter{ $0 is Input } as! [Input]).map{ input in 
+                $0.input = self.inputs.values.map{ input in 
                     CoreML_Specification_FeatureDescription.with {
                         $0.name = input.name
                         $0.type = CoreML_Specification_FeatureType.with {
@@ -33,7 +35,7 @@ extension Model {
                     }
                 }
 
-                $0.output = (self.items.filter{ $0 is Output } as! [Output]).map{ output in 
+                $0.output = self.outputs.values.map{ output in 
                     CoreML_Specification_FeatureDescription.with {
                         $0.name = output.name
                         $0.type = CoreML_Specification_FeatureType.with {
@@ -45,7 +47,7 @@ extension Model {
                     }
                 }
 
-                $0.trainingInput = (self.items.filter{ $0 is TrainingInput } as! [TrainingInput]).map{ trainingInput in 
+                $0.trainingInput = self.trainingInputs.values.map{ trainingInput in 
                     CoreML_Specification_FeatureDescription.with {
                         $0.name = trainingInput.name
                         $0.type = CoreML_Specification_FeatureType.with {
@@ -70,7 +72,7 @@ extension Model {
             }
 
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = (neuralNetwork.layers.filter{ $0 is InnerProduct } as! [InnerProduct]).map{ layer in 
+                $0.layers = (self.neuralNetwork.layers.filter{ $0 is InnerProduct } as! [InnerProduct]).map{ layer in 
                     CoreML_Specification_NeuralNetworkLayer.with {
                         $0.name = layer.name
                         $0.input = layer.input
@@ -93,12 +95,12 @@ extension Model {
                 }
 
                 if trainable, 
-                   let loss = neuralNetwork.loss,
+                   let loss = self.neuralNetwork.loss,
                    loss.count > 0,
-                   let optimizer = neuralNetwork.optimizer,
-                   let epochDefault = neuralNetwork.epochDefault,
-                   let epochSet = neuralNetwork.epochSet,
-                   let shuffle = neuralNetwork.shuffle {
+                   let optimizer = self.neuralNetwork.optimizer,
+                   let epochDefault = self.neuralNetwork.epochDefault,
+                   let epochSet = self.neuralNetwork.epochSet,
+                   let shuffle = self.neuralNetwork.shuffle {
                     $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
                         $0.lossLayers = loss.map{ loss in 
                             CoreML_Specification_LossLayer.with {
