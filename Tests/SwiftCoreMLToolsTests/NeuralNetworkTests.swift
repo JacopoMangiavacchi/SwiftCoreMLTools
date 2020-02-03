@@ -73,14 +73,7 @@ final class NeuralNetworkTests: XCTestCase {
 
         XCTAssertEqual(network.layers.count, 2)
 
-        let encoder = JSONEncoder()
-        // encoder.outputFormatting = .prettyPrinted
-
-        let jsonData = try! encoder.encode(network)
-        let jsonString = String(data: jsonData, encoding: .utf8)
-
-        // print(jsonString!)
-
+        let jsonData = try! JSONEncoder().encode(network)
         let decodedNetwork = try! JSONDecoder().decode(NeuralNetwork.self, from: jsonData)
 
         XCTAssertEqual(decodedNetwork.layers.count, 2)

@@ -8,6 +8,8 @@ A Swift Library for creating CoreML models in Swift.
 
 This library expose a (function builder based) DSL as well as a programmatic API (see examples below).
 
+The library also implement Codable protocol allowing to print and edit CoreML model in JSON format.
+
 **The library is not "official" - it is not part of Apple CoreML and it is not maintained.**
 
 This library use the Apple Swift Protocol Buffer package and compile and import to Swift the CoreML ProtoBuf datastructures defined from the GitHub Apple CoreMLTools repo - https://github.com/apple/coremltools/tree/master/mlmodel/format
@@ -92,6 +94,13 @@ let coremlModel = Model(version: 4,
 }
 ```
 
+## Example code to export and save to a CoreML model data file
+```swift
+let model = Model(...){ ... }
+let coreMLData = model.coreMLData
+try! coreMLData.write(to: URL(fileURLWithPath: "model.mlmodel"))
+```
+
 ## CoreML model creation with programmatic API
 ```swift
 var model = Model(version: 4,
@@ -125,6 +134,128 @@ model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
                                          updatable: true,
                                          weights: [0.0],
                                          bias: [0.0]))
+```
+
+## JSON Format model persistence (Codable)
+
+### Example code to Encode a CoreML model to JSON String
+```swift
+let model = Model(...){...}
+
+let encoder = JSONEncoder()
+encoder.outputFormatting = .prettyPrinted
+
+let jsonData = try! encoder.encode(model)
+let jsonModel = String(data: jsonData, encoding: .utf8)
+
+print(jsonModel!)
+```
+
+### Example code to Decode a JSON String to a CoreML model
+```swift
+let jsonModel = "{...}"
+let jsonData = Data(jsonModel.utf8)
+let model = try! JSONDecoder().decode(Model.self, from: jsonData)
+```
+
+### Example CoreML model in JSON format
+```json
+{
+  "author" : "Jacopo Mangiavacchi",
+  "inputs" : {
+    "dense_input" : {
+      "name" : "dense_input",
+      "shape" : [
+        1
+      ],
+      "featureType" : "Double"
+    }
+  },
+  "outputs" : {
+    "output" : {
+      "name" : "output",
+      "shape" : [
+        1
+      ],
+      "featureType" : "Double"
+    }
+  },
+  "trainingInputs" : {
+    "output_true" : {
+      "name" : "output_true",
+      "shape" : [
+        1
+      ],
+      "featureType" : "Double"
+    },
+    "dense_input" : {
+      "name" : "dense_input",
+      "shape" : [
+        1
+      ],
+      "featureType" : "Double"
+    }
+  },
+  "version" : 4,
+  "shortDescription" : "Trivial linear classifier",
+  "license" : "MIT",
+  "userDefined" : {
+    "SwiftCoremltoolsVersion" : "0.1"
+  },
+  "neuralNetwork" : {
+    "epochDefault" : 2,
+    "losses" : [
+      {
+        "type" : "mse",
+        "base" : {
+          "name" : "lossLayer",
+          "input" : "output",
+          "target" : "output_true"
+        }
+      }
+    ],
+    "shuffle" : true,
+    "layers" : [
+      {
+        "type" : "innerProduct",
+        "base" : {
+          "output" : [
+            "output"
+          ],
+          "outputChannels" : 1,
+          "weights" : [
+            0
+          ],
+          "input" : [
+            "dense_input"
+          ],
+          "bias" : [
+            0
+          ],
+          "inputChannels" : 1,
+          "updatable" : true,
+          "name" : "layer1"
+        }
+      }
+    ],
+    "optimizer" : {
+      "type" : "sgd",
+      "base" : {
+        "momentumDefault" : 0,
+        "momentumMax" : 1,
+        "learningRateMax" : 0.29999999999999999,
+        "miniBatchSizeRange" : [
+          5
+        ],
+        "miniBatchSizeDefault" : 5,
+        "learningRateDefault" : 0.01
+      }
+    },
+    "epochSet" : [
+      2
+    ]
+  }
+}
 ```
 
 ## Verbouse alternative approach to explicitly use Swift version of the CoreML ProtoBuf data structure to export the model

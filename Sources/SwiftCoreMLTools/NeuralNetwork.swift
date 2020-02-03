@@ -49,7 +49,7 @@ public struct LayerBuilder {
     }
 }
 
-public struct NeuralNetwork : ModelItems {
+public struct NeuralNetwork : Items {
     public let losses: [Loss]?
     public let optimizer: Optimizer?
     public let epochDefault: UInt?
