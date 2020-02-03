@@ -68,9 +68,9 @@ let coremlModel = Model(version: 4,
     Output(name: "output", shape: [1], featureType: .Double)
     TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
     TrainingInput(name: "output_true", shape: [1], featureType: .Double)
-    NeuralNetwork(loss: [MSE(name: "lossLayer",
-                             input: "output",
-                             target: "output_true")],
+    NeuralNetwork(losses: [MSE(name: "lossLayer",
+                               input: "output",
+                               target: "output_true")],
                   optimizer: SGD(learningRateDefault: 0.01,
                                  learningRateMax: 0.3,
                                  miniBatchSizeDefault: 5,
@@ -104,9 +104,9 @@ model.addInput(Input(name: "dense_input", shape: [1], featureType: .Double))
 model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
 model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
 model.addTrainingInput(TrainingInput(name: "output_true", shape: [1], featureType: .Double))
-model.neuralNetwork = NeuralNetwork(loss: [MSE(name: "lossLayer",
-                                               input: "output",
-                                               target: "output_true")],
+model.neuralNetwork = NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                                 input: "output",
+                                                 target: "output_true")],
                                     optimizer: SGD(learningRateDefault: 0.01,
                                                    learningRateMax: 0.3,
                                                    miniBatchSizeDefault: 5,

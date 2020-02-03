@@ -93,33 +93,33 @@ public struct SGD : Optimizer, Codable {
 
 
 public struct NeuralNetwork : ModelItems {
-    public let loss: [Loss]?
+    public let losses: [Loss]?
     public let optimizer: Optimizer?
     public let epochDefault: UInt?
     public let epochSet: [UInt]?
     public let shuffle: Bool?
     public var layers: [NetworkLayer]
 
-    fileprivate init(loss: [Loss]?,
+    fileprivate init(losses: [Loss]?,
          optimizer: Optimizer?,
          epochDefault: UInt?,
          epochSet: [UInt]?,
          shuffle: Bool?,
          layers: [NetworkLayer]) {
         self.layers = layers
-        self.loss = loss
+        self.losses = losses
         self.optimizer = optimizer
         self.epochDefault = epochDefault
         self.epochSet = epochSet
         self.shuffle = shuffle
     }
 
-    public init(loss: [Loss]? = nil,
+    public init(losses: [Loss]? = nil,
                 optimizer: Optimizer? = nil,
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil) {
-        self.init(loss: loss,
+        self.init(losses: losses,
                   optimizer: optimizer,
                   epochDefault: epochDefault,
                   epochSet: epochSet,
@@ -127,13 +127,13 @@ public struct NeuralNetwork : ModelItems {
                   layers: [NetworkLayer]())
     }
 
-    public init(loss: [Loss]? = nil,
+    public init(losses: [Loss]? = nil,
                 optimizer: Optimizer? = nil,
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil,
                 @LayerBuilder _ builder: () -> NetworkLayer) {
-        self.init(loss: loss,
+        self.init(losses: losses,
                   optimizer: optimizer,
                   epochDefault: epochDefault,
                   epochSet: epochSet,
@@ -141,13 +141,13 @@ public struct NeuralNetwork : ModelItems {
                   layers: [builder()])
     }
 
-    public init(loss: [Loss]? = nil,
+    public init(losses: [Loss]? = nil,
                 optimizer: Optimizer? = nil,
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil,
                 @LayerBuilder _ builder: () -> [NetworkLayer]) {
-        self.init(loss: loss,
+        self.init(losses: losses,
                   optimizer: optimizer,
                   epochDefault: epochDefault,
                   epochSet: epochSet,
@@ -163,7 +163,7 @@ public struct NeuralNetwork : ModelItems {
 
 extension NeuralNetwork : Codable {
     private enum CodingKeys : CodingKey {
-    // public let loss: [Loss]?
+    // public let losses: [Loss]?
     // public let optimizer: Optimizer?
     // public let epochDefault: UInt?
     // public let epochSet: [UInt]?
@@ -176,7 +176,7 @@ extension NeuralNetwork : Codable {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.loss = try container.decode([AnyLoss].self, forKey: .loss).map { $0.base }
+        self.losses = try container.decode([AnyLoss].self, forKey: .loss).map { $0.base }
         // self.title = try container.decode(String.self, forKey: .title)
 
         self.optimizer = nil
@@ -189,7 +189,7 @@ extension NeuralNetwork : Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        try container.encode(loss?.map(AnyLoss.init), forKey: .loss)
+        try container.encode(losses?.map(AnyLoss.init), forKey: .loss)
         // try container.encode(title, forKey: .title)
     }
 }
