@@ -52,7 +52,7 @@ let coremlModel = Model(version: 4,
                      output: ["output"],
                      inputChannels: 1,
                      outputChannels: 1,
-                     updatable: true,
+                     updatable: false,
                      weights: s4tfModel.layer1.weight[0],
                      bias: s4tfModel.layer1.bias)
     }
