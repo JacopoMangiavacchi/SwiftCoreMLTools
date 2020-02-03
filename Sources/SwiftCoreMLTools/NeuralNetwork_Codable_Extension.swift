@@ -20,6 +20,17 @@ public enum OptimizerType : String, Codable {
     }
 }
 
+public enum LayerType : String, Codable {
+    case innerProduct
+
+    var metatype: Layer.Type {
+        switch self {
+        case .innerProduct:
+            return InnerProduct.self
+        }
+    }
+}
+
 struct AnyLoss : Codable {
     var base: Loss
 
@@ -72,9 +83,35 @@ struct AnyOptimizer : Codable {
     }
 }
 
+struct AnyLayer : Codable {
+    var base: Layer
+
+    init(_ base: Layer) {
+        self.base = base
+    }
+
+    private enum CodingKeys : CodingKey {
+        case type, base
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let type = try container.decode(LayerType.self, forKey: .type)
+        self.base = try type.metatype.init(from: container.superDecoder(forKey: .base))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(type(of: base).type, forKey: .type)
+        try base.encode(to: container.superEncoder(forKey: .base))
+    }
+}
+
 extension NeuralNetwork : Codable {
     private enum CodingKeys : CodingKey {
-        case losses, optimizer, epochDefault, epochSet, shuffle //, layers
+        case losses, optimizer, epochDefault, epochSet, shuffle, layers
     }
 
     public init(from decoder: Decoder) throws {
@@ -86,7 +123,7 @@ extension NeuralNetwork : Codable {
         self.epochDefault = try container.decode(UInt?.self, forKey: .epochDefault)
         self.epochSet = try container.decode([UInt]?.self, forKey: .epochSet)
         self.shuffle = try container.decode(Bool?.self, forKey: .shuffle)
-        self.layers = [NetworkLayer]()
+        self.layers = try container.decode([AnyLayer].self, forKey: .layers).map { $0.base }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -107,7 +144,6 @@ extension NeuralNetwork : Codable {
         if let shuffle = shuffle {
             try container.encode(shuffle, forKey: .shuffle)
         }
-
-
+        try container.encode(layers.map(AnyLayer.init), forKey: .layers)
     }
 }
