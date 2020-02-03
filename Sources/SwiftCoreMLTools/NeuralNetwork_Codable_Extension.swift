@@ -74,7 +74,7 @@ struct AnyOptimizer : Codable {
 
 extension NeuralNetwork : Codable {
     private enum CodingKeys : CodingKey {
-        case losses, optimizer //, epochDefault, epochSet, shuffle, layers
+        case losses, optimizer, epochDefault, epochSet, shuffle //, layers
     }
 
     public init(from decoder: Decoder) throws {
@@ -83,11 +83,9 @@ extension NeuralNetwork : Codable {
 
         self.losses = try container.decode([AnyLoss].self, forKey: .losses).map { $0.base }
         self.optimizer = try container.decode(AnyOptimizer.self, forKey: .optimizer).base
-
-        // self.title = try container.decode(String.self, forKey: .title)
-        self.epochDefault = nil
-        self.epochSet = nil
-        self.shuffle = nil
+        self.epochDefault = try container.decode(UInt?.self, forKey: .epochDefault)
+        self.epochSet = try container.decode([UInt]?.self, forKey: .epochSet)
+        self.shuffle = try container.decode(Bool?.self, forKey: .shuffle)
         self.layers = [NetworkLayer]()
     }
 
@@ -100,7 +98,16 @@ extension NeuralNetwork : Codable {
         if let optimizer = optimizer {
             try container.encode(AnyOptimizer(optimizer), forKey: .optimizer)
         }
+        if let epochDefault = epochDefault {
+            try container.encode(epochDefault, forKey: .epochDefault)
+        }
+        if let epochSet = epochSet {
+            try container.encode(epochSet, forKey: .epochSet)
+        }
+        if let shuffle = shuffle {
+            try container.encode(shuffle, forKey: .shuffle)
+        }
 
-        // try container.encode(title, forKey: .title)
+
     }
 }
