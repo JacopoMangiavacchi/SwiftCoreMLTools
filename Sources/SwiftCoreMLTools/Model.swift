@@ -1,23 +1,23 @@
-public enum FeatureType {
+public enum FeatureType : String, Codable {
     case Double
 }
 
-public protocol ModelItems {
+public protocol Items : Codable {
 }
 
-public struct Input : ModelItems {
+public struct Input : Items {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
 }
 
-public struct Output : ModelItems {
+public struct Output : Items {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
 }
 
-public struct TrainingInput : ModelItems {
+public struct TrainingInput : Items {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
@@ -25,7 +25,7 @@ public struct TrainingInput : ModelItems {
 
 @_functionBuilder
 public struct ItemBuilder {
-    public static func buildBlock(_ children: ModelItems...) -> [ModelItems] {
+    public static func buildBlock(_ children: Items...) -> [Items] {
         children.compactMap{ $0 }
     }
 }
@@ -42,14 +42,14 @@ public struct Model {
     public var trainingInputs: [String : TrainingInput]
     public var neuralNetwork: NeuralNetwork
 
-    let items: [ModelItems]
+    let items: [Items]
 
     fileprivate init(version: UInt,
          shortDescription: String?,
          author: String?,
          license: String?,
          userDefined: [String : String]?,
-         items: [ModelItems]) {
+         items: [Items]) {
         self.version = version
         self.shortDescription = shortDescription
         self.author = author
@@ -91,7 +91,7 @@ public struct Model {
                   author: author,
                   license: license,
                   userDefined: userDefined,
-                  items: [ModelItems]())
+                  items: [Items]())
     }
 
     public init(version: UInt = 4,
@@ -99,7 +99,7 @@ public struct Model {
                 author: String? = nil,
                 license: String? = nil,
                 userDefined: [String : String]? = [:],
-                @ItemBuilder _ builder: () -> ModelItems) {
+                @ItemBuilder _ builder: () -> Items) {
         self.init(version: version,
                   shortDescription: shortDescription,
                   author: author,
@@ -113,7 +113,7 @@ public struct Model {
                 author: String? = nil,
                 license: String? = nil,
                 userDefined: [String : String]? = [:],
-                @ItemBuilder _ builder: () -> [ModelItems]) {
+                @ItemBuilder _ builder: () -> [Items]) {
         self.init(version: version,
                   shortDescription: shortDescription,
                   author: author,
@@ -132,5 +132,27 @@ public struct Model {
 
     public mutating func addTrainingInput(_ trainingInput: TrainingInput) {
         trainingInputs[trainingInput.name] = trainingInput
+    }
+}
+
+extension Model : Codable {
+    private enum CodingKeys : CodingKey {
+        case version, shortDescription, author, license, userDefined, inputs, outputs, trainingInputs, neuralNetwork
+    }
+
+    public init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.version = try container.decode(UInt.self, forKey: .version)
+        self.shortDescription = try container.decode(String?.self, forKey: .shortDescription)
+        self.author = try container.decode(String?.self, forKey: .author)
+        self.license = try container.decode(String?.self, forKey: .license)
+        self.userDefined = try container.decode([String : String]?.self, forKey: .userDefined)
+        self.inputs = try container.decode([String : Input].self, forKey: .inputs)
+        self.outputs = try container.decode([String : Output].self, forKey: .outputs)
+        self.trainingInputs = try container.decode([String : TrainingInput].self, forKey: .trainingInputs)
+        self.neuralNetwork = try container.decode(NeuralNetwork.self, forKey: .neuralNetwork)
+        self.items = [Items]()
     }
 }

@@ -95,14 +95,14 @@ extension Model {
                 }
 
                 if trainable, 
-                   let loss = self.neuralNetwork.loss,
-                   loss.count > 0,
+                   let losses = self.neuralNetwork.losses,
+                   losses.count > 0,
                    let optimizer = self.neuralNetwork.optimizer,
                    let epochDefault = self.neuralNetwork.epochDefault,
                    let epochSet = self.neuralNetwork.epochSet,
                    let shuffle = self.neuralNetwork.shuffle {
                     $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
-                        $0.lossLayers = loss.map{ loss in 
+                        $0.lossLayers = losses.map{ loss in 
                             CoreML_Specification_LossLayer.with {
                                 switch loss {
                                 case let mse as MSE:

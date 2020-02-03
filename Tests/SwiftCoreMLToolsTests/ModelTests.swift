@@ -72,9 +72,9 @@ final class ModelTests: XCTestCase {
             Output(name: "output", shape: [1], featureType: .Double)
             TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
-            NeuralNetwork(loss: [MSE(name: "lossLayer",
-                                     input: "output",
-                                     target: "output_true")],
+            NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                       input: "output",
+                                       target: "output_true")],
                           optimizer: SGD(learningRateDefault: 0.01,
                                          learningRateMax: 0.3,
                                          miniBatchSizeDefault: 5,
@@ -108,9 +108,9 @@ final class ModelTests: XCTestCase {
             Output(name: "output", shape: [1], featureType: .Double)
             TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
-            NeuralNetwork(loss: [MSE(name: "lossLayer",
-                                     input: "output",
-                                     target: "output_true")],
+            NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                       input: "output",
+                                       target: "output_true")],
                           optimizer: SGD(learningRateDefault: 0.01,
                                          learningRateMax: 0.3,
                                          miniBatchSizeDefault: 5,
@@ -147,9 +147,9 @@ final class ModelTests: XCTestCase {
             Output(name: "output", shape: [1], featureType: .Double)
             TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
             TrainingInput(name: "output_true", shape: [1], featureType: .Double)
-            NeuralNetwork(loss: [MSE(name: "lossLayer",
-                                     input: "output",
-                                     target: "output_true")],
+            NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                       input: "output",
+                                       target: "output_true")],
                           optimizer: SGD(learningRateDefault: 0.01,
                                          learningRateMax: 0.3,
                                          miniBatchSizeDefault: 5,
@@ -187,9 +187,9 @@ final class ModelTests: XCTestCase {
         model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
         model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
         model.addTrainingInput(TrainingInput(name: "output_true", shape: [1], featureType: .Double))
-        model.neuralNetwork = NeuralNetwork(loss: [MSE(name: "lossLayer",
-                                                       input: "output",
-                                                       target: "output_true")],
+        model.neuralNetwork = NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                                         input: "output",
+                                                         target: "output_true")],
                                             optimizer: SGD(learningRateDefault: 0.01,
                                                            learningRateMax: 0.3,
                                                            miniBatchSizeDefault: 5,
@@ -209,10 +209,63 @@ final class ModelTests: XCTestCase {
                                                  weights: [0.0],
                                                  bias: [0.0]))
 
+        let coreMLData = model.coreMLData
+
+        XCTAssert(coreMLData != nil, "Failed Convert to CoreML Data")
+        XCTAssert(coreMLData!.count > 0, "Failed Convert to CoreML Data (empty)")
+    }
+
+    func testCodable() {
+        let model = Model(version: 4,
+                          shortDescription: "Trivial linear classifier",
+                          author: "Jacopo Mangiavacchi",
+                          license: "MIT",
+                          userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
+            Input(name: "dense_input", shape: [1], featureType: .Double)
+            Output(name: "output", shape: [1], featureType: .Double)
+            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
+            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                       input: "output",
+                                       target: "output_true")],
+                          optimizer: SGD(learningRateDefault: 0.01,
+                                         learningRateMax: 0.3,
+                                         miniBatchSizeDefault: 5,
+                                         miniBatchSizeRange: [5],
+                                         momentumDefault: 0,
+                                         momentumMax: 1.0),
+                          epochDefault: 2,
+                          epochSet: [2],
+                          shuffle: true) {
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true,
+                             weights: [0.0],
+                             bias: [0.0])
+            }
+        }
+
         XCTAssert(model.inputs.count == 1, "Failed extracting Input")
         XCTAssert(model.outputs.count == 1, "Failed extracting Output")
         XCTAssert(model.trainingInputs.count == 2, "Failed extracting TrainingInput")
         XCTAssert(model.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork")
+
+        let encoder = JSONEncoder()
+        // encoder.outputFormatting = .prettyPrinted
+
+        let jsonData = try! encoder.encode(model)
+        // let jsonString = String(data: jsonData, encoding: .utf8)
+        // print(jsonString!)
+
+        let decodedModel = try! JSONDecoder().decode(Model.self, from: jsonData)
+
+        XCTAssert(decodedModel.inputs.count == 1, "Failed extracting Input after encoding/decoding")
+        XCTAssert(decodedModel.outputs.count == 1, "Failed extracting Output after encoding/decoding")
+        XCTAssert(decodedModel.trainingInputs.count == 2, "Failed extracting TrainingInput after encoding/decoding")
+        XCTAssert(decodedModel.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork after encoding/decoding")
     }
 
     static var allTests = [
@@ -224,5 +277,6 @@ final class ModelTests: XCTestCase {
         ("testModelExtraction", testModelExtraction),
         ("testModelAPI", testModelAPI),
         ("testRealModelExport", testRealModelExport),
+        ("testCodable", testCodable),
     ]
 }
