@@ -1,47 +1,3 @@
-public protocol Loss : Codable {
-    static var type: LossType { get }
-}
-
-public struct MSE : Loss {
-    public static let type = LossType.mse
-
-    public let name: String
-    public let input: String
-    public let target: String
-}
-
-public protocol Optimizer : Codable {
-    static var type: OptimizerType { get }
-}
-
-public struct SGD : Optimizer {
-    public static let type = OptimizerType.sgd
-
-    public let learningRateDefault: Double
-    public let learningRateMax: Double
-    public let miniBatchSizeDefault: UInt
-    public let miniBatchSizeRange: [UInt]
-    public let momentumDefault: Double
-    public let momentumMax: Double
-}
-
-public protocol Layer : Codable {
-    static var type: LayerType { get }
-}
-
-public struct InnerProduct : Layer, Codable {
-    public static let type = LayerType.innerProduct
-
-    public let name: String
-    public let input: [String]
-    public let output: [String]
-    public let inputChannels: UInt
-    public let outputChannels: UInt
-    public let updatable: Bool
-    public let weights: [Float]
-    public let bias: [Float]
-}
-
 @_functionBuilder
 public struct LayerBuilder {
     public static func buildBlock(_ children: Layer...) -> [Layer] {
@@ -114,5 +70,44 @@ public struct NeuralNetwork : Items {
 
     public mutating func addLayer(_ layer: Layer) {
         layers.append(layer)
+    }
+}
+
+extension NeuralNetwork : Codable {
+    private enum CodingKeys : CodingKey {
+        case losses, optimizer, epochDefault, epochSet, shuffle, layers
+    }
+
+    public init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.losses = try container.decode([AnyLoss].self, forKey: .losses).map { $0.base }
+        self.optimizer = try container.decode(AnyOptimizer.self, forKey: .optimizer).base
+        self.epochDefault = try container.decode(UInt?.self, forKey: .epochDefault)
+        self.epochSet = try container.decode([UInt]?.self, forKey: .epochSet)
+        self.shuffle = try container.decode(Bool?.self, forKey: .shuffle)
+        self.layers = try container.decode([AnyLayer].self, forKey: .layers).map { $0.base }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if let losses = losses {
+            try container.encode(losses.map(AnyLoss.init), forKey: .losses)
+        }
+        if let optimizer = optimizer {
+            try container.encode(AnyOptimizer(optimizer), forKey: .optimizer)
+        }
+        if let epochDefault = epochDefault {
+            try container.encode(epochDefault, forKey: .epochDefault)
+        }
+        if let epochSet = epochSet {
+            try container.encode(epochSet, forKey: .epochSet)
+        }
+        if let shuffle = shuffle {
+            try container.encode(shuffle, forKey: .shuffle)
+        }
+        try container.encode(layers.map(AnyLayer.init), forKey: .layers)
     }
 }
