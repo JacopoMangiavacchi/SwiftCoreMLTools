@@ -1,29 +1,58 @@
 public enum LayerType : String, Codable {
     case innerProduct
+    case linear, reLu, leakyReLu, thresholdedReLu, preLu, tanh, scaledTanh, sigmoid, sigmoidHard, elu, softsign, softplus, parametricSoftplus
 
     var metatype: Layer.Type {
         switch self {
+        // Real Layers
         case .innerProduct:
             return InnerProduct.self
+
+        //Activation Functions
+        case .linear:
+            return Linear.self
+
+        case .reLu:
+            return ReLu.self
+
+        case .leakyReLu:
+            return LeakyReLu.self
+
+        case .thresholdedReLu:
+            return ThresholdedReLu.self
+
+        case .preLu:
+            return PreLu.self
+
+        case .tanh:
+            return Tanh.self
+
+        case .scaledTanh:
+            return ScaledTanh.self
+
+        case .sigmoid:
+            return Sigmoid.self
+
+        case .sigmoidHard:
+            return SigmoidHard.self
+
+        case .elu:
+            return Elu.self
+
+        case .softsign:
+            return Softsign.self
+
+        case .softplus:
+            return Softplus.self
+
+        case .parametricSoftplus:
+            return ParametricSoftplus.self
         }
     }
 }
 
 public protocol Layer : Codable {
     static var type: LayerType { get }
-}
-
-public struct InnerProduct : Layer, Codable {
-    public static let type = LayerType.innerProduct
-
-    public let name: String
-    public let input: [String]
-    public let output: [String]
-    public let inputChannels: UInt
-    public let outputChannels: UInt
-    public let updatable: Bool
-    public let weights: [Float]
-    public let bias: [Float]
 }
 
 struct AnyLayer : Codable {
