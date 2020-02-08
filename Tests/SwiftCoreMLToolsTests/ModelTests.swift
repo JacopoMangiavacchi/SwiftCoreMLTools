@@ -51,11 +51,11 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
+                             weights: [0.0],
+                             bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
-                             weights: [0.0],
-                             bias: [0.0])
+                             updatable: true)
             }
         }
 
@@ -87,11 +87,11 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
+                             weights: [0.0],
+                             bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
-                             weights: [0.0],
-                             bias: [0.0])
+                             updatable: true)
             }
         }
 
@@ -123,11 +123,11 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
+                             weights: [0.0],
+                             bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
-                             weights: [0.0],
-                             bias: [0.0])
+                             updatable: true)
             }
         }
 
@@ -162,11 +162,11 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
+                             weights: [0.0],
+                             bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
-                             weights: [0.0],
-                             bias: [0.0])
+                             updatable: true)
             }
         }
 
@@ -203,16 +203,18 @@ final class ModelTests: XCTestCase {
         model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
                                                  input: ["dense_input"],
                                                  output: ["output"],
+                                                 weights: [0.0],
+                                                 bias: [0.0],
                                                  inputChannels: 1,
                                                  outputChannels: 1,
-                                                 updatable: true,
-                                                 weights: [0.0],
-                                                 bias: [0.0]))
+                                                 updatable: true))
 
         let coreMLData = model.coreMLData
 
         XCTAssert(coreMLData != nil, "Failed Convert to CoreML Data")
         XCTAssert(coreMLData!.count > 0, "Failed Convert to CoreML Data (empty)")
+
+        // TODO: Add more test validating the generated coreMLData
     }
 
     func testCodable() {
@@ -240,11 +242,11 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
+                             weights: [0.0],
+                             bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
-                             weights: [0.0],
-                             bias: [0.0])
+                             updatable: true)
             }
         }
 

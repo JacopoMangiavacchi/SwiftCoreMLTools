@@ -72,24 +72,142 @@ extension Model {
             }
 
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = (self.neuralNetwork.layers.filter{ $0 is InnerProduct } as! [InnerProduct]).map{ layer in 
-                    CoreML_Specification_NeuralNetworkLayer.with {
+                $0.layers = self.neuralNetwork.layers.map{ layer in 
+                    return CoreML_Specification_NeuralNetworkLayer.with {
                         $0.name = layer.name
                         $0.input = layer.input
                         $0.output = layer.output
-                        $0.isUpdatable = layer.updatable
-                        $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
-                            $0.inputChannels = UInt64(layer.inputChannels)
-                            $0.outputChannels = UInt64(layer.outputChannels)
-                            $0.hasBias_p = true
-                            $0.weights = CoreML_Specification_WeightParams.with {
-                                $0.floatValue = layer.weights
-                                $0.isUpdatable = layer.updatable
+
+                        switch layer {
+                        case let innerProduct as InnerProduct:
+                            $0.isUpdatable = innerProduct.updatable
+                            $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
+                                $0.inputChannels = UInt64(innerProduct.inputChannels)
+                                $0.outputChannels = UInt64(innerProduct.outputChannels)
+                                $0.hasBias_p = true
+                                $0.weights = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = innerProduct.weights
+                                    $0.isUpdatable = innerProduct.updatable
+                                }
+                                $0.bias = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = innerProduct.bias
+                                    $0.isUpdatable = innerProduct.updatable
+                                }
                             }
-                            $0.bias = CoreML_Specification_WeightParams.with {
-                                $0.floatValue = layer.bias
-                                $0.isUpdatable = layer.updatable
+
+                        case let convolution as Convolution:
+                            $0.isUpdatable = convolution.updatable
+                            $0.convolution = CoreML_Specification_ConvolutionLayerParams.with {
+                                $0.outputChannels = UInt64(convolution.outputChannels)
+                                $0.kernelChannels = UInt64(convolution.kernelChannels)
+                                $0.nGroups = UInt64(convolution.nGroups)
+                                $0.kernelSize = convolution.kernelSize.map{ UInt64($0) }
+                                $0.stride = convolution.stride.map{ UInt64($0) }
+                                $0.dilationFactor = convolution.stride.map{ UInt64($0) }
+  
+                                switch convolution.paddingType {
+                                case .valid(let borderAmounts):
+                                    $0.valid = CoreML_Specification_ValidPadding.with {
+                                        $0.paddingAmounts = CoreML_Specification_BorderAmounts.with {
+                                            $0.borderAmounts = borderAmounts.map{
+                                                var edge = CoreML_Specification_BorderAmounts.EdgeSizes()
+                                                edge.startEdgeSize = UInt64($0.startEdgeSize)
+                                                edge.endEdgeSize = UInt64($0.endEdgeSize)
+                                                return edge
+                                            }
+                                        }
+                                    }
+
+                                case .same(let mode):
+                                    $0.same = CoreML_Specification_SamePadding.with {
+                                        switch mode {
+                                        case .bottomRightHeavy:
+                                            $0.asymmetryMode = .bottomRightHeavy
+
+                                        case .topLeftHeavy:
+                                            $0.asymmetryMode = .topLeftHeavy
+                                        }
+                                    }
+                                }
+  
+                                $0.isDeconvolution = convolution.deconvolution
+                                $0.hasBias_p = true
+                                $0.weights = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = convolution.weights
+                                    $0.isUpdatable = convolution.updatable
+                                }
+                                $0.bias = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = convolution.bias
+                                    $0.isUpdatable = convolution.updatable
+                                }
+
+                                $0.outputShape = convolution.outputShape.map{ UInt64($0) }
                             }
+
+                        case let activation as Activation:
+                            $0.activation = CoreML_Specification_ActivationParams.with { activationParam in
+                                switch activation {
+                                case let linear as Linear:
+                                    activationParam.linear = CoreML_Specification_ActivationLinear.with {
+                                        $0.alpha = linear.alpha
+                                        $0.beta = linear.beta
+                                    }
+
+                                case _ as ReLu:
+                                    activationParam.reLu = CoreML_Specification_ActivationReLU()
+
+                                case let leakyReLu as LeakyReLu:
+                                    activationParam.leakyReLu = CoreML_Specification_ActivationLeakyReLU.with {
+                                        $0.alpha = leakyReLu.alpha
+                                    }
+
+                                case let thresholdedReLu as ThresholdedReLu:
+                                    activationParam.thresholdedReLu = CoreML_Specification_ActivationThresholdedReLU.with {
+                                        $0.alpha = thresholdedReLu.alpha
+                                    }
+
+                                case _ as PReLu:
+                                    activationParam.preLu = CoreML_Specification_ActivationPReLU()
+
+                                case _ as Tanh:
+                                    activationParam.tanh = CoreML_Specification_ActivationTanh()
+
+                                case let scaledTanh as ScaledTanh:
+                                    activationParam.scaledTanh = CoreML_Specification_ActivationScaledTanh.with {
+                                        $0.alpha = scaledTanh.alpha
+                                        $0.beta = scaledTanh.beta
+                                    }
+
+                                case _ as Sigmoid:
+                                    activationParam.sigmoid = CoreML_Specification_ActivationSigmoid()
+
+                                case let sigmoidHard as SigmoidHard:
+                                    activationParam.sigmoidHard = CoreML_Specification_ActivationSigmoidHard.with {
+                                        $0.alpha = sigmoidHard.alpha
+                                        $0.beta = sigmoidHard.beta
+                                    }
+
+                                case let elu as Elu:
+                                    activationParam.elu = CoreML_Specification_ActivationELU.with {
+                                        $0.alpha = elu.alpha
+                                    }
+
+                                case _ as Softsign:
+                                    activationParam.softsign = CoreML_Specification_ActivationSoftsign()
+
+                                case _ as Softplus:
+                                    activationParam.softplus = CoreML_Specification_ActivationSoftplus()
+
+                                case _ as ParametricSoftplus:
+                                    activationParam.parametricSoftplus = CoreML_Specification_ActivationParametricSoftplus()
+
+                                default:
+                                    break
+                                }
+                            }
+
+                        default:
+                            break
                         }
                     }
                 }
