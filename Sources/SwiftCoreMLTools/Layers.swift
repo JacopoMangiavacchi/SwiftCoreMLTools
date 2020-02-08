@@ -1,4 +1,4 @@
-public struct InnerProduct : Layer {
+public struct InnerProduct : TrainableLayer {
     public static let type = LayerType.innerProduct
     public let name: String
     public let input: [String]
@@ -65,7 +65,7 @@ extension PaddingType : Codable {
     }
 }
 
-public struct Convolution : Layer {
+public struct Convolution : TrainableLayer {
     public static let type = LayerType.convolution
     public let name: String
     public let input: [String]
@@ -85,16 +85,16 @@ public struct Convolution : Layer {
     public let updatable: Bool
 }
 
+// TODO
 public struct Pooling : Layer {
     public static let type = LayerType.pooling
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
-    public let bias: [Float]
 }
 
-public struct Embedding : Layer {
+// TODO
+public struct Embedding : TrainableLayer {
     public static let type = LayerType.embedding
     public let name: String
     public let input: [String]
@@ -103,7 +103,8 @@ public struct Embedding : Layer {
     public let bias: [Float]
 }
 
-public struct SimpleRecurrent : Layer {
+// TODO
+public struct SimpleRecurrent : TrainableLayer {
     public static let type = LayerType.simpleRecurrent
     public let name: String
     public let input: [String]
@@ -112,7 +113,8 @@ public struct SimpleRecurrent : Layer {
     public let bias: [Float]
 }
 
-public struct Gru : Layer {
+// TODO
+public struct Gru : TrainableLayer {
     public static let type = LayerType.gru
     public let name: String
     public let input: [String]
@@ -121,7 +123,8 @@ public struct Gru : Layer {
     public let bias: [Float]
 }
 
-public struct UniDirectionalLstm : Layer {
+// TODO
+public struct UniDirectionalLstm : TrainableLayer {
     public static let type = LayerType.uniDirectionalLstm
     public let name: String
     public let input: [String]
@@ -130,7 +133,8 @@ public struct UniDirectionalLstm : Layer {
     public let bias: [Float]
 }
 
-public struct BiDirectionalLstm : Layer {
+// TODO
+public struct BiDirectionalLstm : TrainableLayer {
     public static let type = LayerType.biDirectionalLstm
     public let name: String
     public let input: [String]

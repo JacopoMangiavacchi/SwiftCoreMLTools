@@ -61,6 +61,9 @@ public protocol BaseLayer : Codable {
 }
 
 public protocol Layer : BaseLayer {
+}
+
+public protocol TrainableLayer : Layer {
     var weights: [Float] { get }
     var bias: [Float] { get }
 }

@@ -72,25 +72,50 @@ extension Model {
             }
 
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = (self.neuralNetwork.layers.filter{ $0 is InnerProduct } as! [InnerProduct]).map{ layer in 
-                    CoreML_Specification_NeuralNetworkLayer.with {
-                        $0.name = layer.name
-                        $0.input = layer.input
-                        $0.output = layer.output
-                        $0.isUpdatable = layer.updatable
-                        $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
-                            $0.inputChannels = UInt64(layer.inputChannels)
-                            $0.outputChannels = UInt64(layer.outputChannels)
-                            $0.hasBias_p = true
-                            $0.weights = CoreML_Specification_WeightParams.with {
-                                $0.floatValue = layer.weights
-                                $0.isUpdatable = layer.updatable
-                            }
-                            $0.bias = CoreML_Specification_WeightParams.with {
-                                $0.floatValue = layer.bias
-                                $0.isUpdatable = layer.updatable
+                $0.layers = self.neuralNetwork.layers.compactMap{ layer in 
+                    switch layer {
+                    case let innerProduct as InnerProduct:
+                        return CoreML_Specification_NeuralNetworkLayer.with {
+                            $0.name = innerProduct.name
+                            $0.input = innerProduct.input
+                            $0.output = innerProduct.output
+                            $0.isUpdatable = innerProduct.updatable
+                            $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
+                                $0.inputChannels = UInt64(innerProduct.inputChannels)
+                                $0.outputChannels = UInt64(innerProduct.outputChannels)
+                                $0.hasBias_p = true
+                                $0.weights = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = innerProduct.weights
+                                    $0.isUpdatable = innerProduct.updatable
+                                }
+                                $0.bias = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = innerProduct.bias
+                                    $0.isUpdatable = innerProduct.updatable
+                                }
                             }
                         }
+
+                    case let activation as Activation:
+                        return CoreML_Specification_NeuralNetworkLayer.with {
+                            $0.name = activation.name
+                            $0.input = activation.input
+                            $0.output = activation.output
+                            $0.activation = CoreML_Specification_ActivationParams.with { activationParam in
+                                switch activation {
+                                case let linear as Linear:
+                                    activationParam.linear = CoreML_Specification_ActivationLinear.with {
+                                        $0.alpha = linear.alpha
+                                        $0.beta = linear.beta
+                                    }
+
+                                default:
+                                    break
+                                }
+                            }
+                        }
+
+                    default:
+                        return nil
                     }
                 }
 

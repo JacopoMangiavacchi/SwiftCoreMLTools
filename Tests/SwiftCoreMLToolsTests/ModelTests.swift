@@ -213,6 +213,8 @@ final class ModelTests: XCTestCase {
 
         XCTAssert(coreMLData != nil, "Failed Convert to CoreML Data")
         XCTAssert(coreMLData!.count > 0, "Failed Convert to CoreML Data (empty)")
+
+        // TODO: Add more test validating the generated coreMLData
     }
 
     func testCodable() {
