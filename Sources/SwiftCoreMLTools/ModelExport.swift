@@ -72,13 +72,14 @@ extension Model {
             }
 
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = self.neuralNetwork.layers.compactMap{ layer in 
-                    switch layer {
-                    case let innerProduct as InnerProduct:
-                        return CoreML_Specification_NeuralNetworkLayer.with {
-                            $0.name = innerProduct.name
-                            $0.input = innerProduct.input
-                            $0.output = innerProduct.output
+                $0.layers = self.neuralNetwork.layers.map{ layer in 
+                    return CoreML_Specification_NeuralNetworkLayer.with {
+                        $0.name = layer.name
+                        $0.input = layer.input
+                        $0.output = layer.output
+
+                        switch layer {
+                        case let innerProduct as InnerProduct:
                             $0.isUpdatable = innerProduct.updatable
                             $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
                                 $0.inputChannels = UInt64(innerProduct.inputChannels)
@@ -93,13 +94,8 @@ extension Model {
                                     $0.isUpdatable = innerProduct.updatable
                                 }
                             }
-                        }
 
-                    case let activation as Activation:
-                        return CoreML_Specification_NeuralNetworkLayer.with {
-                            $0.name = activation.name
-                            $0.input = activation.input
-                            $0.output = activation.output
+                        case let activation as Activation:
                             $0.activation = CoreML_Specification_ActivationParams.with { activationParam in
                                 switch activation {
                                 case let linear as Linear:
@@ -160,10 +156,10 @@ extension Model {
                                     break
                                 }
                             }
-                        }
 
-                    default:
-                        return nil
+                        default:
+                            break
+                        }
                     }
                 }
 
