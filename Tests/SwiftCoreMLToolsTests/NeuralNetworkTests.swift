@@ -7,10 +7,10 @@ final class NeuralNetworkTests: XCTestCase {
             InnerProduct(name: "layer1",
                          input: ["dense_input"],
                          output: ["output"],
-                         inputChannels: 1,
-                         outputChannels: 1,
                          weights: [0.0],
                          bias: [0.0],
+                         inputChannels: 1,
+                         outputChannels: 1,
                          updatable: true)
         }
 
@@ -22,18 +22,18 @@ final class NeuralNetworkTests: XCTestCase {
             InnerProduct(name: "layer1",
                          input: ["dense_input"],
                          output: ["output"],
-                         inputChannels: 1,
-                         outputChannels: 1,
                          weights: [0.0],
                          bias: [0.0],
+                         inputChannels: 1,
+                         outputChannels: 1,
                          updatable: true)
             InnerProduct(name: "layer2",
                          input: ["dense_input"],
                          output: ["output"],
-                         inputChannels: 1,
-                         outputChannels: 1,
                          weights: [0.0],
                          bias: [0.0],
+                         inputChannels: 1,
+                         outputChannels: 1,
                          updatable: true)
         }
 
@@ -56,18 +56,18 @@ final class NeuralNetworkTests: XCTestCase {
             InnerProduct(name: "layer1",
                          input: ["dense_input"],
                          output: ["output"],
-                         inputChannels: 1,
-                         outputChannels: 1,
                          weights: [0.0],
                          bias: [0.0],
+                         inputChannels: 1,
+                         outputChannels: 1,
                          updatable: true)
             InnerProduct(name: "layer2",
                          input: ["dense_input"],
                          output: ["output"],
-                         inputChannels: 1,
-                         outputChannels: 1,
                          weights: [0.0],
                          bias: [0.0],
+                         inputChannels: 1,
+                         outputChannels: 1,
                          updatable: true)
         }
 

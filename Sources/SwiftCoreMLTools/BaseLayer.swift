@@ -58,8 +58,6 @@ public protocol BaseLayer : Codable {
     var name: String { get }
     var input: [String] { get }
     var output: [String] { get }
-    var inputChannels: UInt { get }
-    var outputChannels: UInt { get }
 }
 
 public protocol Layer : BaseLayer {

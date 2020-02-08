@@ -5,6 +5,9 @@ public struct Linear : Activation {
     public let output: [String]
     public let inputChannels: UInt
     public let outputChannels: UInt
+
+    public let alpha: Float = 0.0
+    public let beta: Float = 0.0
 }
 
 public struct ReLu : Activation {
@@ -23,6 +26,8 @@ public struct LeakyReLu : Activation {
     public let output: [String]
     public let inputChannels: UInt
     public let outputChannels: UInt
+
+    public let alpha: Float = 0.0
 }
 
 public struct ThresholdedReLu : Activation {
@@ -59,6 +64,9 @@ public struct ScaledTanh : Activation {
     public let output: [String]
     public let inputChannels: UInt
     public let outputChannels: UInt
+
+    public let alpha: Float = 0.0
+    public let beta: Float = 0.0
 }
 
 public struct Sigmoid : Activation {
@@ -77,6 +85,9 @@ public struct SigmoidHard : Activation {
     public let output: [String]
     public let inputChannels: UInt
     public let outputChannels: UInt
+
+    public let alpha: Float = 0.0
+    public let beta: Float = 0.0
 }
 
 public struct Elu : Activation {
@@ -86,6 +97,8 @@ public struct Elu : Activation {
     public let output: [String]
     public let inputChannels: UInt
     public let outputChannels: UInt
+
+    public let alpha: Float = 0.0
 }
 
 public struct Softsign : Activation {

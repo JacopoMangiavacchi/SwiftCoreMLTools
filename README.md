@@ -23,10 +23,11 @@ CoreML support much more then Neural Network models but this experimental librar
 ## Export Swift for TensorFlow sample scenario
 
 ### Trivial Swift for TensorFlow model
+
 ```swift
 struct LinearRegression: Layer {
     var layer1 = Dense<Float>(inputSize: 1, outputSize: 1, activation: identity)
-    
+
     @differentiable
     func callAsFunction(_ input: Tensor<Float>) -> Tensor<Float> {
         return layer1(input)
@@ -38,6 +39,7 @@ var s4tfModel = LinearRegression()
 ```
 
 ### Export to CoreML using DSL approach
+
 ```swift
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
@@ -50,16 +52,17 @@ let coremlModel = Model(version: 4,
         InnerProduct(name: "dense_1",
                      input: ["dense_input"],
                      output: ["output"],
+                     weights: s4tfModel.layer1.weight[0],
+                     bias: s4tfModel.layer1.bias,
                      inputChannels: 1,
                      outputChannels: 1,
-                     updatable: false,
-                     weights: s4tfModel.layer1.weight[0],
-                     bias: s4tfModel.layer1.bias)
+                     updatable: false)
     }
 }
 ```
 
 ### Export a CoreML personalizable (re-trainable) model using DSL approach
+
 ```swift
 let coremlModel = Model(version: 4,
                         shortDescription: "Trivial linear classifier",
@@ -85,16 +88,17 @@ let coremlModel = Model(version: 4,
         InnerProduct(name: "dense_1",
                      input: ["dense_input"],
                      output: ["output"],
+                     weights: s4tfModel.layer1.weight[0],
+                     bias: s4tfModel.layer1.bias,
                      inputChannels: 1,
                      outputChannels: 1,
-                     updatable: true,
-                     weights: s4tfModel.layer1.weight[0],
-                     bias: s4tfModel.layer1.bias)
+                     updatable: true)
     }
 }
 ```
 
 ## Example code to export and save to a CoreML model data file
+
 ```swift
 let model = Model(...){ ... }
 let coreMLData = model.coreMLData
@@ -102,13 +106,14 @@ try! coreMLData.write(to: URL(fileURLWithPath: "model.mlmodel"))
 ```
 
 ## CoreML model creation with programmatic API
+
 ```swift
 var model = Model(version: 4,
                   shortDescription: "Trivial linear classifier",
                   author: "Jacopo Mangiavacchi",
                   license: "MIT",
                   userDefined: ["SwiftCoremltoolsVersion" : "0.1"])
-                    
+
 model.addInput(Input(name: "dense_input", shape: [1], featureType: .Double))
 model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
 model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
@@ -125,20 +130,21 @@ model.neuralNetwork = NeuralNetwork(losses: [MSE(name: "lossLayer",
                                     epochDefault: 2,
                                     epochSet: [2],
                                     shuffle: true)
-                                    
+
 model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
                                          input: ["dense_input"],
                                          output: ["output"],
+                                         weights: [0.0],
+                                         bias: [0.0],
                                          inputChannels: 1,
                                          outputChannels: 1,
-                                         updatable: true,
-                                         weights: [0.0],
-                                         bias: [0.0]))
+                                         updatable: true))
 ```
 
 ## JSON Format model persistence (Codable)
 
 ### Example code to Encode a CoreML model to JSON String
+
 ```swift
 let model = Model(...){...}
 
@@ -152,6 +158,7 @@ print(jsonModel!)
 ```
 
 ### Example code to Decode a JSON String to a CoreML model
+
 ```swift
 let jsonModel = "{...}"
 let jsonData = Data(jsonModel.utf8)
@@ -159,6 +166,7 @@ let model = try! JSONDecoder().decode(Model.self, from: jsonData)
 ```
 
 ### Example CoreML model in JSON format
+
 ```json
 {
   "author" : "Jacopo Mangiavacchi",
@@ -259,6 +267,7 @@ let model = try! JSONDecoder().decode(Model.self, from: jsonData)
 ```
 
 ## Verbouse alternative approach to explicitly use Swift version of the CoreML ProtoBuf data structure to export the model
+
 ```swift
 func convertToCoreML(weights: Float, bias: Float) -> CoreML_Specification_Model {
     return CoreML_Specification_Model.with {
