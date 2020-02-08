@@ -48,68 +48,11 @@ extension Model {
                         switch layer {
                         case let innerProduct as InnerProduct:
                             layerSpec.isUpdatable = innerProduct.updatable
-                            layerSpec.innerProduct = CoreML_Specification_InnerProductLayerParams.with { innerProductSpec in
-                                innerProductSpec.inputChannels = UInt64(innerProduct.inputChannels)
-                                innerProductSpec.outputChannels = UInt64(innerProduct.outputChannels)
-                                innerProductSpec.hasBias_p = true
-                                innerProductSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
-                                    weightsSpec.floatValue = innerProduct.weights
-                                    weightsSpec.isUpdatable = innerProduct.updatable
-                                }
-                                innerProductSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
-                                    biasSpec.floatValue = innerProduct.bias
-                                    biasSpec.isUpdatable = innerProduct.updatable
-                                }
-                            }
+                            layerSpec.innerProduct = convertToInnerProduct(innerProduct: innerProduct)
 
                         case let convolution as Convolution:
                             layerSpec.isUpdatable = convolution.updatable
-                            layerSpec.convolution = CoreML_Specification_ConvolutionLayerParams.with { convolutionSpec in
-                                convolutionSpec.outputChannels = UInt64(convolution.outputChannels)
-                                convolutionSpec.kernelChannels = UInt64(convolution.kernelChannels)
-                                convolutionSpec.nGroups = UInt64(convolution.nGroups)
-                                convolutionSpec.kernelSize = convolution.kernelSize.map{ UInt64($0) }
-                                convolutionSpec.stride = convolution.stride.map{ UInt64($0) }
-                                convolutionSpec.dilationFactor = convolution.stride.map{ UInt64($0) }
-  
-                                switch convolution.paddingType {
-                                case .valid(let borderAmounts):
-                                    convolutionSpec.valid = CoreML_Specification_ValidPadding.with { paddingSpec in
-                                        paddingSpec.paddingAmounts = CoreML_Specification_BorderAmounts.with {  borderSpec in
-                                            borderSpec.borderAmounts = borderAmounts.map{
-                                                var edge = CoreML_Specification_BorderAmounts.EdgeSizes()
-                                                edge.startEdgeSize = UInt64($0.startEdgeSize)
-                                                edge.endEdgeSize = UInt64($0.endEdgeSize)
-                                                return edge
-                                            }
-                                        }
-                                    }
-
-                                case .same(let mode):
-                                    convolutionSpec.same = CoreML_Specification_SamePadding.with { paddingSpec in
-                                        switch mode {
-                                        case .bottomRightHeavy:
-                                            paddingSpec.asymmetryMode = .bottomRightHeavy
-
-                                        case .topLeftHeavy:
-                                            paddingSpec.asymmetryMode = .topLeftHeavy
-                                        }
-                                    }
-                                }
-  
-                                convolutionSpec.isDeconvolution = convolution.deconvolution
-                                convolutionSpec.hasBias_p = true
-                                convolutionSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
-                                    weightsSpec.floatValue = convolution.weights
-                                    weightsSpec.isUpdatable = convolution.updatable
-                                }
-                                convolutionSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
-                                    biasSpec.floatValue = convolution.bias
-                                    biasSpec.isUpdatable = convolution.updatable
-                                }
-
-                                convolutionSpec.outputShape = convolution.outputShape.map{ UInt64($0) }
-                            }
+                            layerSpec.convolution = convertToConvolution(convolution: convolution)
 
                         case let activation as Activation:
                             layerSpec.activation = CoreML_Specification_ActivationParams.with { activationParam in
@@ -257,6 +200,71 @@ extension Model {
                     }
                 }
             }
+        }
+    }
+
+    func convertToInnerProduct(innerProduct: InnerProduct) -> CoreML_Specification_InnerProductLayerParams {
+        return CoreML_Specification_InnerProductLayerParams.with { innerProductSpec in
+            innerProductSpec.inputChannels = UInt64(innerProduct.inputChannels)
+            innerProductSpec.outputChannels = UInt64(innerProduct.outputChannels)
+            innerProductSpec.hasBias_p = true
+            innerProductSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
+                weightsSpec.floatValue = innerProduct.weights
+                weightsSpec.isUpdatable = innerProduct.updatable
+            }
+            innerProductSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
+                biasSpec.floatValue = innerProduct.bias
+                biasSpec.isUpdatable = innerProduct.updatable
+            }
+        }
+    }
+
+    func convertToConvolution(convolution: Convolution) -> CoreML_Specification_ConvolutionLayerParams {
+        return CoreML_Specification_ConvolutionLayerParams.with { convolutionSpec in
+            convolutionSpec.outputChannels = UInt64(convolution.outputChannels)
+            convolutionSpec.kernelChannels = UInt64(convolution.kernelChannels)
+            convolutionSpec.nGroups = UInt64(convolution.nGroups)
+            convolutionSpec.kernelSize = convolution.kernelSize.map{ UInt64($0) }
+            convolutionSpec.stride = convolution.stride.map{ UInt64($0) }
+            convolutionSpec.dilationFactor = convolution.stride.map{ UInt64($0) }
+
+            switch convolution.paddingType {
+            case .valid(let borderAmounts):
+                convolutionSpec.valid = CoreML_Specification_ValidPadding.with { paddingSpec in
+                    paddingSpec.paddingAmounts = CoreML_Specification_BorderAmounts.with {  borderSpec in
+                        borderSpec.borderAmounts = borderAmounts.map{
+                            var edge = CoreML_Specification_BorderAmounts.EdgeSizes()
+                            edge.startEdgeSize = UInt64($0.startEdgeSize)
+                            edge.endEdgeSize = UInt64($0.endEdgeSize)
+                            return edge
+                        }
+                    }
+                }
+
+            case .same(let mode):
+                convolutionSpec.same = CoreML_Specification_SamePadding.with { paddingSpec in
+                    switch mode {
+                    case .bottomRightHeavy:
+                        paddingSpec.asymmetryMode = .bottomRightHeavy
+
+                    case .topLeftHeavy:
+                        paddingSpec.asymmetryMode = .topLeftHeavy
+                    }
+                }
+            }
+
+            convolutionSpec.isDeconvolution = convolution.deconvolution
+            convolutionSpec.hasBias_p = true
+            convolutionSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
+                weightsSpec.floatValue = convolution.weights
+                weightsSpec.isUpdatable = convolution.updatable
+            }
+            convolutionSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
+                biasSpec.floatValue = convolution.bias
+                biasSpec.isUpdatable = convolution.updatable
+            }
+
+            convolutionSpec.outputShape = convolution.outputShape.map{ UInt64($0) }
         }
     }
 }
