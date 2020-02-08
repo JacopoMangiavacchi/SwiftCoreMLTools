@@ -11,11 +11,43 @@ public struct InnerProduct : Layer {
     public let updatable: Bool
 }
 
-public enum PaddingType : String, Codable {
+public enum PaddingType {
 //   enum OneOf_ConvolutionPaddingType: Equatable {
 //     case valid(CoreML_Specification_ValidPadding)
 //     case same(CoreML_Specification_SamePadding)
-    case valid, same
+    case valid(value: Float)
+    case same(value: Int)
+}
+
+extension PaddingType : Codable {
+    enum CodingKeys: String, CodingKey {
+        case valid, same
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(Float.self, forKey: .valid) {
+            self = .valid(value: value)
+        }
+        else if let value = try container.decodeIfPresent(Int.self, forKey: .same) {
+            self = .same(value: value)
+        }
+        else {
+            //Default
+            self = .valid(value: 1)
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case .valid(let value):
+            try container.encode(value, forKey: .valid)
+        case .same(let value):
+            try container.encode(value, forKey: .same)
+        }
+    }
 }
 
 public struct Convolution : Layer {
