@@ -16,18 +16,13 @@ public struct EdgeSizes : Codable {
     public let endEdgeSize: UInt
 }
 
-public struct PaddingAmount : Codable {
-    public let borderAmounts: [EdgeSizes]
-    public let offset: [UInt]
-}
-
 public enum PaddingMode : String, Codable {
     case bottomRightHeavy
     case topLeftHeavy
 }
 
 public enum PaddingType {
-    case valid(amount: PaddingAmount)
+    case valid(borderAmounts: [EdgeSizes])
     case same(mode: PaddingMode)
 }
 
@@ -42,8 +37,8 @@ extension PaddingType : Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let value = try container.decodeIfPresent(PaddingAmount.self, forKey: .valid) {
-            self = .valid(amount: value)
+        if let value = try container.decodeIfPresent([EdgeSizes].self, forKey: .valid) {
+            self = .valid(borderAmounts: value)
         }
         else if let value = try container.decodeIfPresent(PaddingMode.self, forKey: .same) {
             self = .same(mode: value)
@@ -57,8 +52,8 @@ extension PaddingType : Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case .valid(let amount):
-            try container.encode(amount, forKey: .valid)
+        case .valid(let borderAmounts):
+            try container.encode(borderAmounts, forKey: .valid)
         case .same(let mode):
             try container.encode(mode, forKey: .same)
         }

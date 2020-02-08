@@ -99,7 +99,49 @@ extension Model {
                             $0.isUpdatable = convolution.updatable
                             $0.convolution = CoreML_Specification_ConvolutionLayerParams.with {
                                 $0.outputChannels = UInt64(convolution.outputChannels)
-                                // TODO: Convolution
+                                $0.kernelChannels = UInt64(convolution.kernelChannels)
+                                $0.nGroups = UInt64(convolution.nGroups)
+                                $0.kernelSize = convolution.kernelSize.map{ UInt64($0) }
+                                $0.stride = convolution.stride.map{ UInt64($0) }
+                                $0.dilationFactor = convolution.stride.map{ UInt64($0) }
+  
+                                switch convolution.paddingType {
+                                case .valid(let borderAmounts):
+                                    $0.valid = CoreML_Specification_ValidPadding.with {
+                                        $0.paddingAmounts = CoreML_Specification_BorderAmounts.with {
+                                            $0.borderAmounts = borderAmounts.map{
+                                                var edge = CoreML_Specification_BorderAmounts.EdgeSizes()
+                                                edge.startEdgeSize = UInt64($0.startEdgeSize)
+                                                edge.endEdgeSize = UInt64($0.endEdgeSize)
+                                                return edge
+                                            }
+                                        }
+                                    }
+
+                                case .same(let mode):
+                                    $0.same = CoreML_Specification_SamePadding.with {
+                                        switch mode {
+                                        case .bottomRightHeavy:
+                                            $0.asymmetryMode = .bottomRightHeavy
+
+                                        case .topLeftHeavy:
+                                            $0.asymmetryMode = .topLeftHeavy
+                                        }
+                                    }
+                                }
+  
+                                $0.isDeconvolution = convolution.deconvolution
+                                $0.hasBias_p = true
+                                $0.weights = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = convolution.weights
+                                    $0.isUpdatable = convolution.updatable
+                                }
+                                $0.bias = CoreML_Specification_WeightParams.with {
+                                    $0.floatValue = convolution.bias
+                                    $0.isUpdatable = convolution.updatable
+                                }
+
+                                $0.outputShape = convolution.outputShape.map{ UInt64($0) }
                             }
 
                         case let activation as Activation:
