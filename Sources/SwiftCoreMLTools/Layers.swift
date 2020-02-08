@@ -11,12 +11,28 @@ public struct InnerProduct : Layer {
     public let updatable: Bool
 }
 
+public struct EdgeSizes : Codable {
+    public let startEdgeSize: UInt
+    public let endEdgeSize: UInt
+}
+
+public struct PaddingAmount : Codable {
+    public let borderAmounts: [EdgeSizes]
+    public let offset: [UInt]
+}
+
+public enum PaddingMode : String, Codable {
+    case bottomRightHeavy
+    case topLeftHeavy
+}
+
 public enum PaddingType {
-//   enum OneOf_ConvolutionPaddingType: Equatable {
-//     case valid(CoreML_Specification_ValidPadding)
-//     case same(CoreML_Specification_SamePadding)
-    case valid(value: Float)
-    case same(value: Int)
+    case valid(amount: PaddingAmount)
+    case same(mode: PaddingMode)
+}
+
+public enum PaddingCodableError : Error {
+    case errorDecoding
 }
 
 extension PaddingType : Codable {
@@ -26,15 +42,14 @@ extension PaddingType : Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let value = try container.decodeIfPresent(Float.self, forKey: .valid) {
-            self = .valid(value: value)
+        if let value = try container.decodeIfPresent(PaddingAmount.self, forKey: .valid) {
+            self = .valid(amount: value)
         }
-        else if let value = try container.decodeIfPresent(Int.self, forKey: .same) {
-            self = .same(value: value)
+        else if let value = try container.decodeIfPresent(PaddingMode.self, forKey: .same) {
+            self = .same(mode: value)
         }
         else {
-            //Default
-            self = .valid(value: 1)
+            throw PaddingCodableError.errorDecoding
         }
     }
 
@@ -42,10 +57,10 @@ extension PaddingType : Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case .valid(let value):
-            try container.encode(value, forKey: .valid)
-        case .same(let value):
-            try container.encode(value, forKey: .same)
+        case .valid(let amount):
+            try container.encode(amount, forKey: .valid)
+        case .same(let mode):
+            try container.encode(mode, forKey: .same)
         }
     }
 }
