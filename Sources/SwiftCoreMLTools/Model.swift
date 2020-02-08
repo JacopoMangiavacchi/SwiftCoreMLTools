@@ -5,19 +5,25 @@ public enum FeatureType : String, Codable {
 public protocol Items : Codable {
 }
 
-public struct Input : Items {
+public protocol InputOutputItems : Items {
+    var name: String { get }
+    var shape: [UInt] { get }
+    var featureType: FeatureType { get }
+}
+
+public struct Input : InputOutputItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
 }
 
-public struct Output : Items {
+public struct Output : InputOutputItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
 }
 
-public struct TrainingInput : Items {
+public struct TrainingInput : InputOutputItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType

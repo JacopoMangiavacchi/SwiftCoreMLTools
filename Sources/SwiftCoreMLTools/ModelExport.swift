@@ -23,42 +23,9 @@ extension Model {
             model.specificationVersion = Int32(self.version)
 
             model.description_p = CoreML_Specification_ModelDescription.with {
-                $0.input = self.inputs.values.map{ input in 
-                    CoreML_Specification_FeatureDescription.with {
-                        $0.name = input.name
-                        $0.type = CoreML_Specification_FeatureType.with {
-                            $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                                $0.shape = input.shape.map{ Int64($0) }
-                                $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                            }
-                        }
-                    }
-                }
-
-                $0.output = self.outputs.values.map{ output in 
-                    CoreML_Specification_FeatureDescription.with {
-                        $0.name = output.name
-                        $0.type = CoreML_Specification_FeatureType.with {
-                            $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                                $0.shape = output.shape.map{ Int64($0) }
-                                $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                            }
-                        }
-                    }
-                }
-
-                $0.trainingInput = self.trainingInputs.values.map{ trainingInput in 
-                    CoreML_Specification_FeatureDescription.with {
-                        $0.name = trainingInput.name
-                        $0.type = CoreML_Specification_FeatureType.with {
-                            $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                                $0.shape = trainingInput.shape.map{ Int64($0) }
-                                $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
-                            }
-                        }
-                    }
-                }
-
+                $0.input = convertToFeatureDescriptionList(dictionary: self.inputs)
+                $0.output = convertToFeatureDescriptionList(dictionary: self.outputs)
+                $0.trainingInput = convertToFeatureDescriptionList(dictionary: self.trainingInputs)
                 $0.metadata = CoreML_Specification_Metadata.with {
                     $0.shortDescription = self.shortDescription ?? ""
                     $0.author = self.author ?? ""
@@ -273,6 +240,20 @@ extension Model {
                         $0.shuffle = CoreML_Specification_BoolParameter.with {
                             $0.defaultValue = shuffle
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    func convertToFeatureDescriptionList(dictionary: [String : InputOutputItems]) -> [CoreML_Specification_FeatureDescription] {
+        return dictionary.values.map{ input in 
+            CoreML_Specification_FeatureDescription.with {
+                $0.name = input.name
+                $0.type = CoreML_Specification_FeatureType.with {
+                    $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
+                        $0.shape = input.shape.map{ Int64($0) }
+                        $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
                     }
                 }
             }
