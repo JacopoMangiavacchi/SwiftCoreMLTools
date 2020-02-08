@@ -70,61 +70,7 @@ extension Model {
                    let epochDefault = self.neuralNetwork.epochDefault,
                    let epochSet = self.neuralNetwork.epochSet,
                    let shuffle = self.neuralNetwork.shuffle {
-                    neuralNetworkSpec.updateParams = CoreML_Specification_NetworkUpdateParameters.with { updateSpec in
-                        updateSpec.lossLayers = losses.map{ loss in 
-                            CoreML_Specification_LossLayer.with { lossSpec in
-                                switch loss {
-                                case let mse as MSE:
-                                    lossSpec.name = mse.name
-                                    lossSpec.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with { mseSpec in
-                                        mseSpec.input = mse.input
-                                        mseSpec.target = mse.target
-                                    }
-                                default:
-                                    break
-                                }
-                            }
-                        }
-                                                
-                        updateSpec.optimizer = CoreML_Specification_Optimizer.with { optimizerSpec in
-                            switch optimizer {
-                            case let sgd as SGD:
-                                optimizerSpec.sgdOptimizer = CoreML_Specification_SGDOptimizer.with { sgdSpec in
-                                    sgdSpec.learningRate = CoreML_Specification_DoubleParameter.with { learningRateSpec in
-                                        learningRateSpec.defaultValue = sgd.learningRateDefault
-                                        learningRateSpec.range = CoreML_Specification_DoubleRange.with {
-                                            $0.maxValue = sgd.learningRateMax
-                                        }
-                                    }
-                                    sgdSpec.miniBatchSize = CoreML_Specification_Int64Parameter.with { miniBatchSizeSpec in
-                                        miniBatchSizeSpec.defaultValue = Int64(sgd.miniBatchSizeDefault)
-                                        miniBatchSizeSpec.set = CoreML_Specification_Int64Set.with {
-                                            $0.values = sgd.miniBatchSizeRange.map{ Int64($0) }
-                                        }
-                                    }
-                                    sgdSpec.momentum = CoreML_Specification_DoubleParameter.with { momentumSpec in
-                                        momentumSpec.defaultValue = sgd.momentumDefault
-                                        momentumSpec.range = CoreML_Specification_DoubleRange.with {
-                                            $0.maxValue = sgd.momentumMax
-                                        }
-                                    }
-                                }
-                            default:
-                                break
-                            }
-                        }
-                        
-                        updateSpec.epochs = CoreML_Specification_Int64Parameter.with { epochsSpec in
-                            epochsSpec.defaultValue = Int64(epochDefault)
-                            epochsSpec.set = CoreML_Specification_Int64Set.with {
-                                $0.values = epochSet.map{ Int64($0) }
-                            }
-                        }
-                        
-                        updateSpec.shuffle = CoreML_Specification_BoolParameter.with {
-                            $0.defaultValue = shuffle
-                        }
-                    }
+                    neuralNetworkSpec.updateParams = convertToUpdateParam(losses: losses, optimizer: optimizer, epochDefault: epochDefault, epochSet: epochSet, shuffle: shuffle)
                 }
             }
         }
@@ -268,6 +214,66 @@ extension Model {
 
             default:
                 break
+            }
+        }
+    }
+
+    func convertToUpdateParam(losses: [Loss], optimizer: Optimizer, epochDefault: UInt, epochSet: [UInt], shuffle: Bool) -> CoreML_Specification_NetworkUpdateParameters {
+        return CoreML_Specification_NetworkUpdateParameters.with { updateSpec in
+            updateSpec.lossLayers = losses.map{ loss in 
+                CoreML_Specification_LossLayer.with { lossSpec in
+                    switch loss {
+                    case let mse as MSE:
+                        lossSpec.name = mse.name
+                        lossSpec.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with { mseSpec in
+                            mseSpec.input = mse.input
+                            mseSpec.target = mse.target
+                        }
+
+                    default:
+                        break
+                    }
+                }
+            }
+                                    
+            updateSpec.optimizer = CoreML_Specification_Optimizer.with { optimizerSpec in
+                switch optimizer {
+                case let sgd as SGD:
+                    optimizerSpec.sgdOptimizer = CoreML_Specification_SGDOptimizer.with { sgdSpec in
+                        sgdSpec.learningRate = CoreML_Specification_DoubleParameter.with { learningRateSpec in
+                            learningRateSpec.defaultValue = sgd.learningRateDefault
+                            learningRateSpec.range = CoreML_Specification_DoubleRange.with {
+                                $0.maxValue = sgd.learningRateMax
+                            }
+                        }
+                        sgdSpec.miniBatchSize = CoreML_Specification_Int64Parameter.with { miniBatchSizeSpec in
+                            miniBatchSizeSpec.defaultValue = Int64(sgd.miniBatchSizeDefault)
+                            miniBatchSizeSpec.set = CoreML_Specification_Int64Set.with {
+                                $0.values = sgd.miniBatchSizeRange.map{ Int64($0) }
+                            }
+                        }
+                        sgdSpec.momentum = CoreML_Specification_DoubleParameter.with { momentumSpec in
+                            momentumSpec.defaultValue = sgd.momentumDefault
+                            momentumSpec.range = CoreML_Specification_DoubleRange.with {
+                                $0.maxValue = sgd.momentumMax
+                            }
+                        }
+                    }
+                    
+                default:
+                    break
+                }
+            }
+            
+            updateSpec.epochs = CoreML_Specification_Int64Parameter.with { epochsSpec in
+                epochsSpec.defaultValue = Int64(epochDefault)
+                epochsSpec.set = CoreML_Specification_Int64Set.with {
+                    $0.values = epochSet.map{ Int64($0) }
+                }
+            }
+            
+            updateSpec.shuffle = CoreML_Specification_BoolParameter.with {
+                $0.defaultValue = shuffle
             }
         }
     }
