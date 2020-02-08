@@ -95,6 +95,13 @@ extension Model {
                                 }
                             }
 
+                        case let convolution as Convolution:
+                            $0.isUpdatable = convolution.updatable
+                            $0.convolution = CoreML_Specification_ConvolutionLayerParams.with {
+                                $0.outputChannels = UInt64(convolution.outputChannels)
+                                // TODO: Convolution
+                            }
+
                         case let activation as Activation:
                             $0.activation = CoreML_Specification_ActivationParams.with { activationParam in
                                 switch activation {
