@@ -22,15 +22,15 @@ extension Model {
         return CoreML_Specification_Model.with { model in 
             model.specificationVersion = Int32(self.version)
 
-            model.description_p = CoreML_Specification_ModelDescription.with {
-                $0.input = convertToFeatureDescriptionList(dictionary: self.inputs)
-                $0.output = convertToFeatureDescriptionList(dictionary: self.outputs)
-                $0.trainingInput = convertToFeatureDescriptionList(dictionary: self.trainingInputs)
-                $0.metadata = CoreML_Specification_Metadata.with {
-                    $0.shortDescription = self.shortDescription ?? ""
-                    $0.author = self.author ?? ""
-                    $0.license = self.license ?? ""
-                    $0.userDefined = self.userDefined ?? [:]
+            model.description_p = CoreML_Specification_ModelDescription.with { descriptionSpec in
+                descriptionSpec.input = convertToFeatureDescriptionList(dictionary: self.inputs)
+                descriptionSpec.output = convertToFeatureDescriptionList(dictionary: self.outputs)
+                descriptionSpec.trainingInput = convertToFeatureDescriptionList(dictionary: self.trainingInputs)
+                descriptionSpec.metadata = CoreML_Specification_Metadata.with { metadataSpec in
+                    metadataSpec.shortDescription = self.shortDescription ?? ""
+                    metadataSpec.author = self.author ?? ""
+                    metadataSpec.license = self.license ?? ""
+                    metadataSpec.userDefined = self.userDefined ?? [:]
                 }
             }
 
@@ -38,45 +38,45 @@ extension Model {
                 model.isUpdatable = true
             }
 
-            model.neuralNetwork = CoreML_Specification_NeuralNetwork.with {
-                $0.layers = self.neuralNetwork.layers.map{ layer in 
-                    return CoreML_Specification_NeuralNetworkLayer.with {
-                        $0.name = layer.name
-                        $0.input = layer.input
-                        $0.output = layer.output
+            model.neuralNetwork = CoreML_Specification_NeuralNetwork.with { neuralNetworkSpec in
+                neuralNetworkSpec.layers = self.neuralNetwork.layers.map{ layer in 
+                    return CoreML_Specification_NeuralNetworkLayer.with { layerSpec in 
+                        layerSpec.name = layer.name
+                        layerSpec.input = layer.input
+                        layerSpec.output = layer.output
 
                         switch layer {
                         case let innerProduct as InnerProduct:
-                            $0.isUpdatable = innerProduct.updatable
-                            $0.innerProduct = CoreML_Specification_InnerProductLayerParams.with {
-                                $0.inputChannels = UInt64(innerProduct.inputChannels)
-                                $0.outputChannels = UInt64(innerProduct.outputChannels)
-                                $0.hasBias_p = true
-                                $0.weights = CoreML_Specification_WeightParams.with {
-                                    $0.floatValue = innerProduct.weights
-                                    $0.isUpdatable = innerProduct.updatable
+                            layerSpec.isUpdatable = innerProduct.updatable
+                            layerSpec.innerProduct = CoreML_Specification_InnerProductLayerParams.with { innerProductSpec in
+                                innerProductSpec.inputChannels = UInt64(innerProduct.inputChannels)
+                                innerProductSpec.outputChannels = UInt64(innerProduct.outputChannels)
+                                innerProductSpec.hasBias_p = true
+                                innerProductSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
+                                    weightsSpec.floatValue = innerProduct.weights
+                                    weightsSpec.isUpdatable = innerProduct.updatable
                                 }
-                                $0.bias = CoreML_Specification_WeightParams.with {
-                                    $0.floatValue = innerProduct.bias
-                                    $0.isUpdatable = innerProduct.updatable
+                                innerProductSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
+                                    biasSpec.floatValue = innerProduct.bias
+                                    biasSpec.isUpdatable = innerProduct.updatable
                                 }
                             }
 
                         case let convolution as Convolution:
-                            $0.isUpdatable = convolution.updatable
-                            $0.convolution = CoreML_Specification_ConvolutionLayerParams.with {
-                                $0.outputChannels = UInt64(convolution.outputChannels)
-                                $0.kernelChannels = UInt64(convolution.kernelChannels)
-                                $0.nGroups = UInt64(convolution.nGroups)
-                                $0.kernelSize = convolution.kernelSize.map{ UInt64($0) }
-                                $0.stride = convolution.stride.map{ UInt64($0) }
-                                $0.dilationFactor = convolution.stride.map{ UInt64($0) }
+                            layerSpec.isUpdatable = convolution.updatable
+                            layerSpec.convolution = CoreML_Specification_ConvolutionLayerParams.with { convolutionSpec in
+                                convolutionSpec.outputChannels = UInt64(convolution.outputChannels)
+                                convolutionSpec.kernelChannels = UInt64(convolution.kernelChannels)
+                                convolutionSpec.nGroups = UInt64(convolution.nGroups)
+                                convolutionSpec.kernelSize = convolution.kernelSize.map{ UInt64($0) }
+                                convolutionSpec.stride = convolution.stride.map{ UInt64($0) }
+                                convolutionSpec.dilationFactor = convolution.stride.map{ UInt64($0) }
   
                                 switch convolution.paddingType {
                                 case .valid(let borderAmounts):
-                                    $0.valid = CoreML_Specification_ValidPadding.with {
-                                        $0.paddingAmounts = CoreML_Specification_BorderAmounts.with {
-                                            $0.borderAmounts = borderAmounts.map{
+                                    convolutionSpec.valid = CoreML_Specification_ValidPadding.with { paddingSpec in
+                                        paddingSpec.paddingAmounts = CoreML_Specification_BorderAmounts.with {  borderSpec in
+                                            borderSpec.borderAmounts = borderAmounts.map{
                                                 var edge = CoreML_Specification_BorderAmounts.EdgeSizes()
                                                 edge.startEdgeSize = UInt64($0.startEdgeSize)
                                                 edge.endEdgeSize = UInt64($0.endEdgeSize)
@@ -86,33 +86,33 @@ extension Model {
                                     }
 
                                 case .same(let mode):
-                                    $0.same = CoreML_Specification_SamePadding.with {
+                                    convolutionSpec.same = CoreML_Specification_SamePadding.with { paddingSpec in
                                         switch mode {
                                         case .bottomRightHeavy:
-                                            $0.asymmetryMode = .bottomRightHeavy
+                                            paddingSpec.asymmetryMode = .bottomRightHeavy
 
                                         case .topLeftHeavy:
-                                            $0.asymmetryMode = .topLeftHeavy
+                                            paddingSpec.asymmetryMode = .topLeftHeavy
                                         }
                                     }
                                 }
   
-                                $0.isDeconvolution = convolution.deconvolution
-                                $0.hasBias_p = true
-                                $0.weights = CoreML_Specification_WeightParams.with {
-                                    $0.floatValue = convolution.weights
-                                    $0.isUpdatable = convolution.updatable
+                                convolutionSpec.isDeconvolution = convolution.deconvolution
+                                convolutionSpec.hasBias_p = true
+                                convolutionSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
+                                    weightsSpec.floatValue = convolution.weights
+                                    weightsSpec.isUpdatable = convolution.updatable
                                 }
-                                $0.bias = CoreML_Specification_WeightParams.with {
-                                    $0.floatValue = convolution.bias
-                                    $0.isUpdatable = convolution.updatable
+                                convolutionSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
+                                    biasSpec.floatValue = convolution.bias
+                                    biasSpec.isUpdatable = convolution.updatable
                                 }
 
-                                $0.outputShape = convolution.outputShape.map{ UInt64($0) }
+                                convolutionSpec.outputShape = convolution.outputShape.map{ UInt64($0) }
                             }
 
                         case let activation as Activation:
-                            $0.activation = CoreML_Specification_ActivationParams.with { activationParam in
+                            layerSpec.activation = CoreML_Specification_ActivationParams.with { activationParam in
                                 switch activation {
                                 case let linear as Linear:
                                     activationParam.linear = CoreML_Specification_ActivationLinear.with {
@@ -186,15 +186,15 @@ extension Model {
                    let epochDefault = self.neuralNetwork.epochDefault,
                    let epochSet = self.neuralNetwork.epochSet,
                    let shuffle = self.neuralNetwork.shuffle {
-                    $0.updateParams = CoreML_Specification_NetworkUpdateParameters.with {
-                        $0.lossLayers = losses.map{ loss in 
-                            CoreML_Specification_LossLayer.with {
+                    neuralNetworkSpec.updateParams = CoreML_Specification_NetworkUpdateParameters.with { updateSpec in
+                        updateSpec.lossLayers = losses.map{ loss in 
+                            CoreML_Specification_LossLayer.with { lossSpec in
                                 switch loss {
                                 case let mse as MSE:
-                                    $0.name = mse.name
-                                    $0.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with {
-                                        $0.input = mse.input
-                                        $0.target = mse.target
+                                    lossSpec.name = mse.name
+                                    lossSpec.meanSquaredErrorLossLayer = CoreML_Specification_MeanSquaredErrorLossLayer.with { mseSpec in
+                                        mseSpec.input = mse.input
+                                        mseSpec.target = mse.target
                                     }
                                 default:
                                     break
@@ -202,25 +202,25 @@ extension Model {
                             }
                         }
                                                 
-                        $0.optimizer = CoreML_Specification_Optimizer.with {
+                        updateSpec.optimizer = CoreML_Specification_Optimizer.with { optimizerSpec in
                             switch optimizer {
                             case let sgd as SGD:
-                                $0.sgdOptimizer = CoreML_Specification_SGDOptimizer.with {
-                                    $0.learningRate = CoreML_Specification_DoubleParameter.with {
-                                        $0.defaultValue = sgd.learningRateDefault
-                                        $0.range = CoreML_Specification_DoubleRange.with {
+                                optimizerSpec.sgdOptimizer = CoreML_Specification_SGDOptimizer.with { sgdSpec in
+                                    sgdSpec.learningRate = CoreML_Specification_DoubleParameter.with { learningRateSpec in
+                                        learningRateSpec.defaultValue = sgd.learningRateDefault
+                                        learningRateSpec.range = CoreML_Specification_DoubleRange.with {
                                             $0.maxValue = sgd.learningRateMax
                                         }
                                     }
-                                    $0.miniBatchSize = CoreML_Specification_Int64Parameter.with {
-                                        $0.defaultValue = Int64(sgd.miniBatchSizeDefault)
-                                        $0.set = CoreML_Specification_Int64Set.with {
+                                    sgdSpec.miniBatchSize = CoreML_Specification_Int64Parameter.with { miniBatchSizeSpec in
+                                        miniBatchSizeSpec.defaultValue = Int64(sgd.miniBatchSizeDefault)
+                                        miniBatchSizeSpec.set = CoreML_Specification_Int64Set.with {
                                             $0.values = sgd.miniBatchSizeRange.map{ Int64($0) }
                                         }
                                     }
-                                    $0.momentum = CoreML_Specification_DoubleParameter.with {
-                                        $0.defaultValue = sgd.momentumDefault
-                                        $0.range = CoreML_Specification_DoubleRange.with {
+                                    sgdSpec.momentum = CoreML_Specification_DoubleParameter.with { momentumSpec in
+                                        momentumSpec.defaultValue = sgd.momentumDefault
+                                        momentumSpec.range = CoreML_Specification_DoubleRange.with {
                                             $0.maxValue = sgd.momentumMax
                                         }
                                     }
@@ -230,14 +230,14 @@ extension Model {
                             }
                         }
                         
-                        $0.epochs = CoreML_Specification_Int64Parameter.with {
-                            $0.defaultValue = Int64(epochDefault)
-                            $0.set = CoreML_Specification_Int64Set.with {
+                        updateSpec.epochs = CoreML_Specification_Int64Parameter.with { epochsSpec in
+                            epochsSpec.defaultValue = Int64(epochDefault)
+                            epochsSpec.set = CoreML_Specification_Int64Set.with {
                                 $0.values = epochSet.map{ Int64($0) }
                             }
                         }
                         
-                        $0.shuffle = CoreML_Specification_BoolParameter.with {
+                        updateSpec.shuffle = CoreML_Specification_BoolParameter.with {
                             $0.defaultValue = shuffle
                         }
                     }
@@ -248,12 +248,12 @@ extension Model {
 
     func convertToFeatureDescriptionList(dictionary: [String : InputOutputItems]) -> [CoreML_Specification_FeatureDescription] {
         return dictionary.values.map{ input in 
-            CoreML_Specification_FeatureDescription.with {
-                $0.name = input.name
-                $0.type = CoreML_Specification_FeatureType.with {
-                    $0.multiArrayType = CoreML_Specification_ArrayFeatureType.with {
-                        $0.shape = input.shape.map{ Int64($0) }
-                        $0.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
+            CoreML_Specification_FeatureDescription.with { featureSpec in
+                featureSpec.name = input.name
+                featureSpec.type = CoreML_Specification_FeatureType.with { featureTypeSpec in
+                    featureTypeSpec.multiArrayType = CoreML_Specification_ArrayFeatureType.with { featureArrayTypeSpec in
+                        featureArrayTypeSpec.shape = input.shape.map{ Int64($0) }
+                        featureArrayTypeSpec.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
                     }
                 }
             }
