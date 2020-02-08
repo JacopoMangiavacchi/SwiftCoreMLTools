@@ -9,9 +9,9 @@ final class NeuralNetworkTests: XCTestCase {
                          output: ["output"],
                          inputChannels: 1,
                          outputChannels: 1,
-                         updatable: true,
                          weights: [0.0],
-                         bias: [0.0])
+                         bias: [0.0],
+                         updatable: true)
         }
 
         XCTAssertEqual(network.layers.count, 1)
@@ -24,17 +24,17 @@ final class NeuralNetworkTests: XCTestCase {
                          output: ["output"],
                          inputChannels: 1,
                          outputChannels: 1,
-                         updatable: true,
                          weights: [0.0],
-                         bias: [0.0])
+                         bias: [0.0],
+                         updatable: true)
             InnerProduct(name: "layer2",
                          input: ["dense_input"],
                          output: ["output"],
                          inputChannels: 1,
                          outputChannels: 1,
-                         updatable: true,
                          weights: [0.0],
-                         bias: [0.0])
+                         bias: [0.0],
+                         updatable: true)
         }
 
         XCTAssertEqual(network.layers.count, 2)
@@ -58,17 +58,17 @@ final class NeuralNetworkTests: XCTestCase {
                          output: ["output"],
                          inputChannels: 1,
                          outputChannels: 1,
-                         updatable: true,
                          weights: [0.0],
-                         bias: [0.0])
+                         bias: [0.0],
+                         updatable: true)
             InnerProduct(name: "layer2",
                          input: ["dense_input"],
                          output: ["output"],
                          inputChannels: 1,
                          outputChannels: 1,
-                         updatable: true,
                          weights: [0.0],
-                         bias: [0.0])
+                         bias: [0.0],
+                         updatable: true)
         }
 
         XCTAssertEqual(network.layers.count, 2)

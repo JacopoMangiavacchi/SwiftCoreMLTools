@@ -53,9 +53,9 @@ final class ModelTests: XCTestCase {
                              output: ["output"],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
                              weights: [0.0],
-                             bias: [0.0])
+                             bias: [0.0],
+                             updatable: true)
             }
         }
 
@@ -89,9 +89,9 @@ final class ModelTests: XCTestCase {
                              output: ["output"],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
                              weights: [0.0],
-                             bias: [0.0])
+                             bias: [0.0],
+                             updatable: true)
             }
         }
 
@@ -125,9 +125,9 @@ final class ModelTests: XCTestCase {
                              output: ["output"],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
                              weights: [0.0],
-                             bias: [0.0])
+                             bias: [0.0],
+                             updatable: true)
             }
         }
 
@@ -164,9 +164,9 @@ final class ModelTests: XCTestCase {
                              output: ["output"],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
                              weights: [0.0],
-                             bias: [0.0])
+                             bias: [0.0],
+                             updatable: true)
             }
         }
 
@@ -205,9 +205,9 @@ final class ModelTests: XCTestCase {
                                                  output: ["output"],
                                                  inputChannels: 1,
                                                  outputChannels: 1,
-                                                 updatable: true,
                                                  weights: [0.0],
-                                                 bias: [0.0]))
+                                                 bias: [0.0],
+                                                 updatable: true))
 
         let coreMLData = model.coreMLData
 
@@ -242,9 +242,9 @@ final class ModelTests: XCTestCase {
                              output: ["output"],
                              inputChannels: 1,
                              outputChannels: 1,
-                             updatable: true,
                              weights: [0.0],
-                             bias: [0.0])
+                             bias: [0.0],
+                             updatable: true)
             }
         }
 

@@ -1,53 +1,118 @@
-public struct Linear : Layer, Codable {
+public struct Linear : Activation {
     public static let type = LayerType.linear
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct ReLu : Layer, Codable {
+public struct ReLu : Activation {
     public static let type = LayerType.reLu
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct LeakyReLu : Layer, Codable {
+public struct LeakyReLu : Activation {
     public static let type = LayerType.leakyReLu
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct ThresholdedReLu : Layer, Codable {
+public struct ThresholdedReLu : Activation {
     public static let type = LayerType.thresholdedReLu
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct PreLu : Layer, Codable {
+public struct PreLu : Activation {
     public static let type = LayerType.preLu
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct Tanh : Layer, Codable {
+public struct Tanh : Activation {
     public static let type = LayerType.tanh
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct ScaledTanh : Layer, Codable {
+public struct ScaledTanh : Activation {
     public static let type = LayerType.tanh
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct Sigmoid : Layer, Codable {
+public struct Sigmoid : Activation {
     public static let type = LayerType.sigmoid
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct SigmoidHard : Layer, Codable {
+public struct SigmoidHard : Activation {
     public static let type = LayerType.sigmoidHard
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct Elu : Layer, Codable {
+public struct Elu : Activation {
     public static let type = LayerType.elu
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct Softsign : Layer, Codable {
+public struct Softsign : Activation {
     public static let type = LayerType.softsign
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct Softplus : Layer, Codable {
+public struct Softplus : Activation {
     public static let type = LayerType.softplus
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
-public struct ParametricSoftplus : Layer, Codable {
+public struct ParametricSoftplus : Activation {
     public static let type = LayerType.parametricSoftplus
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let inputChannels: UInt
+    public let outputChannels: UInt
 }
 
 

@@ -1,6 +1,6 @@
 @_functionBuilder
 public struct LayerBuilder {
-    public static func buildBlock(_ children: Layer...) -> [Layer] {
+    public static func buildBlock(_ children: BaseLayer...) -> [BaseLayer] {
         children.compactMap{ $0 }
     }
 }
@@ -11,14 +11,14 @@ public struct NeuralNetwork : Items {
     public let epochDefault: UInt?
     public let epochSet: [UInt]?
     public let shuffle: Bool?
-    public var layers: [Layer]
+    public var layers: [BaseLayer]
 
     fileprivate init(losses: [Loss]?,
          optimizer: Optimizer?,
          epochDefault: UInt?,
          epochSet: [UInt]?,
          shuffle: Bool?,
-         layers: [Layer]) {
+         layers: [BaseLayer]) {
         self.layers = layers
         self.losses = losses
         self.optimizer = optimizer
@@ -37,7 +37,7 @@ public struct NeuralNetwork : Items {
                   epochDefault: epochDefault,
                   epochSet: epochSet,
                   shuffle: shuffle,
-                  layers: [Layer]())
+                  layers: [BaseLayer]())
     }
 
     public init(losses: [Loss]? = nil,
@@ -45,7 +45,7 @@ public struct NeuralNetwork : Items {
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil,
-                @LayerBuilder _ builder: () -> Layer) {
+                @LayerBuilder _ builder: () -> BaseLayer) {
         self.init(losses: losses,
                   optimizer: optimizer,
                   epochDefault: epochDefault,
@@ -59,7 +59,7 @@ public struct NeuralNetwork : Items {
                 epochDefault: UInt? = nil,
                 epochSet: [UInt]? = nil,
                 shuffle: Bool? = nil,
-                @LayerBuilder _ builder: () -> [Layer]) {
+                @LayerBuilder _ builder: () -> [BaseLayer]) {
         self.init(losses: losses,
                   optimizer: optimizer,
                   epochDefault: epochDefault,
@@ -68,7 +68,7 @@ public struct NeuralNetwork : Items {
                   layers: builder())
     }
 
-    public mutating func addLayer(_ layer: Layer) {
+    public mutating func addLayer(_ layer: BaseLayer) {
         layers.append(layer)
     }
 }
