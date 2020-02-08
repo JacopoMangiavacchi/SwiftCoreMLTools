@@ -108,6 +108,54 @@ extension Model {
                                         $0.beta = linear.beta
                                     }
 
+                                case _ as ReLu:
+                                    activationParam.reLu = CoreML_Specification_ActivationReLU()
+
+                                case let leakyReLu as LeakyReLu:
+                                    activationParam.leakyReLu = CoreML_Specification_ActivationLeakyReLU.with {
+                                        $0.alpha = leakyReLu.alpha
+                                    }
+
+                                case let thresholdedReLu as ThresholdedReLu:
+                                    activationParam.thresholdedReLu = CoreML_Specification_ActivationThresholdedReLU.with {
+                                        $0.alpha = thresholdedReLu.alpha
+                                    }
+
+                                case _ as PReLu:
+                                    activationParam.preLu = CoreML_Specification_ActivationPReLU()
+
+                                case _ as Tanh:
+                                    activationParam.tanh = CoreML_Specification_ActivationTanh()
+
+                                case let scaledTanh as ScaledTanh:
+                                    activationParam.scaledTanh = CoreML_Specification_ActivationScaledTanh.with {
+                                        $0.alpha = scaledTanh.alpha
+                                        $0.beta = scaledTanh.beta
+                                    }
+
+                                case _ as Sigmoid:
+                                    activationParam.sigmoid = CoreML_Specification_ActivationSigmoid()
+
+                                case let sigmoidHard as SigmoidHard:
+                                    activationParam.sigmoidHard = CoreML_Specification_ActivationSigmoidHard.with {
+                                        $0.alpha = sigmoidHard.alpha
+                                        $0.beta = sigmoidHard.beta
+                                    }
+
+                                case let elu as Elu:
+                                    activationParam.elu = CoreML_Specification_ActivationELU.with {
+                                        $0.alpha = elu.alpha
+                                    }
+
+                                case _ as Softsign:
+                                    activationParam.softsign = CoreML_Specification_ActivationSoftsign()
+
+                                case _ as Softplus:
+                                    activationParam.softplus = CoreML_Specification_ActivationSoftplus()
+
+                                case _ as ParametricSoftplus:
+                                    activationParam.parametricSoftplus = CoreML_Specification_ActivationParametricSoftplus()
+
                                 default:
                                     break
                                 }

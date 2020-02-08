@@ -37,10 +37,12 @@ public struct ThresholdedReLu : Activation {
     public let output: [String]
     public let inputChannels: UInt
     public let outputChannels: UInt
+
+    public let alpha: Float = 0.0
 }
 
-public struct PreLu : Activation {
-    public static let type = LayerType.preLu
+public struct PReLu : Activation {
+    public static let type = LayerType.pReLu
     public let name: String
     public let input: [String]
     public let output: [String]
