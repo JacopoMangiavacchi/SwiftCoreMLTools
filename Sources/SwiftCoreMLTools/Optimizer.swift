@@ -22,6 +22,15 @@ public struct SGD : Optimizer {
     public let miniBatchSizeRange: [UInt]
     public let momentumDefault: Double
     public let momentumMax: Double
+
+    public init(learningRateDefault: Double, learningRateMax: Double, miniBatchSizeDefault: UInt, miniBatchSizeRange: [UInt], momentumDefault: Double, momentumMax: Double) {
+        self.learningRateDefault = learningRateDefault
+        self.learningRateMax = learningRateMax
+        self.miniBatchSizeDefault = miniBatchSizeDefault
+        self.miniBatchSizeRange = miniBatchSizeRange
+        self.momentumDefault = momentumDefault
+        self.momentumMax = momentumMax
+    }
 }
 
 struct AnyOptimizer : Codable {

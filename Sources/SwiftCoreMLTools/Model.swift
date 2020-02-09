@@ -15,18 +15,36 @@ public struct Input : InputOutputItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
+
+    public init(name: String, shape: [UInt], featureType: FeatureType) {
+        self.name = name
+        self.shape = shape
+        self.featureType = featureType
+    }
 }
 
 public struct Output : InputOutputItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
+
+    public init(name: String, shape: [UInt], featureType: FeatureType) {
+        self.name = name
+        self.shape = shape
+        self.featureType = featureType
+    }
 }
 
 public struct TrainingInput : InputOutputItems {
     public let name: String
     public let shape: [UInt]
     public let featureType: FeatureType
+
+    public init(name: String, shape: [UInt], featureType: FeatureType) {
+        self.name = name
+        self.shape = shape
+        self.featureType = featureType
+    }
 }
 
 @_functionBuilder

@@ -19,6 +19,12 @@ public struct MSE : Loss {
     public let name: String
     public let input: String
     public let target: String
+
+    public init(name: String, input: String, target: String) {
+        self.name = name
+        self.input = input
+        self.target = target
+    }
 }
 
 struct AnyLoss : Codable {
