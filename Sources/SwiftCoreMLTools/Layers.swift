@@ -9,11 +9,28 @@ public struct InnerProduct : TrainableLayer {
     public let inputChannels: UInt
     public let outputChannels: UInt
     public let updatable: Bool
+
+    public init(name: String, input: [String], output: [String], weights: [Float], bias: [Float], inputChannels: UInt, outputChannels: UInt, updatable: Bool = false) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.weights = weights
+        self.bias = bias
+
+        self.inputChannels = inputChannels
+        self.outputChannels = outputChannels
+        self.updatable = updatable
+    }
 }
 
 public struct EdgeSizes : Codable {
     public let startEdgeSize: UInt
     public let endEdgeSize: UInt
+
+    public init(startEdgeSize: UInt, endEdgeSize: UInt) {
+        self.startEdgeSize = startEdgeSize
+        self.endEdgeSize = endEdgeSize
+    }
 }
 
 public enum PaddingMode : String, Codable {
@@ -78,6 +95,27 @@ public struct Convolution : TrainableLayer {
     public let outputShape: [UInt]
     public let deconvolution: Bool
     public let updatable: Bool
+
+    public init(name: String, input: [String], output: [String], weights: [Float], bias: [Float], outputChannels: UInt, kernelChannels: UInt, 
+                nGroups: UInt, kernelSize: [UInt], stride: [UInt], dilationFactor: [UInt], paddingType: PaddingType, outputShape: [UInt],
+                deconvolution: Bool, updatable: Bool = false) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.weights = weights
+        self.bias = bias
+        
+        self.outputChannels = outputChannels
+        self.kernelChannels = kernelChannels
+        self.nGroups = nGroups
+        self.kernelSize = kernelSize
+        self.stride = stride
+        self.dilationFactor = dilationFactor
+        self.paddingType = paddingType
+        self.outputShape = outputShape
+        self.deconvolution = deconvolution
+        self.updatable = updatable
+    }
 }
 
 // TODO
