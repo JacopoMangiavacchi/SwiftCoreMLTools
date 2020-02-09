@@ -60,10 +60,7 @@ public protocol BaseLayer : Codable {
     var output: [String] { get }
 }
 
-public protocol Layer : BaseLayer {
-}
-
-public protocol TrainableLayer : Layer {
+public protocol TrainableLayer : BaseLayer {
     var weights: [Float] { get }
     var bias: [Float] { get }
 }

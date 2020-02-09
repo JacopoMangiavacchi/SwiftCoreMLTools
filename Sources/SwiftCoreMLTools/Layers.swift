@@ -81,7 +81,7 @@ public struct Convolution : TrainableLayer {
 }
 
 // TODO
-public struct Pooling : Layer {
+public struct Pooling : BaseLayer {
     public static let type = LayerType.pooling
     public let name: String
     public let input: [String]
