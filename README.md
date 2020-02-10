@@ -20,6 +20,9 @@ CoreML models generated with this library could be potentially personalized (tra
 
 CoreML support much more then Neural Network models but this experimental library is only focused, at the moment, on Neural Network support.
 
+> End to end test case exporting a real S4TF model at:
+> https://github.com/JacopoMangiavacchi/TestSwiftCoreMLTools
+
 ## Neural Network Support (work in progress)
 
 ### Layers
