@@ -65,6 +65,17 @@ public protocol TrainableLayer : BaseLayer {
     var bias: [Float] { get }
 }
 
+extension TrainableLayer {
+    static func getUniformWeigthsAndBias(inputChannels: UInt, outputChannels: UInt) -> (weights: [Float], bias: [Float]) {
+		let limit = Float(6 / (inputChannels + outputChannels)).squareRoot()
+
+        let weights = (0..<(inputChannels*outputChannels)).map{ _ in Float.random(in: -limit...limit) }
+        let bias = (0..<outputChannels).map{ _ in Float.random(in: -limit...limit) }
+
+        return (weights, bias)        
+    }
+}
+
 public protocol Activation : BaseLayer {
 }
 

@@ -10,12 +10,20 @@ public struct InnerProduct : TrainableLayer {
     public let outputChannels: UInt
     public let updatable: Bool
 
-    public init(name: String, input: [String], output: [String], weights: [Float], bias: [Float], inputChannels: UInt, outputChannels: UInt, updatable: Bool = false) {
+    public init(name: String, input: [String], output: [String], weights: [Float]?, bias: [Float]?, inputChannels: UInt, outputChannels: UInt, updatable: Bool = false) {
         self.name = name
         self.input = input
         self.output = output
-        self.weights = weights
-        self.bias = bias
+    
+        if let weights = weights, let bias = bias {
+            self.weights = weights
+            self.bias = bias
+        }
+        else {
+            let (weights, bias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
+            self.weights = weights
+            self.bias = bias
+        }
 
         self.inputChannels = inputChannels
         self.outputChannels = outputChannels
