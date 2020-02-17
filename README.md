@@ -80,8 +80,8 @@ let coremlModel = Model(version: 4,
                         author: "Jacopo Mangiavacchi",
                         license: "MIT",
                         userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-    Input(name: "dense_input", shape: [1], featureType: .Double)
-    Output(name: "output", shape: [1], featureType: .Double)
+    Input(name: "dense_input", shape: [1])
+    Output(name: "output", shape: [1])
     NeuralNetwork {
         InnerProduct(name: "dense_1",
                      input: ["dense_input"],
@@ -103,10 +103,10 @@ let coremlModel = Model(version: 4,
                         author: "Jacopo Mangiavacchi",
                         license: "MIT",
                         userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-    Input(name: "dense_input", shape: [1], featureType: .Double)
-    Output(name: "output", shape: [1], featureType: .Double)
-    TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-    TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+    Input(name: "dense_input", shape: [1])
+    Output(name: "output", shape: [1])
+    TrainingInput(name: "dense_input", shape: [1])
+    TrainingInput(name: "output_true", shape: [1])
     NeuralNetwork(losses: [MSE(name: "lossLayer",
                                input: "output",
                                target: "output_true")],
@@ -148,10 +148,10 @@ var model = Model(version: 4,
                   license: "MIT",
                   userDefined: ["SwiftCoremltoolsVersion" : "0.1"])
 
-model.addInput(Input(name: "dense_input", shape: [1], featureType: .Double))
-model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
-model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
-model.addTrainingInput(TrainingInput(name: "output_true", shape: [1], featureType: .Double))
+model.addInput(Input(name: "dense_input", shape: [1]))
+model.addOutput(Output(name: "output", shape: [1]))
+model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1]))
+model.addTrainingInput(TrainingInput(name: "output_true", shape: [1]))
 model.neuralNetwork = NeuralNetwork(losses: [MSE(name: "lossLayer",
                                                  input: "output",
                                                  target: "output_true")],
@@ -214,26 +214,26 @@ let model = try! JSONDecoder().decode(Model.self, from: jsonData)
     "dense_input" : {
       "name" : "dense_input",
       "shape" : [1],
-      "featureType" : "Double"
+      "featureType" : "Float"
     }
   },
   "outputs" : {
     "output" : {
       "name" : "output",
       "shape" : [1],
-      "featureType" : "Double"
+      "featureType" : "Float"
     }
   },
   "trainingInputs" : {
     "output_true" : {
       "name" : "output_true",
       "shape" : [1],
-      "featureType" : "Double"
+      "featureType" : "Float"
     },
     "dense_input" : {
       "name" : "dense_input",
       "shape" : [1],
-      "featureType" : "Double"
+      "featureType" : "Float"
     }
   },
   "neuralNetwork" : {

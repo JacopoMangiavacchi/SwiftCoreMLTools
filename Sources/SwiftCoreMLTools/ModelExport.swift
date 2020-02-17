@@ -83,7 +83,7 @@ extension Model {
                 featureSpec.type = CoreML_Specification_FeatureType.with { featureTypeSpec in
                     featureTypeSpec.multiArrayType = CoreML_Specification_ArrayFeatureType.with { featureArrayTypeSpec in
                         featureArrayTypeSpec.shape = input.shape.map{ Int64($0) }
-                        featureArrayTypeSpec.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
+                        featureArrayTypeSpec.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.float32
                     }
                 }
             }
