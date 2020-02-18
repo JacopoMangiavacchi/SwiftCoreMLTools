@@ -4,7 +4,7 @@ import XCTest
 final class ModelTests: XCTestCase {
     func testSingleInputs() {
         let model = Model {
-            Input(name: "dense_input1", shape: [1], featureType: .Double)
+            Input(name: "dense_input1", shape: [1])
         }
 
         XCTAssertEqual(model.items.count, 1)
@@ -12,11 +12,11 @@ final class ModelTests: XCTestCase {
 
     func testMultipleInputs() {
         let model = Model {
-            Input(name: "dense_input1", shape: [1], featureType: .Double)
-            Input(name: "dense_input2", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input1", shape: [1])
+            Input(name: "dense_input2", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
         }
 
         XCTAssertEqual(model.items.count, 5)
@@ -28,10 +28,10 @@ final class ModelTests: XCTestCase {
                           author: "Jacopo Mangiavacchi",
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-            Input(name: "dense_input", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
         }
 
         XCTAssertEqual(model.items.count, 4)
@@ -43,15 +43,15 @@ final class ModelTests: XCTestCase {
                           author: "Jacopo Mangiavacchi",
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-            Input(name: "dense_input", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
             NeuralNetwork {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
-                             weights: [0.0],
+                             weight: [0.0],
                              bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
@@ -68,10 +68,10 @@ final class ModelTests: XCTestCase {
                           author: "Jacopo Mangiavacchi",
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-            Input(name: "dense_input", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
             NeuralNetwork(losses: [MSE(name: "lossLayer",
                                        input: "output",
                                        target: "output_true")],
@@ -87,7 +87,7 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
-                             weights: [0.0],
+                             weight: [0.0],
                              bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
@@ -104,10 +104,10 @@ final class ModelTests: XCTestCase {
                           author: "Jacopo Mangiavacchi",
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-            Input(name: "dense_input", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
             NeuralNetwork(losses: [MSE(name: "lossLayer",
                                        input: "output",
                                        target: "output_true")],
@@ -123,7 +123,7 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
-                             weights: [0.0],
+                             weight: [0.0],
                              bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
@@ -143,10 +143,10 @@ final class ModelTests: XCTestCase {
                           author: "Jacopo Mangiavacchi",
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-            Input(name: "dense_input", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
             NeuralNetwork(losses: [MSE(name: "lossLayer",
                                        input: "output",
                                        target: "output_true")],
@@ -162,7 +162,7 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
-                             weights: [0.0],
+                             weight: [0.0],
                              bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,
@@ -183,10 +183,10 @@ final class ModelTests: XCTestCase {
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"])
                           
-        model.addInput(Input(name: "dense_input", shape: [1], featureType: .Double))
-        model.addOutput(Output(name: "output", shape: [1], featureType: .Double))
-        model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1], featureType: .Double))
-        model.addTrainingInput(TrainingInput(name: "output_true", shape: [1], featureType: .Double))
+        model.addInput(Input(name: "dense_input", shape: [1]))
+        model.addOutput(Output(name: "output", shape: [1]))
+        model.addTrainingInput(TrainingInput(name: "dense_input", shape: [1]))
+        model.addTrainingInput(TrainingInput(name: "output_true", shape: [1]))
         model.neuralNetwork = NeuralNetwork(losses: [MSE(name: "lossLayer",
                                                          input: "output",
                                                          target: "output_true")],
@@ -203,7 +203,7 @@ final class ModelTests: XCTestCase {
         model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
                                                  input: ["dense_input"],
                                                  output: ["output"],
-                                                 weights: [0.0],
+                                                 weight: [0.0],
                                                  bias: [0.0],
                                                  inputChannels: 1,
                                                  outputChannels: 1,
@@ -223,10 +223,10 @@ final class ModelTests: XCTestCase {
                           author: "Jacopo Mangiavacchi",
                           license: "MIT",
                           userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
-            Input(name: "dense_input", shape: [1], featureType: .Double)
-            Output(name: "output", shape: [1], featureType: .Double)
-            TrainingInput(name: "dense_input", shape: [1], featureType: .Double)
-            TrainingInput(name: "output_true", shape: [1], featureType: .Double)
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
             NeuralNetwork(losses: [MSE(name: "lossLayer",
                                        input: "output",
                                        target: "output_true")],
@@ -242,7 +242,7 @@ final class ModelTests: XCTestCase {
                 InnerProduct(name: "layer1",
                              input: ["dense_input"],
                              output: ["output"],
-                             weights: [0.0],
+                             weight: [0.0],
                              bias: [0.0],
                              inputChannels: 1,
                              outputChannels: 1,

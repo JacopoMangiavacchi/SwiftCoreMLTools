@@ -83,7 +83,7 @@ extension Model {
                 featureSpec.type = CoreML_Specification_FeatureType.with { featureTypeSpec in
                     featureTypeSpec.multiArrayType = CoreML_Specification_ArrayFeatureType.with { featureArrayTypeSpec in
                         featureArrayTypeSpec.shape = input.shape.map{ Int64($0) }
-                        featureArrayTypeSpec.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.double
+                        featureArrayTypeSpec.dataType = CoreML_Specification_ArrayFeatureType.ArrayDataType.float32
                     }
                 }
             }
@@ -96,7 +96,7 @@ extension Model {
             innerProductSpec.outputChannels = UInt64(innerProduct.outputChannels)
             innerProductSpec.hasBias_p = true
             innerProductSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
-                weightsSpec.floatValue = innerProduct.weights
+                weightsSpec.floatValue = innerProduct.weight
                 weightsSpec.isUpdatable = innerProduct.updatable
             }
             innerProductSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
@@ -143,7 +143,7 @@ extension Model {
             convolutionSpec.isDeconvolution = convolution.deconvolution
             convolutionSpec.hasBias_p = true
             convolutionSpec.weights = CoreML_Specification_WeightParams.with { weightsSpec in
-                weightsSpec.floatValue = convolution.weights
+                weightsSpec.floatValue = convolution.weight
                 weightsSpec.isUpdatable = convolution.updatable
             }
             convolutionSpec.bias = CoreML_Specification_WeightParams.with { biasSpec in
