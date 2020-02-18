@@ -3,25 +3,25 @@ public struct InnerProduct : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 
     public let inputChannels: UInt
     public let outputChannels: UInt
     public let updatable: Bool
 
-    public init(name: String, input: [String], output: [String], weights: [Float]?, bias: [Float]?, inputChannels: UInt, outputChannels: UInt, updatable: Bool = false) {
+    public init(name: String, input: [String], output: [String], weight: [Float]? = nil, bias: [Float]? = nil, inputChannels: UInt, outputChannels: UInt, updatable: Bool = false) {
         self.name = name
         self.input = input
         self.output = output
     
-        if let weights = weights, let bias = bias {
-            self.weights = weights
+        if let weight = weight, let bias = bias {
+            self.weight = weight
             self.bias = bias
         }
         else {
-            let (weights, bias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
-            self.weights = weights
+            let (weight, bias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
+            self.weight = weight
             self.bias = bias
         }
 
@@ -90,7 +90,7 @@ public struct Convolution : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 
     public let outputChannels: UInt
@@ -104,13 +104,13 @@ public struct Convolution : TrainableLayer {
     public let deconvolution: Bool
     public let updatable: Bool
 
-    public init(name: String, input: [String], output: [String], weights: [Float], bias: [Float], outputChannels: UInt, kernelChannels: UInt, 
+    public init(name: String, input: [String], output: [String], weight: [Float], bias: [Float], outputChannels: UInt, kernelChannels: UInt, 
                 nGroups: UInt, kernelSize: [UInt], stride: [UInt], dilationFactor: [UInt], paddingType: PaddingType, outputShape: [UInt],
                 deconvolution: Bool, updatable: Bool = false) {
         self.name = name
         self.input = input
         self.output = output
-        self.weights = weights
+        self.weight = weight
         self.bias = bias
         
         self.outputChannels = outputChannels
@@ -140,7 +140,7 @@ public struct Embedding : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 }
 
@@ -150,7 +150,7 @@ public struct SimpleRecurrent : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 }
 
@@ -160,7 +160,7 @@ public struct Gru : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 }
 
@@ -170,7 +170,7 @@ public struct UniDirectionalLstm : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 }
 
@@ -180,6 +180,6 @@ public struct BiDirectionalLstm : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
-    public let weights: [Float]
+    public let weight: [Float]
     public let bias: [Float]
 }

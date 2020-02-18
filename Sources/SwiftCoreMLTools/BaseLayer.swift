@@ -61,18 +61,18 @@ public protocol BaseLayer : Codable {
 }
 
 public protocol TrainableLayer : BaseLayer {
-    var weights: [Float] { get }
+    var weight: [Float] { get }
     var bias: [Float] { get }
 }
 
 extension TrainableLayer {
-    static func getUniformWeigthsAndBias(inputChannels: UInt, outputChannels: UInt) -> (weights: [Float], bias: [Float]) {
+    static func getUniformWeigthsAndBias(inputChannels: UInt, outputChannels: UInt) -> (weight: [Float], bias: [Float]) {
 		let limit = Float(6 / (inputChannels + outputChannels)).squareRoot()
 
-        let weights = (0..<(inputChannels*outputChannels)).map{ _ in Float.random(in: -limit...limit) }
+        let weight = (0..<(inputChannels*outputChannels)).map{ _ in Float.random(in: -limit...limit) }
         let bias = (0..<outputChannels).map{ _ in Float.random(in: -limit...limit) }
 
-        return (weights, bias)        
+        return (weight, bias)        
     }
 }
 
