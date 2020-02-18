@@ -62,6 +62,29 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(model.items.count, 5)
     }
 
+    func testWithRandomWeight() {
+        let model = Model(version: 4,
+                          shortDescription: "Trivial linear classifier",
+                          author: "Jacopo Mangiavacchi",
+                          license: "MIT",
+                          userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
+            NeuralNetwork {
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true)
+            }
+        }
+
+        XCTAssertEqual(model.items.count, 5)
+    }
+
     func testWithPersonazibleNeuralNetwork() {
         let model = Model(version: 4,
                           shortDescription: "Trivial linear classifier",
@@ -275,6 +298,7 @@ final class ModelTests: XCTestCase {
         ("testMultipleInputs", testMultipleInputs),
         ("testWithMetadata", testWithMetadata),
         ("testWithNeuralNetwork", testWithNeuralNetwork),
+        ("testWithRandomWeight", testWithRandomWeight),
         ("testWithPersonazibleNeuralNetwork", testWithPersonazibleNeuralNetwork),
         ("testModelExtraction", testModelExtraction),
         ("testModelAPI", testModelAPI),

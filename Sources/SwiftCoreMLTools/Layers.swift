@@ -20,9 +20,9 @@ public struct InnerProduct : TrainableLayer {
             self.bias = bias
         }
         else {
-            let (weight, bias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
-            self.weight = weight
-            self.bias = bias
+            let (randomWeight, randomBias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
+            self.weight = randomWeight
+            self.bias = randomBias
         }
 
         self.inputChannels = inputChannels
