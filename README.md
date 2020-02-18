@@ -89,8 +89,7 @@ let coremlModel = Model(version: 4,
                      weight: s4tfModel.layer1.weight.transposed().flattened().scalars,
                      bias: s4tfModel.layer1.bias.flattened().scalars,
                      inputChannels: 1,
-                     outputChannels: 1,
-                     updatable: false)
+                     outputChannels: 1)
     }
 }
 ```
