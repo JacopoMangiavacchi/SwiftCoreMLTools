@@ -57,6 +57,18 @@ extension Model {
                         case let activation as Activation:
                             layerSpec.activation = convertToActivation(activation: activation)
 
+                        case let embedding as Embedding:
+                            layerSpec.embedding = convertToEmbedding(embedding: embedding)
+
+                        case let permute as Permute:
+                            layerSpec.permute = convertToPermute(permute: permute)
+
+                        case let flatten as Flatten:
+                            layerSpec.flatten = convertToFlatten(flatten: flatten)
+
+                        case let concat as Concat:
+                            layerSpec.concat = convertToConcat(concat: concat)
+
                         default:
                             break
                         }
@@ -276,5 +288,21 @@ extension Model {
                 $0.defaultValue = shuffle
             }
         }
+    }
+
+    func convertToEmbedding(embedding: Embedding) -> CoreML_Specification_EmbeddingLayerParams {
+        return CoreML_Specification_EmbeddingLayerParams()
+    }
+
+    func convertToPermute(permute: Permute) -> CoreML_Specification_PermuteLayerParams {
+        return CoreML_Specification_PermuteLayerParams()
+    }
+
+    func convertToFlatten(flatten: Flatten) -> CoreML_Specification_FlattenLayerParams {
+        return CoreML_Specification_FlattenLayerParams()
+    }
+
+    func convertToConcat(concat: Concat) -> CoreML_Specification_ConcatLayerParams {
+        return CoreML_Specification_ConcatLayerParams()
     }
 }
