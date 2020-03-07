@@ -140,8 +140,20 @@ public struct Embedding : TrainableLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
+    public let inputDim: UInt
+    public let outputChannels: UInt
     public let weight: [Float]
     public let bias: [Float]
+
+    public init(name: String, input: [String], output: [String], weight: [Float], inputDim: UInt, outputChannels: UInt) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.weight = weight
+        self.bias = []
+        self.inputDim = inputDim
+        self.outputChannels = outputChannels
+    }
 }
 
 // TODO
