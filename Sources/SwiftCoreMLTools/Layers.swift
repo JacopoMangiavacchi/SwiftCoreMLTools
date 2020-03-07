@@ -183,3 +183,27 @@ public struct BiDirectionalLstm : TrainableLayer {
     public let weight: [Float]
     public let bias: [Float]
 }
+
+// TODO
+public struct Permute : BaseLayer {
+    public static let type = LayerType.permute
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+}
+
+// TODO
+public struct Flatten : BaseLayer {
+    public static let type = LayerType.flatten
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+}
+
+// TODO
+public struct Concat : BaseLayer {
+    public static let type = LayerType.concat
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+}

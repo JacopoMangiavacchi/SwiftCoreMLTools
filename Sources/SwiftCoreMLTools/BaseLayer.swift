@@ -1,5 +1,5 @@
 public enum LayerType : String, Codable {
-    case innerProduct, convolution, pooling, embedding, simpleRecurrent, gru, uniDirectionalLstm, biDirectionalLstm
+    case innerProduct, convolution, pooling, embedding, simpleRecurrent, gru, uniDirectionalLstm, biDirectionalLstm, permute, flatten, concat 
     case linear, reLu, leakyReLu, thresholdedReLu, pReLu, tanh, scaledTanh, sigmoid, sigmoidHard, elu, softsign, softplus, parametricSoftplus
 
     var metatype: BaseLayer.Type {
@@ -21,6 +21,12 @@ public enum LayerType : String, Codable {
             return UniDirectionalLstm.self
         case .biDirectionalLstm:
             return BiDirectionalLstm.self
+        case .permute:
+            return Permute.self
+        case .flatten:
+            return Flatten.self
+        case .concat:
+            return Concat.self
 
         //Activation Functions
         case .linear:
