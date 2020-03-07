@@ -291,15 +291,30 @@ extension Model {
     }
 
     func convertToEmbedding(embedding: Embedding) -> CoreML_Specification_EmbeddingLayerParams {
-        return CoreML_Specification_EmbeddingLayerParams()
+        return CoreML_Specification_EmbeddingLayerParams.with {
+            $0.inputDim = UInt64(embedding.inputDim)
+            $0.outputChannels = UInt64(embedding.outputChannels)
+            $0.weights = CoreML_Specification_WeightParams.with { weightsSpec in
+                weightsSpec.floatValue = embedding.weight
+            }
+        }
     }
 
     func convertToPermute(permute: Permute) -> CoreML_Specification_PermuteLayerParams {
-        return CoreML_Specification_PermuteLayerParams()
+        return CoreML_Specification_PermuteLayerParams.with {
+            $0.axis = permute.axis.map{ UInt64($0) }
+        }
     }
 
     func convertToFlatten(flatten: Flatten) -> CoreML_Specification_FlattenLayerParams {
-        return CoreML_Specification_FlattenLayerParams()
+        return CoreML_Specification_FlattenLayerParams.with {
+            switch flatten.mode {
+            case .first:
+                $0.mode = .channelFirst
+            case .last:
+                $0.mode = .channelLast
+            }
+        }
     }
 
     func convertToConcat(concat: Concat) -> CoreML_Specification_ConcatLayerParams {
