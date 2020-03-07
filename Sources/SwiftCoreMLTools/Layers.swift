@@ -190,6 +190,18 @@ public struct Permute : BaseLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
+    public let axis: [UInt]
+
+    public init(name: String, input: [String], output: [String], axis: [UInt]) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.axis = axis
+    }    
+}
+
+public enum FlattenOrder : Int, Codable {
+    case first, last
 }
 
 // TODO
@@ -198,6 +210,14 @@ public struct Flatten : BaseLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
+    public let mode: FlattenOrder
+
+    public init(name: String, input: [String], output: [String], mode: FlattenOrder = .last) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.mode = mode
+    }    
 }
 
 // TODO
@@ -206,4 +226,10 @@ public struct Concat : BaseLayer {
     public let name: String
     public let input: [String]
     public let output: [String]
+
+    public init(name: String, input: [String], output: [String]) {
+        self.name = name
+        self.input = input
+        self.output = output
+    }    
 }
