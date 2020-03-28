@@ -242,6 +242,13 @@ extension Model {
                             mseSpec.target = mse.target
                         }
 
+                    case let categoricalCrossEntropy as CategoricalCrossEntropy:
+                        lossSpec.name = categoricalCrossEntropy.name
+                        lossSpec.categoricalCrossEntropyLossLayer = CoreML_Specification_CategoricalCrossEntropyLossLayer.with { categoricalCrossEntropySpec in
+                            categoricalCrossEntropySpec.input = categoricalCrossEntropy.input
+                            categoricalCrossEntropySpec.target = categoricalCrossEntropy.target
+                        }
+
                     default:
                         break
                     }

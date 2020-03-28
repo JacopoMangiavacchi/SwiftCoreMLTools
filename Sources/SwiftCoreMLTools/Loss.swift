@@ -1,10 +1,12 @@
 public enum LossType : String, Codable {
-    case mse
+    case mse, categoricalCrossEntropy
 
     var metatype: Loss.Type {
         switch self {
         case .mse:
             return MSE.self
+        case .categoricalCrossEntropy:
+            return CategoricalCrossEntropy.self
         }
     }
 }
@@ -15,6 +17,20 @@ public protocol Loss : Codable {
 
 public struct MSE : Loss {
     public static let type = LossType.mse
+
+    public let name: String
+    public let input: String
+    public let target: String
+
+    public init(name: String, input: String, target: String) {
+        self.name = name
+        self.input = input
+        self.target = target
+    }
+}
+
+public struct CategoricalCrossEntropy : Loss {
+    public static let type = LossType.categoricalCrossEntropy
 
     public let name: String
     public let input: String
