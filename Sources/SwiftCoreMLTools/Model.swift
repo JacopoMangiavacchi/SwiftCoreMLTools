@@ -66,8 +66,6 @@ public struct Model {
     public var trainingInputs: [String : TrainingInput]
     public var neuralNetwork: NeuralNetwork
 
-    let items: [Items]
-
     fileprivate init(version: UInt,
          shortDescription: String?,
          author: String?,
@@ -79,7 +77,6 @@ public struct Model {
         self.author = author
         self.license = license
         self.userDefined = userDefined
-        self.items = items
         self.inputs = [String : Input]()
         self.outputs = [String : Output]()
         self.trainingInputs = [String : TrainingInput]()
@@ -177,6 +174,5 @@ extension Model : Codable {
         self.outputs = try container.decode([String : Output].self, forKey: .outputs)
         self.trainingInputs = try container.decode([String : TrainingInput].self, forKey: .trainingInputs)
         self.neuralNetwork = try container.decode(NeuralNetwork.self, forKey: .neuralNetwork)
-        self.items = [Items]()
     }
 }

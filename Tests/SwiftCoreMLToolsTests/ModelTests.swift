@@ -7,7 +7,7 @@ final class ModelTests: XCTestCase {
             Input(name: "dense_input1", shape: [1])
         }
 
-        XCTAssertEqual(model.items.count, 1)
+        XCTAssertEqual(model.inputs.count, 1)
     }
 
     func testMultipleInputs() {
@@ -19,7 +19,9 @@ final class ModelTests: XCTestCase {
             TrainingInput(name: "output_true", shape: [1])
         }
 
-        XCTAssertEqual(model.items.count, 5)
+        XCTAssertEqual(model.inputs.count, 2)
+        XCTAssertEqual(model.outputs.count, 1)
+        XCTAssertEqual(model.trainingInputs.count, 2)
     }
 
     func testWithMetadata() {
@@ -34,7 +36,9 @@ final class ModelTests: XCTestCase {
             TrainingInput(name: "output_true", shape: [1])
         }
 
-        XCTAssertEqual(model.items.count, 4)
+        XCTAssertEqual(model.inputs.count, 1)
+        XCTAssertEqual(model.outputs.count, 1)
+        XCTAssertEqual(model.trainingInputs.count, 2)
     }
 
     func testWithNeuralNetwork() {
@@ -59,7 +63,9 @@ final class ModelTests: XCTestCase {
             }
         }
 
-        XCTAssertEqual(model.items.count, 5)
+        XCTAssertEqual(model.inputs.count, 1)
+        XCTAssertEqual(model.outputs.count, 1)
+        XCTAssertEqual(model.trainingInputs.count, 2)
     }
 
     func testWithRandomWeight() {
@@ -82,7 +88,9 @@ final class ModelTests: XCTestCase {
             }
         }
 
-        XCTAssertEqual(model.items.count, 5)
+        XCTAssertEqual(model.inputs.count, 1)
+        XCTAssertEqual(model.outputs.count, 1)
+        XCTAssertEqual(model.trainingInputs.count, 2)
     }
 
     func testWithPersonazibleNeuralNetwork() {
@@ -118,7 +126,9 @@ final class ModelTests: XCTestCase {
             }
         }
 
-        XCTAssertEqual(model.items.count, 5)
+        XCTAssertEqual(model.inputs.count, 1)
+        XCTAssertEqual(model.outputs.count, 1)
+        XCTAssertEqual(model.trainingInputs.count, 2)
     }
 
     func testModelExtraction() {
