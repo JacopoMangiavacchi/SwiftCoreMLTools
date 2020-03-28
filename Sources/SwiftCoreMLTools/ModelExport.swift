@@ -39,7 +39,7 @@ extension Model {
             }
 
             model.neuralNetwork = CoreML_Specification_NeuralNetwork.with { neuralNetworkSpec in
-                neuralNetworkSpec.layers = self.neuralNetwork.layers.map{ layer in 
+                neuralNetworkSpec.layers = self.neuralNetwork.layers.values.map{ layer in 
                     return CoreML_Specification_NeuralNetworkLayer.with { layerSpec in 
                         layerSpec.name = layer.name
                         layerSpec.input = layer.input
