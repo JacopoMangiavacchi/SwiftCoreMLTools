@@ -39,7 +39,7 @@ CoreML support much more then Neural Network models but this experimental librar
 - Linear
 - ReLu
 - LeakyReLu
-- ThresholdedReLu 
+- ThresholdedReLu
 - PReLu
 - Tanh
 - ScaledTanh
@@ -53,6 +53,7 @@ CoreML support much more then Neural Network models but this experimental librar
 ### Loss Functions
 
 - MSE
+- CategoricalCrossEntropy
 
 ### Optimizers
 
