@@ -279,6 +279,40 @@ extension Model {
                         }
                     }
                     
+                case let adam as Adam:
+                    optimizerSpec.adamOptimizer = CoreML_Specification_AdamOptimizer.with { adamSpec in
+                        adamSpec.learningRate = CoreML_Specification_DoubleParameter.with { learningRateSpec in
+                            learningRateSpec.defaultValue = adam.learningRateDefault
+                            learningRateSpec.range = CoreML_Specification_DoubleRange.with {
+                                $0.maxValue = adam.learningRateMax
+                            }
+                        }
+                        adamSpec.miniBatchSize = CoreML_Specification_Int64Parameter.with { miniBatchSizeSpec in
+                            miniBatchSizeSpec.defaultValue = Int64(adam.miniBatchSizeDefault)
+                            miniBatchSizeSpec.set = CoreML_Specification_Int64Set.with {
+                                $0.values = adam.miniBatchSizeRange.map{ Int64($0) }
+                            }
+                        }
+                        adamSpec.beta1 = CoreML_Specification_DoubleParameter.with { beta1Spec in
+                            beta1Spec.defaultValue = adam.beta1Default
+                            beta1Spec.range = CoreML_Specification_DoubleRange.with {
+                                $0.maxValue = adam.beta1Max
+                            }
+                        }
+                        adamSpec.beta2 = CoreML_Specification_DoubleParameter.with { beta2Spec in
+                            beta2Spec.defaultValue = adam.beta2Default
+                            beta2Spec.range = CoreML_Specification_DoubleRange.with {
+                                $0.maxValue = adam.beta2Max
+                            }
+                        }
+                        adamSpec.eps = CoreML_Specification_DoubleParameter.with { epsSpec in
+                            epsSpec.defaultValue = adam.epsDefault
+                            epsSpec.range = CoreML_Specification_DoubleRange.with {
+                                $0.maxValue = adam.epsMax
+                            }
+                        }
+                    }
+                    
                 default:
                     break
                 }
