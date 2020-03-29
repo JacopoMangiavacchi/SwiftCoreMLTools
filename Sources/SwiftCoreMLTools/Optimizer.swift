@@ -1,10 +1,12 @@
 public enum OptimizerType : String, Codable {
-    case sgd
+    case sgd, adam
 
     var metatype: Optimizer.Type {
         switch self {
         case .sgd:
             return SGD.self
+        case .adam:
+            return Adam.self
         }
     }
 }
@@ -30,6 +32,34 @@ public struct SGD : Optimizer {
         self.miniBatchSizeRange = miniBatchSizeRange
         self.momentumDefault = momentumDefault
         self.momentumMax = momentumMax
+    }
+}
+
+public struct Adam : Optimizer {
+    public static let type = OptimizerType.adam
+
+    public let learningRateDefault: Double
+    public let learningRateMax: Double
+    public let miniBatchSizeDefault: UInt
+    public let miniBatchSizeRange: [UInt]
+    public let beta1Default: Double
+    public let beta1Max: Double
+    public let beta2Default: Double
+    public let beta2Max: Double
+    public let epsDefault: Double
+    public let epsMax: Double
+
+    public init(learningRateDefault: Double, learningRateMax: Double, miniBatchSizeDefault: UInt, miniBatchSizeRange: [UInt], beta1Default: Double, beta1Max: Double, beta2Default: Double, beta2Max: Double, epsDefault: Double, epsMax: Double) {
+        self.learningRateDefault = learningRateDefault
+        self.learningRateMax = learningRateMax
+        self.miniBatchSizeDefault = miniBatchSizeDefault
+        self.miniBatchSizeRange = miniBatchSizeRange
+        self.beta1Default = beta1Default
+        self.beta1Max = beta1Max
+        self.beta2Default = beta2Default
+        self.beta2Max = beta2Max
+        self.epsDefault = epsDefault
+        self.epsMax = epsMax
     }
 }
 
