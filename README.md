@@ -58,6 +58,7 @@ CoreML support much more then Neural Network models but this experimental librar
 ### Optimizers
 
 - SGD
+- Adam
 
 ## Export Swift for TensorFlow sample scenario
 
