@@ -30,8 +30,9 @@ CoreML support much more then Neural Network models but this experimental librar
 - InnerProduct
 - Convolution
 - Embedding
-- Permute
 - Flatten
+- Pooling
+- Permute
 - Concat
 
 ### Activation Functions
