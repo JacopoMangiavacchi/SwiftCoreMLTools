@@ -54,6 +54,9 @@ extension Model {
                             layerSpec.isUpdatable = convolution.updatable
                             layerSpec.convolution = convertToConvolution(convolution: convolution)
 
+                        case let pooling as Pooling:
+                            layerSpec.pooling = convertToPooling(pooling: pooling)
+
                         case let activation as Activation:
                             layerSpec.activation = convertToActivation(activation: activation)
 
@@ -164,6 +167,55 @@ extension Model {
             }
 
             convolutionSpec.outputShape = convolution.outputShape.map{ UInt64($0) }
+        }
+    }
+
+    func convertToPooling(pooling: Pooling) -> CoreML_Specification_PoolingLayerParams {
+        return CoreML_Specification_PoolingLayerParams.with { poolingSpec in
+            switch pooling.poolingType {
+            case .max:
+                poolingSpec.type = CoreML_Specification_PoolingLayerParams.PoolingType.max
+            case .average:
+                poolingSpec.type = CoreML_Specification_PoolingLayerParams.PoolingType.average
+            case .l2:
+                poolingSpec.type = CoreML_Specification_PoolingLayerParams.PoolingType.l2
+            }
+            
+            poolingSpec.kernelSize = pooling.kernelSize.map{ UInt64($0) }
+            poolingSpec.stride = pooling.stride.map{ UInt64($0) }
+
+            switch pooling.paddingType {
+            case .valid(let borderAmounts):
+                poolingSpec.valid = CoreML_Specification_ValidPadding.with { paddingSpec in
+                    paddingSpec.paddingAmounts = CoreML_Specification_BorderAmounts.with {  borderSpec in
+                        borderSpec.borderAmounts = borderAmounts.map{
+                            var edge = CoreML_Specification_BorderAmounts.EdgeSizes()
+                            edge.startEdgeSize = UInt64($0.startEdgeSize)
+                            edge.endEdgeSize = UInt64($0.endEdgeSize)
+                            return edge
+                        }
+                    }
+                }
+
+            case .same(let mode):
+                poolingSpec.same = CoreML_Specification_SamePadding.with { paddingSpec in
+                    switch mode {
+                    case .bottomRightHeavy:
+                        paddingSpec.asymmetryMode = .bottomRightHeavy
+
+                    case .topLeftHeavy:
+                        paddingSpec.asymmetryMode = .topLeftHeavy
+                    }
+                }
+
+            case .includeLastPixel(let paddingAmounts):
+                poolingSpec.includeLastPixel = CoreML_Specification_PoolingLayerParams.ValidCompletePadding.with { paddingSpec in
+                    paddingSpec.paddingAmounts = paddingAmounts.map{ UInt64($0) }
+                }
+            }
+
+            poolingSpec.avgPoolExcludePadding = pooling.avgPoolExcludePadding
+            poolingSpec.globalPooling = pooling.globalPooling
         }
     }
 
