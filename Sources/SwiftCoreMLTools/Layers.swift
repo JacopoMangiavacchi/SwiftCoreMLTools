@@ -46,7 +46,7 @@ public enum PaddingMode : String, Codable {
     case topLeftHeavy
 }
 
-public enum PaddingType {
+public enum ConvolutionPaddingType {
     case valid(borderAmounts: [EdgeSizes])
     case same(mode: PaddingMode)
 }
@@ -55,7 +55,7 @@ public enum PaddingCodableError : Error {
     case errorDecoding
 }
 
-extension PaddingType : Codable {
+extension ConvolutionPaddingType : Codable {
     enum CodingKeys: String, CodingKey {
         case valid, same
     }
@@ -99,13 +99,13 @@ public struct Convolution : TrainableLayer {
     public let kernelSize: [UInt]
     public let stride: [UInt]
     public let dilationFactor: [UInt]
-    public let paddingType: PaddingType
+    public let paddingType: ConvolutionPaddingType
     public let outputShape: [UInt]
     public let deconvolution: Bool
     public let updatable: Bool
 
     public init(name: String, input: [String], output: [String], weight: [Float], bias: [Float], outputChannels: UInt, kernelChannels: UInt, 
-                nGroups: UInt, kernelSize: [UInt], stride: [UInt], dilationFactor: [UInt], paddingType: PaddingType, outputShape: [UInt],
+                nGroups: UInt, kernelSize: [UInt], stride: [UInt], dilationFactor: [UInt], paddingType: ConvolutionPaddingType, outputShape: [UInt],
                 deconvolution: Bool, updatable: Bool = false) {
         self.name = name
         self.input = input
@@ -126,15 +126,80 @@ public struct Convolution : TrainableLayer {
     }
 }
 
-// TODO
+public enum PoolingType : Int, Codable {
+    case max // = 0
+    case average // = 1
+    case l2 // = 2
+}
+
+public enum PoolingPaddingType {
+    case valid(borderAmounts: [EdgeSizes])
+    case same(mode: PaddingMode)
+    case includeLastPixel(paddingAmounts: [UInt])
+}
+
+extension PoolingPaddingType : Codable {
+    enum CodingKeys: String, CodingKey {
+        case valid, same, includeLastPixel
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent([EdgeSizes].self, forKey: .valid) {
+            self = .valid(borderAmounts: value)
+        }
+        else if let value = try container.decodeIfPresent(PaddingMode.self, forKey: .same) {
+            self = .same(mode: value)
+        }
+        else if let value = try container.decodeIfPresent([UInt].self, forKey: .includeLastPixel) {
+            self = .includeLastPixel(paddingAmounts: value)
+        }
+        else {
+            throw PaddingCodableError.errorDecoding
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case .valid(let borderAmounts):
+            try container.encode(borderAmounts, forKey: .valid)
+        case .same(let mode):
+            try container.encode(mode, forKey: .same)
+        case .includeLastPixel(let paddingAmounts):
+            try container.encode(paddingAmounts, forKey: .includeLastPixel)
+        }
+    }
+}
+
 public struct Pooling : BaseLayer {
     public static let type = LayerType.pooling
     public let name: String
     public let input: [String]
     public let output: [String]
+    public let poolingType: PoolingType
+    public let kernelSize: [UInt]
+    public let stride: [UInt]
+    public let paddingType: PoolingPaddingType
+    public let avgPoolExcludePadding: Bool
+    public let globalPooling: Bool
+
+    public init(name: String, input: [String], output: [String], poolingType: PoolingType, kernelSize: [UInt],
+                stride: [UInt], paddingType: PoolingPaddingType, avgPoolExcludePadding: Bool, globalPooling: Bool) {
+        self.name = name
+        self.input = input
+        self.output = output
+        
+        self.poolingType = poolingType
+        self.kernelSize = kernelSize
+        self.stride = stride
+        self.paddingType = paddingType
+        self.avgPoolExcludePadding = avgPoolExcludePadding
+        self.globalPooling = globalPooling
+    }
 }
 
-// TODO
 public struct Embedding : TrainableLayer {
     public static let type = LayerType.embedding
     public let name: String
@@ -154,6 +219,53 @@ public struct Embedding : TrainableLayer {
         self.inputDim = inputDim
         self.outputChannels = outputChannels
     }
+}
+
+public struct Permute : BaseLayer {
+    public static let type = LayerType.permute
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let axis: [UInt]
+
+    public init(name: String, input: [String], output: [String], axis: [UInt]) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.axis = axis
+    }    
+}
+
+public enum FlattenOrder : Int, Codable {
+    case first, last
+}
+
+public struct Flatten : BaseLayer {
+    public static let type = LayerType.flatten
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+    public let mode: FlattenOrder
+
+    public init(name: String, input: [String], output: [String], mode: FlattenOrder = .last) {
+        self.name = name
+        self.input = input
+        self.output = output
+        self.mode = mode
+    }    
+}
+
+public struct Concat : BaseLayer {
+    public static let type = LayerType.concat
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+
+    public init(name: String, input: [String], output: [String]) {
+        self.name = name
+        self.input = input
+        self.output = output
+    }    
 }
 
 // TODO
@@ -194,54 +306,4 @@ public struct BiDirectionalLstm : TrainableLayer {
     public let output: [String]
     public let weight: [Float]
     public let bias: [Float]
-}
-
-// TODO
-public struct Permute : BaseLayer {
-    public static let type = LayerType.permute
-    public let name: String
-    public let input: [String]
-    public let output: [String]
-    public let axis: [UInt]
-
-    public init(name: String, input: [String], output: [String], axis: [UInt]) {
-        self.name = name
-        self.input = input
-        self.output = output
-        self.axis = axis
-    }    
-}
-
-public enum FlattenOrder : Int, Codable {
-    case first, last
-}
-
-// TODO
-public struct Flatten : BaseLayer {
-    public static let type = LayerType.flatten
-    public let name: String
-    public let input: [String]
-    public let output: [String]
-    public let mode: FlattenOrder
-
-    public init(name: String, input: [String], output: [String], mode: FlattenOrder = .last) {
-        self.name = name
-        self.input = input
-        self.output = output
-        self.mode = mode
-    }    
-}
-
-// TODO
-public struct Concat : BaseLayer {
-    public static let type = LayerType.concat
-    public let name: String
-    public let input: [String]
-    public let output: [String]
-
-    public init(name: String, input: [String], output: [String]) {
-        self.name = name
-        self.input = input
-        self.output = output
-    }    
 }
