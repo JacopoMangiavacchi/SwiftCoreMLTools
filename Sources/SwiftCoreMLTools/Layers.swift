@@ -104,15 +104,29 @@ public struct Convolution : TrainableLayer {
     public let deconvolution: Bool
     public let updatable: Bool
 
-    public init(name: String, input: [String], output: [String], weight: [Float], bias: [Float], outputChannels: UInt, kernelChannels: UInt, 
+    public init(name: String, input: [String], output: [String], weight: [Float]? = nil, bias: [Float]? = nil, outputChannels: UInt, kernelChannels: UInt, 
                 nGroups: UInt, kernelSize: [UInt], stride: [UInt], dilationFactor: [UInt], paddingType: ConvolutionPaddingType, outputShape: [UInt],
                 deconvolution: Bool, updatable: Bool = false) {
         self.name = name
         self.input = input
         self.output = output
-        self.weight = weight
-        self.bias = bias
-        
+
+        if let weight = weight, let bias = bias {
+            self.weight = weight
+            self.bias = bias
+        }
+        else if kernelSize.count == 2 {
+            let inputChannels = outputChannels * kernelSize[0] * kernelSize[1]
+            let (randomWeight, randomBias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
+            self.weight = randomWeight
+            self.bias = randomBias
+        }
+        else {
+            print("Wrong kernelSize shape")
+            self.weight = [Float]()
+            self.bias = [Float]()
+        }
+
         self.outputChannels = outputChannels
         self.kernelChannels = kernelChannels
         self.nGroups = nGroups
