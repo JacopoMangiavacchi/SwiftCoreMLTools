@@ -50,6 +50,7 @@ CoreML support much more then Neural Network models but this experimental librar
 - Softsign
 - Softplus
 - ParametricSoftplus
+- Softmax
 
 ### Loss Functions
 
