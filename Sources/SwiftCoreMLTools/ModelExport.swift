@@ -58,7 +58,12 @@ extension Model {
                             layerSpec.pooling = convertToPooling(pooling: pooling)
 
                         case let activation as Activation:
-                            layerSpec.activation = convertToActivation(activation: activation)
+                            if activation is Softmax {
+                                layerSpec.softmax =  CoreML_Specification_SoftmaxLayerParams()
+                            }
+                            else {
+                                layerSpec.activation = convertToActivation(activation: activation)
+                            }
 
                         case let embedding as Embedding:
                             layerSpec.embedding = convertToEmbedding(embedding: embedding)

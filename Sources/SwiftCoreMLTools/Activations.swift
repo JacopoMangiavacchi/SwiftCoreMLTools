@@ -196,3 +196,16 @@ public struct ParametricSoftplus : Activation {
         self.output = output
     }
 }
+
+public struct Softmax : Activation {
+    public static let type = LayerType.softmax
+    public let name: String
+    public let input: [String]
+    public let output: [String]
+
+    public init(name: String, input: [String], output: [String]) {
+        self.name = name
+        self.input = input
+        self.output = output
+    }
+}
