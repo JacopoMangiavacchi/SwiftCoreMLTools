@@ -116,7 +116,7 @@ public struct Convolution : TrainableLayer {
             self.bias = bias
         }
         else if kernelSize.count == 2 {
-            let inputChannels = outputChannels * kernelSize[0] * kernelSize[1]
+            let inputChannels = kernelChannels * kernelSize[0] * kernelSize[1]
             let (randomWeight, randomBias) = Self.getUniformWeigthsAndBias(inputChannels: inputChannels, outputChannels: outputChannels)
             self.weight = randomWeight
             self.bias = randomBias
