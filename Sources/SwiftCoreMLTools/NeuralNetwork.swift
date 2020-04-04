@@ -12,7 +12,7 @@ public struct NeuralNetwork : Items {
     public let epochSet: [UInt]?
     public let shuffle: Bool?
 
-    public var layers: [String : BaseLayer]
+    public var layers: [BaseLayer]
 
     fileprivate init(losses: [Loss]?,
          optimizer: Optimizer?,
@@ -25,11 +25,7 @@ public struct NeuralNetwork : Items {
         self.epochDefault = epochDefault
         self.epochSet = epochSet
         self.shuffle = shuffle
-        self.layers = [String : BaseLayer]()
-
-        for layer in layers {
-            self.layers[layer.name] = layer
-        }
+        self.layers = layers
     }
 
     public init(losses: [Loss]? = nil,
@@ -74,7 +70,7 @@ public struct NeuralNetwork : Items {
     }
 
     public mutating func addLayer(_ layer: BaseLayer) {
-        layers[layer.name] = layer
+        layers.append(layer)
     }
 }
 
@@ -92,7 +88,7 @@ extension NeuralNetwork : Codable {
         self.epochDefault = try container.decode(UInt?.self, forKey: .epochDefault)
         self.epochSet = try container.decode([UInt]?.self, forKey: .epochSet)
         self.shuffle = try container.decode(Bool?.self, forKey: .shuffle)
-        self.layers = try container.decode([String : AnyLayer].self, forKey: .layers).mapValues { $0.base }
+        self.layers = try container.decode([AnyLayer].self, forKey: .layers).map { $0.base }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -113,6 +109,6 @@ extension NeuralNetwork : Codable {
         if let shuffle = shuffle {
             try container.encode(shuffle, forKey: .shuffle)
         }
-        try container.encode(layers.mapValues(AnyLayer.init), forKey: .layers)
+        try container.encode(layers.map(AnyLayer.init), forKey: .layers)
     }
 }
