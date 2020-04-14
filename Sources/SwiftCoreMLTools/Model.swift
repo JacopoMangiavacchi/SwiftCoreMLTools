@@ -1,5 +1,6 @@
 public enum FeatureType : String, Codable {
-    case Float
+    case `float`
+    case `int`
 }
 
 public protocol Items : Codable {
@@ -16,7 +17,7 @@ public struct Input : InputOutputItems {
     public let shape: [UInt]
     public let featureType: FeatureType
 
-    public init(name: String, shape: [UInt], featureType: FeatureType = .Float) {
+    public init(name: String, shape: [UInt], featureType: FeatureType = .float) {
         self.name = name
         self.shape = shape
         self.featureType = featureType
@@ -28,7 +29,7 @@ public struct Output : InputOutputItems {
     public let shape: [UInt]
     public let featureType: FeatureType
 
-    public init(name: String, shape: [UInt], featureType: FeatureType = .Float) {
+    public init(name: String, shape: [UInt], featureType: FeatureType = .float) {
         self.name = name
         self.shape = shape
         self.featureType = featureType
@@ -40,7 +41,7 @@ public struct TrainingInput : InputOutputItems {
     public let shape: [UInt]
     public let featureType: FeatureType
 
-    public init(name: String, shape: [UInt], featureType: FeatureType = .Float) {
+    public init(name: String, shape: [UInt], featureType: FeatureType = .float) {
         self.name = name
         self.shape = shape
         self.featureType = featureType

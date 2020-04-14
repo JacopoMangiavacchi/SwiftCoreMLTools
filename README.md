@@ -221,26 +221,26 @@ let model = try! JSONDecoder().decode(Model.self, from: jsonData)
     "dense_input" : {
       "name" : "dense_input",
       "shape" : [1],
-      "featureType" : "Float"
+      "featureType" : "float"
     }
   },
   "outputs" : {
     "output" : {
       "name" : "output",
       "shape" : [1],
-      "featureType" : "Float"
+      "featureType" : "float"
     }
   },
   "trainingInputs" : {
     "output_true" : {
       "name" : "output_true",
       "shape" : [1],
-      "featureType" : "Float"
+      "featureType" : "float"
     },
     "dense_input" : {
       "name" : "dense_input",
       "shape" : [1],
-      "featureType" : "Float"
+      "featureType" : "float"
     }
   },
   "neuralNetwork" : {
