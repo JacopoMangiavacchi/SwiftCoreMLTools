@@ -39,6 +39,11 @@ CoreML support much more then Neural Network models but this experimental librar
 - GitHub project: https://github.com/JacopoMangiavacchi/CoreML-TransferLearning-Demo
 - Documentation: https://heartbeat.fritz.ai/core-ml-on-device-training-with-transfer-learning-from-swift-for-tensorflow-models-1264b444e18d
 
+
+## Documentation
+
+[Documentation](https://jacopomangiavacchi.github.io/SwiftCoreMLTools/Documentation/)
+
 ## Neural Network Support (work in progress)
 
 ### Layers
