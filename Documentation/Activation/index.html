@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftCoreMLTools - Activation</title>
+    <style type="text/css">
+    :root {
+    --system-red: rgb(255, 59, 48);
+    --system-orange: rgb(255, 149, 0);
+    --system-yellow: rgb(255, 204, 0);
+    --system-green: rgb(52, 199, 89);
+    --system-teal: rgb(90, 200, 250);
+    --system-blue: rgb(0, 122, 255);
+    --system-indigo: rgb(88, 86, 214);
+    --system-purple: rgb(175, 82, 222);
+    --system-pink: rgb(255, 45, 85);
+    --system-gray: rgb(142, 142, 147);
+    --system-gray2: rgb(174, 174, 178);
+    --system-gray3: rgb(199, 199, 204);
+    --system-gray4: rgb(209, 209, 214);
+    --system-gray5: rgb(229, 229, 234);
+    --system-gray6: rgb(242, 242, 247);
+
+    --label: rgb(0, 0, 0);
+    --secondary-label: rgb(60, 60, 67);
+    --tertiary-label: rgb(72, 72, 74);
+    --quaternary-label: rgb(99, 99, 102);
+    --placeholder-text: rgb(142, 142, 147);
+    --link: rgb(0, 122, 255);
+    --separator: rgb(229, 229, 234);
+    --opaque-separator: rgb(198, 198, 200);
+    --system-fill: rgb(120, 120, 128);
+    --secondary-system-fill: rgb(120, 120, 128);
+    --tertiary-system-fill: rgb(118, 118, 128);
+    --quaternary-system-fill: rgb(116, 116, 128);
+    --system-background: rgb(255, 255, 255);
+    --secondary-system-background: rgb(242, 242, 247);
+    --tertiary-system-background: rgb(255, 255, 255);
+    --system-grouped-background: rgb(242, 242, 247);
+    --secondary-system-grouped-background: rgb(255, 255, 255);
+    --tertiary-system-grouped-background: rgb(242, 242, 247);
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+    :root {
+        --system-red: color(display-p3 1 0.2314 0.1882);
+        --system-orange: color(display-p3 1 0.5843 0);
+        --system-yellow: color(display-p3 1 0.8 0);
+        --system-green: color(display-p3 0.2039 0.7804 0.349);
+        --system-teal: color(display-p3 0.3529 0.7843 0.9804);
+        --system-blue: color(display-p3 0 0.4784 1);
+        --system-indigo: color(display-p3 0.3451 0.3373 0.8392);
+        --system-purple: color(display-p3 0.6863 0.3216 0.8706);
+        --system-pink: color(display-p3 1 0.1765 0.3333);
+        --system-gray: color(display-p3 0.5569 0.5569 0.5765);
+        --system-gray2: color(display-p3 0.6824 0.6824 0.698);
+        --system-gray3: color(display-p3 0.7804 0.7804 0.8);
+        --system-gray4: color(display-p3 0.8196 0.8196 0.8392);
+        --system-gray5: color(display-p3 0.898 0.898 0.9176);
+        --system-gray6: color(display-p3 0.949 0.949 0.9686);
+
+        --label: color(display-p3 0 0 0);
+        --secondary-label: color(display-p3 0.2353 0.2353 0.2627);
+        --tertiary-label: color(display-p3 0.2823 0.2823 0.2901);
+        --quaternary-label: color(display-p3 0.4627 0.4627 0.5019);
+        --placeholder-text: color(display-p3 0.5568 0.5568 0.5764);
+        --link: color(display-p3 0 0.4784 1);
+        --separator: color(display-p3 0.898 0.898 0.9176);
+        --opaque-separator: color(display-p3 0.7765 0.7765 0.7843);
+        --system-fill: color(display-p3 0.4706 0.4706 0.502);
+        --secondary-system-fill: color(display-p3 0.4706 0.4706 0.502);
+        --tertiary-system-fill: color(display-p3 0.4627 0.4627 0.502);
+        --quaternary-system-fill: color(display-p3 0.4549 0.4549 0.502);
+        --system-background: color(display-p3 1 1 1);
+        --secondary-system-background: color(display-p3 0.949 0.949 0.9686);
+        --tertiary-system-background: color(display-p3 1 1 1);
+        --system-grouped-background: color(display-p3 0.949 0.949 0.9686);
+        --secondary-system-grouped-background: color(display-p3 1 1 1);
+        --tertiary-system-grouped-background: color(
+            display-p3 0.949 0.949 0.9686
+        );
+    }
+}
+
+/*
+@media (prefers-color-scheme: dark) {
+    :root {
+        --system-red: rgb(255, 69, 58);
+        --system-orange: rgb(255, 159, 10);
+        --system-yellow: rgb(255, 214, 10);
+        --system-green: rgb(48, 209, 88);
+        --system-teal: rgb(100, 210, 255);
+        --system-blue: rgb(10, 132, 255);
+        --system-indigo: rgb(94, 92, 230);
+        --system-purple: rgb(191, 90, 242);
+        --system-pink: rgb(255, 55, 95);
+        --system-gray: rgb(142, 142, 147);
+        --system-gray2: rgb(99, 99, 102);
+        --system-gray3: rgb(72, 72, 74);
+        --system-gray4: rgb(58, 58, 60);
+        --system-gray5: rgb(44, 44, 46);
+        --system-gray6: rgb(28, 28, 30);
+
+        --label: rgb(255, 255, 255);
+        --secondary-label: rgb(235, 235, 245);
+        --tertiary-label: rgb(235, 235, 245);
+        --quaternary-label: rgb(235, 235, 245);
+        --placeholder-text: rgb(235, 235, 245);
+        --link: rgb(9, 132, 255);
+        --separator: rgb(44, 44, 46);
+        --opaque-separator: rgb(56, 56, 58);
+        --system-fill: rgb(120, 120, 128);
+        --secondary-system-fill: rgb(120, 120, 128);
+        --tertiary-system-fill: rgb(118, 118, 128);
+        --quaternary-system-fill: rgb(118, 118, 128);
+        --system-background: rgb(0, 0, 0);
+        --secondary-system-background: rgb(28, 28, 30);
+        --tertiary-system-background: rgb(44, 44, 46);
+        --system-grouped-background: rgb(0, 0, 0);
+        --secondary-system-grouped-background: rgb(28, 28, 30);
+        --tertiary-system-grouped-background: rgb(44, 44, 46);
+    }
+
+    @supports (color: color(display-p3 1 1 1)) {
+        :root {
+            --system-red: color(display-p3 1 0.4118 0.3804);
+            --system-orange: color(display-p3 1 0.702 0.251);
+            --system-yellow: color(display-p3 1 0.8314 0.149);
+            --system-green: color(display-p3 0.1882 0.8588 0.3569);
+            --system-teal: color(display-p3 0.4392 0.8431 1);
+            --system-blue: color(display-p3 0.251 0.6118 1);
+            --system-indigo: color(display-p3 0.4902 0.4784 1);
+            --system-purple: color(display-p3 0.8549 0.5608 1);
+            --system-pink: color(display-p3 1 0.3922 0.5098);
+            --system-gray: color(display-p3 0.6824 0.6824 0.698);
+            --system-gray2: color(display-p3 0.4863 0.4863 0.502);
+            --system-gray3: color(display-p3 0.3294 0.3294 0.3373);
+            --system-gray4: color(display-p3 0.2667 0.2667 0.2745);
+            --system-gray5: color(display-p3 0.2118 0.2118 0.2196);
+            --system-gray6: color(display-p3 0.1412 0.1412 0.149);
+
+            --label: color(display-p3 1 1 1);
+            --secondary-label: color(display-p3 0.9216 0.9216 0.9608);
+            --tertiary-label: color(display-p3 0.9216 0.9216 0.9608);
+            --quaternary-label: color(display-p3 0.9216 0.9216 0.9608);
+            --placeholder-text: color(display-p3 0.9216 0.9216 0.9608);
+            --link: color(display-p3 0.03529 0.5176 1);
+            --separator: color(display-p3 0.2118 0.2118 0.2196);
+            --opaque-separator: color(display-p3 0.2196 0.2196 0.2275);
+            --system-fill: color(display-p3 0.4706 0.4706 0.502);
+            --secondary-system-fill: color(display-p3 0.4706 0.4706 0.502);
+            --tertiary-system-fill: color(display-p3 0.4627 0.4627 0.502);
+            --quaternary-system-fill: color(display-p3 0.4627 0.4627 0.502);
+            --system-background: color(display-p3 0 0 0);
+            --secondary-system-background: color(
+                display-p3 0.1412 0.1412 0.149
+            );
+            --tertiary-system-background: color(
+                display-p3 0.2118 0.2118 0.2196
+            );
+            --system-grouped-background: color(display-p3 0 0 0);
+            --secondary-system-grouped-background: color(
+                display-p3 0.1412 0.1412 0.149
+            );
+            --tertiary-system-grouped-background: color(
+                display-p3 0.2118 0.2118 0.2196
+            );
+        }
+    }
+} */
+
+:root {
+    --large-title: 600 32pt / 39pt sans-serif;
+    --title-1: 600 26pt / 32pt sans-serif;
+    --title-2: 600 20pt / 25pt sans-serif;
+    --title-3: 500 18pt / 23pt sans-serif;
+    --headline: 500 15pt / 20pt sans-serif;
+    --body: 300 15pt / 20pt sans-serif;
+    --callout: 300 14pt / 19pt sans-serif;
+    --subhead: 300 13pt / 18pt sans-serif;
+    --footnote: 300 12pt / 16pt sans-serif;
+    --caption-1: 300 11pt / 13pt sans-serif;
+    --caption-2: 300 11pt / 13pt sans-serif;
+}
+
+:root {
+    --icon-case: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2389c5e6' height='90' rx='8' stroke='%236bb7e1' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m20.21 50c0-20.7 11.9-32.79 30.8-32.79 16 0 28.21 10.33 28.7 25.32h-15.52c-.79-7.53-6.1-12.42-13.19-12.42-8.79 0-14.37 7.52-14.37 19.82s5.54 20 14.41 20c7.08 0 12.22-4.66 13.23-12.09h15.52c-.74 15.07-12.43 25-28.78 25-19.01-.03-30.8-12.12-30.8-32.84z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-class: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%239b98e6' height='90' rx='8' stroke='%235856d6' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m20.21 50c0-20.7 11.9-32.79 30.8-32.79 16 0 28.21 10.33 28.7 25.32h-15.52c-.79-7.53-6.1-12.42-13.19-12.42-8.79 0-14.37 7.52-14.37 19.82s5.54 20 14.41 20c7.08 0 12.22-4.66 13.23-12.09h15.52c-.74 15.07-12.43 25-28.78 25-19.01-.03-30.8-12.12-30.8-32.84z' fill='%23fff'/%3E%3C/svg%3E");
+    --icon-enumeration: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23eca95b' height='90' rx='8' stroke='%23e89234' stroke-miterlimit='10' stroke-width='4' width='90' x='5.17' y='5'/%3E%3Cpath d='m71.9 81.71h-43.47v-63.42h43.47v13h-27.34v12.62h25.71v11.87h-25.71v12.92h27.34z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-extension: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23eca95b' height='90' rx='8' stroke='%23e89234' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cg fill='%23fff'%3E%3Cpath d='m54.43 81.93h-33.92v-63.86h33.92v12.26h-21.82v13.8h20.45v11.32h-20.45v14.22h21.82z'/%3E%3Cpath d='m68.74 74.58h-.27l-2.78 7.35h-7.28l5.59-12.61-6-12.54h8l2.74 7.3h.27l2.76-7.3h7.64l-6.14 12.54 5.89 12.61h-7.64z'/%3E%3C/g%3E%3C/svg%3E%0A");
+    --icon-function: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%237ac673' height='90' rx='8' stroke='%235bb74f' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m24.25 75.66a5.47 5.47 0 0 1 5.75-5.73c1.55 0 3.55.41 6.46.41 3.19 0 4.78-1.55 5.46-6.65l1.5-10.14h-9.34a6 6 0 1 1 0-12h11.1l1.09-7.27c1.55-10.89 8.01-16.58 17.73-16.58 6.69 0 11.74 1.77 11.74 6.64a5.47 5.47 0 0 1 -5.74 5.73c-1.55 0-3.55-.41-6.46-.41-3.14 0-4.73 1.51-5.46 6.65l-.78 5.27h11.44a6 6 0 1 1 .05 12h-13.19l-1.78 12.11c-1.59 10.92-8.1 16.61-17.82 16.61-6.7 0-11.75-1.77-11.75-6.64z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-method: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%235a98f8' height='90' rx='8' stroke='%232974ed' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m70.61 81.71v-39.6h-.31l-15.69 39.6h-9.22l-15.65-39.6h-.35v39.6h-14.19v-63.42h18.63l16 41.44h.36l16-41.44h18.61v63.42z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-property: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%2389c5e6' height='90' rx='8' stroke='%236bb7e1' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m52.31 18.29c13.62 0 22.85 8.84 22.85 22.46s-9.71 22.37-23.82 22.37h-10.34v18.59h-16.16v-63.42zm-11.31 32.71h7c6.85 0 10.89-3.56 10.89-10.2s-4.08-10.16-10.89-10.16h-7z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-protocol: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23ff6682' height='90' rx='8' stroke='%23ff2d55' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cg fill='%23fff'%3E%3Cpath d='m46.28 18.29c11.84 0 20 8.66 20 21.71s-8.44 21.71-20.6 21.71h-10.81v20h-12.09v-63.42zm-11.41 33.05h8.13c6.93 0 11-4 11-11.29s-4-11.25-10.93-11.25h-8.2z'/%3E%3Cpath d='m62 57.45h8v4.77h.16c.84-3.45 2.54-5.12 5.17-5.12a5.06 5.06 0 0 1 1.92.35v7.55a5.69 5.69 0 0 0 -2.39-.51c-3.08 0-4.66 1.74-4.66 5.12v12.1h-8.2z'/%3E%3C/g%3E%3C/svg%3E%0A");
+    --icon-structure: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%23b57edf' height='90' rx='8' stroke='%239454c2' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m38.38 63c.74 4.53 5.62 7.16 11.82 7.16s10.37-2.81 10.37-6.68c0-3.51-2.73-5.31-10.24-6.76l-6.5-1.23c-12.66-2.35-19.21-8.49-19.21-18.21 0-12.22 10.59-20.09 25.18-20.09 16 0 25.36 7.83 25.53 19.91h-15c-.26-4.57-4.57-7.29-10.42-7.29s-9.31 2.63-9.31 6.37c0 3.34 2.9 5.18 9.8 6.5l6.5 1.23c13.56 2.6 19.71 8.09 19.71 18.09 0 12.74-10 20.83-26.72 20.83-15.82 0-26.28-7.3-26.5-19.78z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-typealias: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%237ac673' height='90' rx='8' stroke='%235bb74f' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m42 81.71v-50.41h-17.53v-13h51.06v13h-17.53v50.41z' fill='%23fff'/%3E%3C/svg%3E%0A");
+    --icon-variable: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%237ac673' height='90' rx='8' stroke='%235bb74f' stroke-miterlimit='10' stroke-width='4' width='90' x='5' y='5'/%3E%3Cpath d='m39.85 81.71-20.22-63.42h18.37l12.18 47.64h.35l12.17-47.64h17.67l-20.22 63.42z' fill='%23fff'/%3E%3C/svg%3E%0A");
+}
+
+/************/
+
+body,
+input,
+textarea,
+select,
+button {
+    font-synthesis: none;
+    -moz-font-feature-settings: "kern";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    direction: ltr;
+    text-align: left;
+}
+
+h1:first-of-type,
+h2:first-of-type,
+h3:first-of-type,
+h4:first-of-type,
+h5:first-of-type,
+h6:first-of-type {
+    margin-top: 0;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+    font-family: inherit;
+    font-weight: inherit;
+}
+
+h1 img,
+h2 img,
+h3 img,
+h4 img,
+h5 img,
+h6 img {
+    margin: 0 0.5em 0.2em 0;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+img + h1 {
+    margin-top: 0.5em;
+}
+
+img + h1,
+img + h2,
+img + h3,
+img + h4,
+img + h5,
+img + h6 {
+    margin-top: 0.3em;
+}
+
+h1 + *,
+h2 + *,
+h3 + *,
+h4 + *,
+h5 + *,
+h6 + * {
+    margin-top: 0.8em;
+}
+
+:is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 0.4em;
+}
+
+:matches(h1, h2, h3, h4, h5, h6) + :matches(h1, h2, h3, h4, h5, h6) {
+    margin-top: 0.4em;
+}
+
+:is(p, ul, ol) + :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 1.6em;
+}
+
+:matches(p, ul, ol) + :matches(h1, h2, h3, h4, h5, h6) {
+    margin-top: 1.6em;
+}
+
+:is(p, ul, ol) + * {
+    margin-top: 0.8em;
+}
+
+:matches(p, ul, ol) + * {
+    margin-top: 0.8em;
+}
+
+ul,
+ol {
+    margin-left: 1.17647em;
+}
+
+:matches(ul, ol) :matches(ul, ol) {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+nav h2 {
+    color: var(--secondary-label);
+    text-transform: uppercase;
+    font-variant: small-caps;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+nav ul,
+nav ol {
+    margin: 0;
+    list-style: none;
+}
+
+nav li li {
+    font-size: smaller;
+}
+
+a:link,
+a:visited {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+a:active {
+    text-decoration: none;
+}
+
+p + a {
+    display: inline-block;
+}
+
+b,
+strong {
+    font-weight: 600;
+}
+
+.summary,
+.discussion {
+    font: var(--callout);
+}
+
+article > .discussion {
+    margin-bottom: 2em;
+}
+
+.discussion .highlight {
+    font: var(--caption-1);
+    background: transparent;
+    border: 1px var(--separator) solid;
+}
+
+em,
+i,
+cite,
+dfn {
+    font-style: italic;
+}
+
+/* sup {
+    font-size: 0.6em;
+    vertical-align: top;
+    position: relative;
+    bottom: -0.2em;
+} */
+
+:matches(h1, h2, h3) sup {
+    font-size: 0.4em;
+}
+
+sup a {
+    vertical-align: inherit;
+    color: inherit;
+}
+
+sup a:hover {
+    color: var(--link);
+    text-decoration: none;
+}
+
+sub {
+    line-height: 1;
+}
+
+abbr {
+    border: 0;
+}
+
+:lang(ja),
+:lang(ko),
+:lang(th),
+:lang(zh) {
+    font-style: normal;
+}
+
+:lang(ko) {
+    word-break: keep-all;
+}
+
+form fieldset {
+    width: 95%;
+    margin: 1em auto;
+    max-width: 450px;
+}
+
+form label {
+    position: relative;
+    display: block;
+    margin-bottom: 14px;
+    width: 100%;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.5em;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+textarea {
+    margin: 0;
+    width: 100%;
+    height: 34px;
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: 400;
+    border: 1px solid var(--separator);
+    border-radius: 4px;
+    padding: 0 1em 0;
+    position: relative;
+    z-index: 1;
+    color: #333333;
+    vertical-align: top;
+}
+
+input[type="text"],
+input[type="text"]:focus,
+input[type="email"],
+input[type="email"]:focus,
+input[type="number"],
+input[type="number"]:focus,
+input[type="password"],
+input[type="password"]:focus,
+input[type="tel"],
+input[type="tel"]:focus,
+input[type="url"],
+input[type="url"]:focus,
+textarea,
+textarea:focus {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+    border-color: #0088cc;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.3);
+    z-index: 9;
+}
+
+input[type="text"]:-moz-read-only,
+input[type="text"]:-moz-read-only,
+input[type="email"]:-moz-read-only,
+input[type="email"]:-moz-read-only,
+input[type="number"]:-moz-read-only,
+input[type="number"]:-moz-read-only,
+input[type="password"]:-moz-read-only,
+input[type="password"]:-moz-read-only,
+input[type="tel"]:-moz-read-only,
+input[type="tel"]:-moz-read-only,
+input[type="url"]:-moz-read-only,
+input[type="url"]:-moz-read-only {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding-left: 0;
+}
+
+input[type="text"]:-moz-read-only,
+input[type="text"]:read-only,
+input[type="email"]:-moz-read-only,
+input[type="email"]:read-only,
+input[type="number"]:-moz-read-only,
+input[type="number"]:read-only,
+input[type="password"]:-moz-read-only,
+input[type="password"]:read-only,
+input[type="tel"]:-moz-read-only,
+input[type="tel"]:read-only,
+input[type="url"]:-moz-read-only,
+input[type="url"]:read-only {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding-left: 0;
+}
+
+::-webkit-input-placeholder,
+:-moz-placeholder,
+::-moz-placeholder,
+:-ms-input-placeholder {
+    color: var(--placeholder-text);
+}
+
+textarea {
+    min-height: 134px;
+    line-height: 1.4737;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    resize: vertical;
+}
+textarea,
+textarea:focus {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+select {
+    background: transparent;
+    width: 100%;
+    height: 34px;
+    padding: 0 1em;
+    font-size: 1em;
+    font-family: inherit;
+    border-radius: 4px;
+    border: none;
+    margin: 0;
+    cursor: pointer;
+}
+select,
+select:focus {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+select:focus {
+    border-color: #0088cc;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.3);
+    z-index: 9;
+}
+
+input[type="file"] {
+    margin: 0;
+    font-family: inherit;
+    font-size: 100%;
+    background: #fafafa;
+    width: 100%;
+    height: 34px;
+    border-radius: 4px;
+    padding: 6px 1em;
+    position: relative;
+    z-index: 1;
+    color: #333333;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+input[type="file"]:focus {
+    border-color: #0088cc;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.3);
+    z-index: 9;
+}
+input[type="file"]:focus,
+input[type="file"]:focus:focus {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+button,
+button:focus,
+input[type="reset"],
+input[type="reset"]:focus,
+input[type="submit"],
+input[type="submit"]:focus {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+:matches(button, input[type="reset"], input[type="submit"]) {
+    background-color: #e3e3e3;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(white),
+        to(#e3e3e3)
+    );
+    background: linear-gradient(white, #e3e3e3);
+    border-color: #d6d6d6;
+    color: #0070c9;
+}
+:matches(button, input[type="reset"], input[type="submit"]):hover {
+    background-color: #eeeeee;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(white),
+        to(#eeeeee)
+    );
+    background: linear-gradient(white, #eeeeee);
+    border-color: #d9d9d9;
+}
+:matches(button, input[type="reset"], input[type="submit"]):active {
+    background-color: gainsboro;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(#f7f7f7),
+        to(gainsboro)
+    );
+    background: linear-gradient(#f7f7f7, gainsboro);
+    border-color: #d0d0d0;
+}
+:matches(button, input[type="reset"], input[type="submit"]):disabled {
+    background-color: #e3e3e3;
+    background: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(white),
+        to(#e3e3e3)
+    );
+    background: linear-gradient(white, #e3e3e3);
+    border-color: #d6d6d6;
+    color: #0070c9;
+}
+
+/*  */
+
+body {
+    background: var(--system-grouped-background);
+    font: var(--body);
+    font-family: ui-system, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--label);
+}
+
+h1 {
+    font: var(--large-title);
+}
+
+h2 {
+    font: var(--title-2);
+}
+
+h3 {
+    font: var(--title-3);
+}
+
+h4,
+h5,
+h6 {
+    font: var(--headline);
+}
+
+/* strong,
+    th,
+    dt {
+        font: var(--headline);
+    } */
+
+a {
+    color: var(--link);
+}
+
+label {
+    font: var(--callout);
+}
+
+label,
+input {
+    display: block;
+}
+
+input {
+    margin-bottom: 1em;
+}
+
+/* button,
+    input[type="submit"] {
+        color: var(--link);
+        background: transparent;
+        border: none;
+        padding: 0.5em;
+    } */
+
+/*********************/
+
+hr {
+    border: none;
+    border-top: 1px var(--separator) solid;
+    margin: 1em 0;
+}
+
+table {
+    width: 100%;
+    font: var(--caption-1);
+    caption-side: bottom;
+    margin-bottom: 2em;
+}
+
+th,
+td {
+    padding: 0 1em;
+}
+
+th {
+    font-weight: 600;
+    text-align: left;
+}
+
+thead th {
+    border-bottom: 1px var(--separator) solid;
+}
+
+tr:last-of-type td,
+tr:last-of-type th {
+    border-bottom: none;
+}
+
+th,
+td {
+    border-bottom: 1px var(--separator) solid;
+    color: var(--secondary-label);
+}
+
+caption {
+    text-align: left;
+    margin-top: 2em;
+    font: var(--caption-2);
+    color: var(--tertiary-label);
+}
+
+code,
+.graph text {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    font-weight: 300;
+}
+
+.graph > polygon {
+    display: none;
+}
+
+.graph text {
+    fill: currentColor !important;
+}
+
+.graph path,
+.graph ellipse,
+.graph rect,
+.graph polygon {
+    stroke: currentColor !important;
+}
+
+body {
+    width: 90vw;
+    max-width: 1280px;
+    margin: 1em auto;
+}
+
+body > header {
+    font: var(--title-1);
+}
+
+body > header a {
+    color: var(--label);
+}
+
+body > header span {
+    font-weight: normal;
+}
+
+body > header sup {
+    text-transform: uppercase;
+    font-size: small;
+    font-weight: 300;
+    color: var(--secondary-label);
+    letter-spacing: 0.1ch;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        width: 96vw;
+        max-width: 100%;
+    }
+
+    body > header {
+        font: var(--title-3);
+        text-align: left;
+        padding: 1em 0;
+    }
+
+    body > nav {
+        display: none;
+    }
+
+    body > main {
+        padding: 0 1em;
+    }
+
+    #relationships figure {
+        display: none;
+    }
+
+    section > [role="article"][class] pre {
+        margin-left: -2.5em;
+    }
+
+    section > [role="article"][class] div {
+        margin-left: -2em;
+    }
+}
+
+body > header {
+    padding: 0.5em 0;
+}
+
+main,
+nav {
+    overflow-x: scroll;
+}
+
+main {
+    background: var(--system-background);
+    border-radius: 8px;
+}
+
+form.search {
+}
+
+body > footer {
+    clear: both;
+    padding: 1em 0;
+    font: var(--caption-1);
+    color: var(--secondary-label);
+}
+
+main {
+    padding: 0 2em;
+    /* max-width: 66ch; */
+}
+
+nav {
+    width: 20vw;
+    float: right;
+    overflow: scroll;
+    padding: 0 1em 3em 1em;
+    margin-left: 1em;
+    position: sticky;
+    top: 1em;
+    max-height: 100vh;
+}
+
+nav a {
+    color: var(--secondary-label);
+}
+
+nav ul a {
+    color: var(--tertiary-label);
+}
+
+nav ol {
+    padding: 0;
+}
+
+nav ul {
+    padding: 0;
+    margin-bottom: 1em;
+    font: var(--callout);
+}
+
+nav ol > li > a {
+    font: var(--headline);
+    font-size: smaller;
+    display: block;
+    margin: 0.5em 0;
+}
+
+nav li {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+main section {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px var(--separator) solid;
+}
+
+main section:last-of-type {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+/* main :matches(h1, h2, h3) {
+    position: sticky;
+    top: 0px;
+}
+
+main h1 {
+    z-index: 1;
+}
+
+main h2 {
+    z-index: 2;
+}
+
+main h3 {
+    z-index: 3;
+} */
+
+blockquote {
+    border-left: 4px var(--separator) solid;
+    padding-left: 2em;
+    margin-left: 0;
+    font-size: smaller;
+    color: var(--secondary-label);
+    --link: var(--secondary-label);
+}
+
+blockquote a {
+    text-decoration: underline;
+}
+
+article {
+    padding: 2em 0 1em 0;
+}
+
+article > .summary {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px var(--separator) solid;
+}
+
+article > .summary:last-child {
+    border-bottom: none;
+}
+
+.parameters th {
+    text-align: right;
+}
+
+.parameters td {
+    color: var(--secondary-label);
+}
+
+.parameters th + td {
+    text-align: center;
+}
+
+dl {
+    padding-top: 1em;
+}
+
+dt {
+    font: var(--headline);
+}
+
+dd {
+    margin-left: 2em;
+    margin-bottom: 1em;
+}
+
+dd p {
+    margin-top: 0;
+}
+
+.highlight {
+    background: var(--secondary-system-background);
+    border-radius: 8px;
+    font-size: smaller;
+    overflow-x: scroll;
+    white-space: pre-line;
+    padding: 1em;
+    padding-left: 3em;
+    text-indent: -2em;
+    margin-bottom: 2em;
+}
+
+.highlight .p {
+    white-space: nowrap;
+}
+
+.highlight .placeholder {
+    color: var(--label);
+}
+
+.highlight a {
+    text-decoration: underline;
+    color: var(--placeholder-text);
+}
+
+.highlight .literal,
+.highlight .keyword,
+.highlight .attribute {
+    color: var(--system-purple);
+}
+
+.highlight .number {
+    color: var(--system-blue);
+}
+
+.highlight .declaration {
+    color: var(--system-teal);
+}
+
+.highlight .type {
+    color: var(--system-indigo);
+}
+
+.highlight .directive {
+    color: var(--system-orange);
+}
+
+.highlight .comment {
+    color: var(--system-gray);
+}
+
+main summary:hover {
+    text-decoration: underline;
+}
+
+figure {
+    margin: 2em 0;
+    padding: 1em 0;
+}
+
+figure svg {
+    max-width: 100%;
+    height: auto !important;
+    margin: 0 auto;
+    display: block;
+}
+
+h1 small {
+    font-size: 0.5em;
+    line-height: 1.5;
+    display: block;
+    font-weight: normal;
+    color: var(--quaternary-label);
+}
+
+p code,
+dd code,
+li code {
+    font-size: smaller;
+    color: var(--secondary-label);
+}
+
+a code {
+    text-decoration: underline;
+}
+
+section > [role="article"][class],
+nav li[class],
+dl dt[class] {
+    background-image: var(--background-image);
+    background-size: 1em;
+    background-repeat: no-repeat;
+    background-position: left 0.25em;
+    padding-left: 3em;
+}
+
+dl dt[class] {
+    background-position-y: 0.125em;
+}
+
+section > [role="article"] {
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px var(--separator) solid;
+    padding-left: 2em !important;
+}
+
+section > [role="article"]:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+nav li[class],
+dl dt[class] {
+    list-style: none;
+    text-indent: -1em;
+    margin-bottom: 0.5em;
+}
+
+nav li[class] {
+    padding-left: 2.5em;
+}
+
+.case,
+.enumeration_case {
+    --background-image: var(--icon-case);
+    --link: var(--system-teal);
+}
+
+.class {
+    --background-image: var(--icon-class);
+    --link: var(--system-indigo);
+}
+
+.enumeration {
+    --background-image: var(--icon-enumeration);
+    --link: var(--system-orange);
+}
+
+.extension {
+    --background-image: var(--icon-extension);
+    --link: var(--system-orange);
+}
+
+.function {
+    --background-image: var(--icon-function);
+    --link: var(--system-green);
+}
+
+.method,
+.initializer {
+    --background-image: var(--icon-method);
+    --link: var(--system-blue);
+}
+
+.property {
+    --background-image: var(--icon-property);
+    --link: var(--system-teal);
+}
+
+.protocol {
+    --background-image: var(--icon-protocol);
+    --link: var(--system-pink);
+}
+
+.structure {
+    --background-image: var(--icon-structure);
+    --link: var(--system-purple);
+}
+
+.typealias {
+    --background-image: var(--icon-typealias);
+    --link: var(--system-green);
+}
+
+.variable {
+    --background-image: var(--icon-variable);
+    --link: var(--system-green);
+}
+
+.unknown {
+    --link: var(--quaternary-label);
+    color: var(--link);
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">
+            <strong>
+                SwiftCoreMLTools
+            </strong>
+            <span>Documentation</span>
+        </a>
+        <sup>Beta</sup>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Conforms To</a></li><li><a href="#relationships">Types Conforming to Activation</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Protocol</small>
+    <code class="name">Activation</code>
+</h1>
+
+<html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">protocol</span> <span class="type">Activation</span>: <a href="/BaseLayer"><span class="type">BaseLayer</span></a></code></pre></body></html>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+    <figure>
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.3 (20191010.1750)
+ -->
+<!-- Title: %3 Pages: 1 -->
+<svg width="1622pt" height="323pt"
+ viewBox="0.00 0.00 1621.56 322.53" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 318.53)">
+<title>%3</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-318.53 1617.56,-318.53 1617.56,4 -4,4"/>
+<!-- Activation -->
+<g id="node1" class="node protocol current">
+<title>Activation</title>
+<g id="a_node1"><a xlink:href="/Activation" xlink:title="Activation">
+<path fill="none" stroke="black" stroke-width="3" d="M890.99,-177.29C890.99,-177.29 698.99,-177.29 698.99,-177.29 692.99,-177.29 686.99,-171.29 686.99,-165.29 686.99,-165.29 686.99,-153.29 686.99,-153.29 686.99,-147.29 692.99,-141.29 698.99,-141.29 698.99,-141.29 890.99,-141.29 890.99,-141.29 896.99,-141.29 902.99,-147.29 902.99,-153.29 902.99,-153.29 902.99,-165.29 902.99,-165.29 902.99,-171.29 896.99,-177.29 890.99,-177.29"/>
+<text text-anchor="middle" x="794.99" y="-156.23" font-family="Menlo" font-size="14.00">Activation</text>
+</a>
+</g>
+</g>
+<!-- BaseLayer -->
+<g id="node7" class="node protocol">
+<title>BaseLayer</title>
+<g id="a_node7"><a xlink:href="/BaseLayer" xlink:title="BaseLayer">
+<path fill="none" stroke="black" d="M223.01,-139.94C223.01,-139.94 31.01,-139.94 31.01,-139.94 25.01,-139.94 19.01,-133.94 19.01,-127.94 19.01,-127.94 19.01,-115.94 19.01,-115.94 19.01,-109.94 25.01,-103.94 31.01,-103.94 31.01,-103.94 223.01,-103.94 223.01,-103.94 229.01,-103.94 235.01,-109.94 235.01,-115.94 235.01,-115.94 235.01,-127.94 235.01,-127.94 235.01,-133.94 229.01,-139.94 223.01,-139.94"/>
+<text text-anchor="middle" x="127.01" y="-118.88" font-family="Menlo" font-size="14.00">BaseLayer</text>
+</a>
+</g>
+</g>
+<!-- Activation&#45;&gt;BaseLayer -->
+<g id="edge14" class="edge conformsTo">
+<title>Activation&#45;&gt;BaseLayer</title>
+<path fill="none" stroke="black" d="M686.93,-153.24C565.86,-146.47 370.24,-135.54 245.2,-128.54"/>
+<polygon fill="black" stroke="black" points="245.37,-125.05 235.19,-127.99 244.98,-132.04 245.37,-125.05"/>
+</g>
+<!-- ReLu -->
+<g id="node2" class="node structure">
+<title>ReLu</title>
+<g id="a_node2"><a xlink:href="/ReLu" xlink:title="ReLu">
+<path fill="none" stroke="black" d="M1455.44,-229.83C1455.44,-229.83 1263.44,-229.83 1263.44,-229.83 1257.44,-229.83 1251.44,-223.83 1251.44,-217.83 1251.44,-217.83 1251.44,-205.83 1251.44,-205.83 1251.44,-199.83 1257.44,-193.83 1263.44,-193.83 1263.44,-193.83 1455.44,-193.83 1455.44,-193.83 1461.44,-193.83 1467.44,-199.83 1467.44,-205.83 1467.44,-205.83 1467.44,-217.83 1467.44,-217.83 1467.44,-223.83 1461.44,-229.83 1455.44,-229.83"/>
+<text text-anchor="middle" x="1359.44" y="-208.78" font-family="Menlo" font-size="14.00">ReLu</text>
+</a>
+</g>
+</g>
+<!-- ReLu&#45;&gt;Activation -->
+<g id="edge13" class="edge conformsTo">
+<title>ReLu&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M1251.28,-201.76C1154.56,-192.76 1013.11,-179.59 913.39,-170.31"/>
+<polygon fill="black" stroke="black" points="913.55,-166.81 903.27,-169.37 912.9,-173.78 913.55,-166.81"/>
+</g>
+<!-- PReLu -->
+<g id="node3" class="node structure">
+<title>PReLu</title>
+<g id="a_node3"><a xlink:href="/PReLu" xlink:title="PReLu">
+<path fill="none" stroke="black" d="M676.79,-36C676.79,-36 484.79,-36 484.79,-36 478.79,-36 472.79,-30 472.79,-24 472.79,-24 472.79,-12 472.79,-12 472.79,-6 478.79,0 484.79,0 484.79,0 676.79,0 676.79,0 682.79,0 688.79,-6 688.79,-12 688.79,-12 688.79,-24 688.79,-24 688.79,-30 682.79,-36 676.79,-36"/>
+<text text-anchor="middle" x="580.79" y="-14.95" font-family="Menlo" font-size="14.00">PReLu</text>
+</a>
+</g>
+</g>
+<!-- PReLu&#45;&gt;Activation -->
+<g id="edge2" class="edge conformsTo">
+<title>PReLu&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M608.36,-36.18C646.83,-61.56 716.69,-107.64 759.16,-135.65"/>
+<polygon fill="black" stroke="black" points="757.26,-138.59 767.53,-141.17 761.11,-132.75 757.26,-138.59"/>
+</g>
+<!-- Softsign -->
+<g id="node4" class="node structure">
+<title>Softsign</title>
+<g id="a_node4"><a xlink:href="/Softsign" xlink:title="Softsign">
+<path fill="none" stroke="black" d="M516.17,-289.76C516.17,-289.76 324.17,-289.76 324.17,-289.76 318.17,-289.76 312.17,-283.76 312.17,-277.76 312.17,-277.76 312.17,-265.76 312.17,-265.76 312.17,-259.76 318.17,-253.76 324.17,-253.76 324.17,-253.76 516.17,-253.76 516.17,-253.76 522.17,-253.76 528.17,-259.76 528.17,-265.76 528.17,-265.76 528.17,-277.76 528.17,-277.76 528.17,-283.76 522.17,-289.76 516.17,-289.76"/>
+<text text-anchor="middle" x="420.17" y="-268.71" font-family="Menlo" font-size="14.00">Softsign</text>
+</a>
+</g>
+</g>
+<!-- Softsign&#45;&gt;Activation -->
+<g id="edge12" class="edge conformsTo">
+<title>Softsign&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M480.39,-253.69C547.2,-233.64 654.82,-201.35 725.24,-180.22"/>
+<polygon fill="black" stroke="black" points="726.35,-183.54 734.92,-177.31 724.34,-176.83 726.35,-183.54"/>
+</g>
+<!-- Sigmoid -->
+<g id="node5" class="node structure">
+<title>Sigmoid</title>
+<g id="a_node5"><a xlink:href="/Sigmoid" xlink:title="Sigmoid">
+<path fill="none" stroke="black" d="M1054.2,-285.24C1054.2,-285.24 862.2,-285.24 862.2,-285.24 856.2,-285.24 850.2,-279.24 850.2,-273.24 850.2,-273.24 850.2,-261.24 850.2,-261.24 850.2,-255.24 856.2,-249.24 862.2,-249.24 862.2,-249.24 1054.2,-249.24 1054.2,-249.24 1060.2,-249.24 1066.2,-255.24 1066.2,-261.24 1066.2,-261.24 1066.2,-273.24 1066.2,-273.24 1066.2,-279.24 1060.2,-285.24 1054.2,-285.24"/>
+<text text-anchor="middle" x="958.2" y="-264.19" font-family="Menlo" font-size="14.00">Sigmoid</text>
+</a>
+</g>
+</g>
+<!-- Sigmoid&#45;&gt;Activation -->
+<g id="edge9" class="edge conformsTo">
+<title>Sigmoid&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M930.88,-249.17C903.46,-231.03 861.08,-203 830.94,-183.06"/>
+<polygon fill="black" stroke="black" points="832.67,-180.01 822.4,-177.41 828.81,-185.85 832.67,-180.01"/>
+</g>
+<!-- ThresholdedReLu -->
+<g id="node6" class="node structure">
+<title>ThresholdedReLu</title>
+<g id="a_node6"><a xlink:href="/ThresholdedReLu" xlink:title="ThresholdedReLu">
+<path fill="none" stroke="black" d="M351.1,-244.91C351.1,-244.91 159.1,-244.91 159.1,-244.91 153.1,-244.91 147.1,-238.91 147.1,-232.91 147.1,-232.91 147.1,-220.91 147.1,-220.91 147.1,-214.91 153.1,-208.91 159.1,-208.91 159.1,-208.91 351.1,-208.91 351.1,-208.91 357.1,-208.91 363.1,-214.91 363.1,-220.91 363.1,-220.91 363.1,-232.91 363.1,-232.91 363.1,-238.91 357.1,-244.91 351.1,-244.91"/>
+<text text-anchor="middle" x="255.1" y="-223.86" font-family="Menlo" font-size="14.00">ThresholdedReLu</text>
+</a>
+</g>
+</g>
+<!-- ThresholdedReLu&#45;&gt;Activation -->
+<g id="edge10" class="edge conformsTo">
+<title>ThresholdedReLu&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M363.38,-213.35C454.12,-201.98 583.43,-185.78 676.83,-174.09"/>
+<polygon fill="black" stroke="black" points="677.4,-177.54 686.89,-172.83 676.53,-170.6 677.4,-177.54"/>
+</g>
+<!-- SigmoidHard -->
+<g id="node8" class="node structure">
+<title>SigmoidHard</title>
+<g id="a_node8"><a xlink:href="/SigmoidHard" xlink:title="SigmoidHard">
+<path fill="none" stroke="black" d="M1554.71,-118.89C1554.71,-118.89 1362.71,-118.89 1362.71,-118.89 1356.71,-118.89 1350.71,-112.89 1350.71,-106.89 1350.71,-106.89 1350.71,-94.89 1350.71,-94.89 1350.71,-88.89 1356.71,-82.89 1362.71,-82.89 1362.71,-82.89 1554.71,-82.89 1554.71,-82.89 1560.71,-82.89 1566.71,-88.89 1566.71,-94.89 1566.71,-94.89 1566.71,-106.89 1566.71,-106.89 1566.71,-112.89 1560.71,-118.89 1554.71,-118.89"/>
+<text text-anchor="middle" x="1458.71" y="-97.83" font-family="Menlo" font-size="14.00">SigmoidHard</text>
+</a>
+</g>
+</g>
+<!-- SigmoidHard&#45;&gt;Activation -->
+<g id="edge4" class="edge conformsTo">
+<title>SigmoidHard&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M1350.6,-110.4C1230.55,-120.96 1037.38,-137.96 913.35,-148.87"/>
+<polygon fill="black" stroke="black" points="912.71,-145.41 903.06,-149.78 913.33,-152.39 912.71,-145.41"/>
+</g>
+<!-- Elu -->
+<g id="node9" class="node structure">
+<title>Elu</title>
+<g id="a_node9"><a xlink:href="/Elu" xlink:title="Elu">
+<path fill="none" stroke="black" d="M369.91,-89.08C369.91,-89.08 177.91,-89.08 177.91,-89.08 171.91,-89.08 165.91,-83.08 165.91,-77.08 165.91,-77.08 165.91,-65.08 165.91,-65.08 165.91,-59.08 171.91,-53.08 177.91,-53.08 177.91,-53.08 369.91,-53.08 369.91,-53.08 375.91,-53.08 381.91,-59.08 381.91,-65.08 381.91,-65.08 381.91,-77.08 381.91,-77.08 381.91,-83.08 375.91,-89.08 369.91,-89.08"/>
+<text text-anchor="middle" x="273.91" y="-68.03" font-family="Menlo" font-size="14.00">Elu</text>
+</a>
+</g>
+</g>
+<!-- Elu&#45;&gt;Activation -->
+<g id="edge15" class="edge conformsTo">
+<title>Elu&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M380.3,-89.09C466.95,-103.76 589.11,-124.44 678.4,-139.55"/>
+<polygon fill="black" stroke="black" points="677.86,-143.01 688.3,-141.23 679.02,-136.11 677.86,-143.01"/>
+</g>
+<!-- Softplus -->
+<g id="node10" class="node structure">
+<title>Softplus</title>
+<g id="a_node10"><a xlink:href="/Softplus" xlink:title="Softplus">
+<path fill="none" stroke="black" d="M1147.69,-42.52C1147.69,-42.52 955.69,-42.52 955.69,-42.52 949.69,-42.52 943.69,-36.52 943.69,-30.52 943.69,-30.52 943.69,-18.52 943.69,-18.52 943.69,-12.52 949.69,-6.52 955.69,-6.52 955.69,-6.52 1147.69,-6.52 1147.69,-6.52 1153.69,-6.52 1159.69,-12.52 1159.69,-18.52 1159.69,-18.52 1159.69,-30.52 1159.69,-30.52 1159.69,-36.52 1153.69,-42.52 1147.69,-42.52"/>
+<text text-anchor="middle" x="1051.69" y="-21.47" font-family="Menlo" font-size="14.00">Softplus</text>
+</a>
+</g>
+</g>
+<!-- Softplus&#45;&gt;Activation -->
+<g id="edge1" class="edge conformsTo">
+<title>Softplus&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M1017.34,-42.56C971.17,-66.8 889.07,-109.9 838.59,-136.4"/>
+<polygon fill="black" stroke="black" points="836.78,-133.4 829.55,-141.14 840.03,-139.59 836.78,-133.4"/>
+</g>
+<!-- ScaledTanh -->
+<g id="node11" class="node structure">
+<title>ScaledTanh</title>
+<g id="a_node11"><a xlink:href="/ScaledTanh" xlink:title="ScaledTanh">
+<path fill="none" stroke="black" d="M782.92,-84.01C782.92,-84.01 590.92,-84.01 590.92,-84.01 584.92,-84.01 578.92,-78.01 578.92,-72.01 578.92,-72.01 578.92,-60.01 578.92,-60.01 578.92,-54.01 584.92,-48.01 590.92,-48.01 590.92,-48.01 782.92,-48.01 782.92,-48.01 788.92,-48.01 794.92,-54.01 794.92,-60.01 794.92,-60.01 794.92,-72.01 794.92,-72.01 794.92,-78.01 788.92,-84.01 782.92,-84.01"/>
+<text text-anchor="middle" x="686.92" y="-62.96" font-family="Menlo" font-size="14.00">ScaledTanh</text>
+</a>
+</g>
+</g>
+<!-- ScaledTanh&#45;&gt;Activation -->
+<g id="edge5" class="edge conformsTo">
+<title>ScaledTanh&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M708.01,-84.21C724.52,-98.47 747.68,-118.45 765.94,-134.21"/>
+<polygon fill="black" stroke="black" points="764.09,-137.24 773.95,-141.13 768.67,-131.94 764.09,-137.24"/>
+</g>
+<!-- Tanh -->
+<g id="node12" class="node structure">
+<title>Tanh</title>
+<g id="a_node12"><a xlink:href="/Tanh" xlink:title="Tanh">
+<path fill="none" stroke="black" d="M204,-198.01C204,-198.01 12,-198.01 12,-198.01 6,-198.01 0,-192.01 0,-186.01 0,-186.01 0,-174.01 0,-174.01 0,-168.01 6,-162.01 12,-162.01 12,-162.01 204,-162.01 204,-162.01 210,-162.01 216,-168.01 216,-174.01 216,-174.01 216,-186.01 216,-186.01 216,-192.01 210,-198.01 204,-198.01"/>
+<text text-anchor="middle" x="108" y="-176.96" font-family="Menlo" font-size="14.00">Tanh</text>
+</a>
+</g>
+</g>
+<!-- Tanh&#45;&gt;Activation -->
+<g id="edge7" class="edge conformsTo">
+<title>Tanh&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M216.1,-176.75C341.37,-172.97 547.12,-166.76 676.61,-162.86"/>
+<polygon fill="black" stroke="black" points="677.07,-166.35 686.96,-162.55 676.86,-159.35 677.07,-166.35"/>
+</g>
+<!-- ParametricSoftplus -->
+<g id="node13" class="node structure">
+<title>ParametricSoftplus</title>
+<g id="a_node13"><a xlink:href="/ParametricSoftplus" xlink:title="ParametricSoftplus">
+<path fill="none" stroke="black" d="M1601.56,-182.23C1601.56,-182.23 1409.56,-182.23 1409.56,-182.23 1403.56,-182.23 1397.56,-176.23 1397.56,-170.23 1397.56,-170.23 1397.56,-158.23 1397.56,-158.23 1397.56,-152.23 1403.56,-146.23 1409.56,-146.23 1409.56,-146.23 1601.56,-146.23 1601.56,-146.23 1607.56,-146.23 1613.56,-152.23 1613.56,-158.23 1613.56,-158.23 1613.56,-170.23 1613.56,-170.23 1613.56,-176.23 1607.56,-182.23 1601.56,-182.23"/>
+<text text-anchor="middle" x="1505.56" y="-161.17" font-family="Menlo" font-size="14.00">ParametricSoftplus</text>
+</a>
+</g>
+</g>
+<!-- ParametricSoftplus&#45;&gt;Activation -->
+<g id="edge8" class="edge conformsTo">
+<title>ParametricSoftplus&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M1397.26,-163.47C1266.81,-162.57 1048.46,-161.05 913.59,-160.11"/>
+<polygon fill="black" stroke="black" points="913.24,-156.61 903.22,-160.04 913.19,-163.61 913.24,-156.61"/>
+</g>
+<!-- LeakyReLu -->
+<g id="node14" class="node structure">
+<title>LeakyReLu</title>
+<g id="a_node14"><a xlink:href="/LeakyReLu" xlink:title="LeakyReLu">
+<path fill="none" stroke="black" d="M1358.92,-286.92C1358.92,-286.92 1166.92,-286.92 1166.92,-286.92 1160.92,-286.92 1154.92,-280.92 1154.92,-274.92 1154.92,-274.92 1154.92,-262.92 1154.92,-262.92 1154.92,-256.92 1160.92,-250.92 1166.92,-250.92 1166.92,-250.92 1358.92,-250.92 1358.92,-250.92 1364.92,-250.92 1370.92,-256.92 1370.92,-262.92 1370.92,-262.92 1370.92,-274.92 1370.92,-274.92 1370.92,-280.92 1364.92,-286.92 1358.92,-286.92"/>
+<text text-anchor="middle" x="1262.92" y="-265.86" font-family="Menlo" font-size="14.00">LeakyReLu</text>
+</a>
+</g>
+</g>
+<!-- LeakyReLu&#45;&gt;Activation -->
+<g id="edge11" class="edge conformsTo">
+<title>LeakyReLu&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M1185.91,-250.87C1102.35,-231.3 969.22,-200.11 881.96,-179.66"/>
+<polygon fill="black" stroke="black" points="882.61,-176.22 872.08,-177.35 881.01,-183.04 882.61,-176.22"/>
+</g>
+<!-- Softmax -->
+<g id="node15" class="node structure">
+<title>Softmax</title>
+<g id="a_node15"><a xlink:href="/Softmax" xlink:title="Softmax">
+<path fill="none" stroke="black" d="M809.77,-314.53C809.77,-314.53 617.77,-314.53 617.77,-314.53 611.77,-314.53 605.77,-308.53 605.77,-302.53 605.77,-302.53 605.77,-290.53 605.77,-290.53 605.77,-284.53 611.77,-278.53 617.77,-278.53 617.77,-278.53 809.77,-278.53 809.77,-278.53 815.77,-278.53 821.77,-284.53 821.77,-290.53 821.77,-290.53 821.77,-302.53 821.77,-302.53 821.77,-308.53 815.77,-314.53 809.77,-314.53"/>
+<text text-anchor="middle" x="713.77" y="-293.48" font-family="Menlo" font-size="14.00">Softmax</text>
+</a>
+</g>
+</g>
+<!-- Softmax&#45;&gt;Activation -->
+<g id="edge6" class="edge conformsTo">
+<title>Softmax&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M724.56,-278.3C738.51,-254.72 762.94,-213.44 779.05,-186.23"/>
+<polygon fill="black" stroke="black" points="782.08,-187.97 784.16,-177.59 776.06,-184.41 782.08,-187.97"/>
+</g>
+<!-- Linear -->
+<g id="node16" class="node structure">
+<title>Linear</title>
+<g id="a_node16"><a xlink:href="/Linear" xlink:title="Linear">
+<path fill="none" stroke="black" d="M1299.46,-94.42C1299.46,-94.42 1107.46,-94.42 1107.46,-94.42 1101.46,-94.42 1095.46,-88.42 1095.46,-82.42 1095.46,-82.42 1095.46,-70.42 1095.46,-70.42 1095.46,-64.42 1101.46,-58.42 1107.46,-58.42 1107.46,-58.42 1299.46,-58.42 1299.46,-58.42 1305.46,-58.42 1311.46,-64.42 1311.46,-70.42 1311.46,-70.42 1311.46,-82.42 1311.46,-82.42 1311.46,-88.42 1305.46,-94.42 1299.46,-94.42"/>
+<text text-anchor="middle" x="1203.46" y="-73.37" font-family="Menlo" font-size="14.00">Linear</text>
+</a>
+</g>
+</g>
+<!-- Linear&#45;&gt;Activation -->
+<g id="edge3" class="edge conformsTo">
+<title>Linear&#45;&gt;Activation</title>
+<path fill="none" stroke="black" d="M1114.58,-94.45C1049.62,-107.63 961.49,-125.51 894.23,-139.15"/>
+<polygon fill="black" stroke="black" points="893.15,-135.8 884.05,-141.22 894.54,-142.66 893.15,-135.8"/>
+</g>
+</g>
+</svg>
+
+
+        <figcaption hidden>Inheritance graph for Activation.</figcaption>
+    </figure>
+        <h3>Conforms To</h3>
+<dl>
+    <dt class="protocol"><code><a href="/BaseLayer">BaseLayer</a></code></dt>
+<dd></dd>
+</dl>
+<h3>Types Conforming to <code>Activation</code></h3>
+<dl>
+    <dt class="structure"><code><a href="/Linear">Linear</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/ReLu">ReLu</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/LeakyReLu">LeakyReLu</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/ThresholdedReLu">ThresholdedReLu</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/PReLu">PReLu</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/Tanh">Tanh</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/ScaledTanh">ScaledTanh</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/Sigmoid">Sigmoid</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/SigmoidHard">SigmoidHard</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/Elu">Elu</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/Softsign">Softsign</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/Softplus">Softplus</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/ParametricSoftplus">ParametricSoftplus</a></code></dt>
+<dd></dd>
+<dt class="structure"><code><a href="/Softmax">Softmax</a></code></dt>
+<dd></dd>
+</dl>
+</section>
+
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2020-05-02T12:26:32-0700">May 2, 2020</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a>.
+</p>
+    </footer>
+</body>
+</html>
