@@ -26,6 +26,18 @@ CoreML support much more then Neural Network models but this experimental librar
 > End to end test case exporting a real S4TF model at:
 > https://github.com/JacopoMangiavacchi/TestSwiftCoreMLTools
 
+## Sample projects using this library to create and train Core ML models on device
+
+### LeNet Convolutional Neural Network for MNIST dataset
+
+- GitHub project: https://github.com/JacopoMangiavacchi/MNIST-CoreML-Training
+- Documentation: https://medium.com/@JMangia/mnist-cnn-core-ml-training-c0f081014fa6
+
+### Transfer Learning with Categorical Embedding
+
+- GitHub project: https://github.com/JacopoMangiavacchi/CoreML-TransferLearning-Demo
+- Documentation: https://heartbeat.fritz.ai/core-ml-on-device-training-with-transfer-learning-from-swift-for-tensorflow-models-1264b444e18d
+
 ## Neural Network Support (work in progress)
 
 ### Layers
