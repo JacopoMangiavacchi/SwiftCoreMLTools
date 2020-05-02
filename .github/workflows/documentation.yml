@@ -13,5 +13,5 @@ jobs:
         uses: SwiftDocOrg/swift-doc@master
         with:
           inputs: "Sources"
-          module-name: FlowManager
+          module-name: SwiftCoreMLTools
           output: "Documentation"
