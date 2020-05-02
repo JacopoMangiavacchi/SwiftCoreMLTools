@@ -1,7 +1,7 @@
 # SwiftCoreMLTools
 
 ![Swift](https://github.com/JacopoMangiavacchi/SwiftCoreMLTools/workflows/Swift/badge.svg)
-[![ver](https://img.shields.io/github/v/release/JacopoMangiavacchi/SwiftCoreMLTools?include_prereleases&label=version)](https://swiftfunc.developerhub.io)
+[![ver](https://img.shields.io/github/v/release/JacopoMangiavacchi/SwiftCoreMLTools?include_prereleases&label=version)](https://github.com/JacopoMangiavacchi/SwiftCoreMLTools)
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
