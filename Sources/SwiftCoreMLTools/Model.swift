@@ -1,3 +1,4 @@
+import Foundation
 import Yams
 
 public enum FeatureType : String, Codable {
@@ -161,6 +162,12 @@ public struct Model {
     public var yaml: String? {
         let encoder = YAMLEncoder()
         return try? encoder.encode(self)
+    }
+
+    public var json: String? {
+        let encoder = JSONEncoder()
+        guard let jsonData = try? encoder.encode(self) else { return nil }
+        return String(data: jsonData, encoding: .utf8)
     }
 }
 
