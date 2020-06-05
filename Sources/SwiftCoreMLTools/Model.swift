@@ -1,3 +1,5 @@
+import Yams
+
 public enum FeatureType : String, Codable {
     case `float`
     case `int`
@@ -154,6 +156,11 @@ public struct Model {
 
     public mutating func addTrainingInput(_ trainingInput: TrainingInput) {
         trainingInputs[trainingInput.name] = trainingInput
+    }
+
+    public var yaml: String? {
+        let encoder = YAMLEncoder()
+        return try? encoder.encode(self)
     }
 }
 

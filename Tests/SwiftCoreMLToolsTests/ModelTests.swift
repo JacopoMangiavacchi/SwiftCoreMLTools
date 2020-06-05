@@ -303,6 +303,42 @@ final class ModelTests: XCTestCase {
         XCTAssert(decodedModel.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork after encoding/decoding")
     }
 
+    func testYaml() {
+        let model = Model(version: 4,
+                          shortDescription: "Trivial linear classifier",
+                          author: "Jacopo Mangiavacchi",
+                          license: "MIT",
+                          userDefined: ["SwiftCoremltoolsVersion" : "0.1"]) {
+            Input(name: "dense_input", shape: [1])
+            Output(name: "output", shape: [1])
+            TrainingInput(name: "dense_input", shape: [1])
+            TrainingInput(name: "output_true", shape: [1])
+            NeuralNetwork(losses: [MSE(name: "lossLayer",
+                                       input: "output",
+                                       target: "output_true")],
+                          optimizer: SGD(learningRateDefault: 0.01,
+                                         learningRateMax: 0.3,
+                                         miniBatchSizeDefault: 5,
+                                         miniBatchSizeRange: [5],
+                                         momentumDefault: 0,
+                                         momentumMax: 1.0),
+                          epochDefault: 2,
+                          epochSet: [2],
+                          shuffle: true) {
+                InnerProduct(name: "layer1",
+                             input: ["dense_input"],
+                             output: ["output"],
+                             weight: [0.0],
+                             bias: [0.0],
+                             inputChannels: 1,
+                             outputChannels: 1,
+                             updatable: true)
+            }
+        }
+
+        print(model.yaml!)
+    }
+
     static var allTests = [
         ("testSingleInputs", testSingleInputs),
         ("testMultipleInputs", testMultipleInputs),
@@ -314,5 +350,6 @@ final class ModelTests: XCTestCase {
         ("testModelAPI", testModelAPI),
         ("testRealModelExport", testRealModelExport),
         ("testCodable", testCodable),
+        ("testYaml", testYaml),
     ]
 }
