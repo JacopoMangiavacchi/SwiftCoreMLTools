@@ -169,6 +169,14 @@ public struct Model {
         guard let jsonData = try? encoder.encode(self) else { return nil }
         return String(data: jsonData, encoding: .utf8)
     }
+
+    public init(yaml: String) {
+        self = try! YAMLDecoder().decode(Model.self, from: yaml)
+    }
+
+    public init(json: String) {
+        self = try! JSONDecoder().decode(Model.self, from: Data(json.utf8))
+    }
 }
 
 extension Model : Codable {

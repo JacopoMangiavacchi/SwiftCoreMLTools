@@ -288,15 +288,9 @@ final class ModelTests: XCTestCase {
         XCTAssert(model.trainingInputs.count == 2, "Failed extracting TrainingInput")
         XCTAssert(model.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork")
 
-        let encoder = JSONEncoder()
-        // encoder.outputFormatting = .prettyPrinted
-
-        let jsonData = try! encoder.encode(model)
-        // let jsonString = String(data: jsonData, encoding: .utf8)
-        // print(jsonString!)
-
-        let decodedModel = try! JSONDecoder().decode(Model.self, from: jsonData)
-
+        // print(model.json!)
+        let decodedModel = Model(json: model.json!)
+        
         XCTAssert(decodedModel.inputs.count == 1, "Failed extracting Input after encoding/decoding")
         XCTAssert(decodedModel.outputs.count == 1, "Failed extracting Output after encoding/decoding")
         XCTAssert(decodedModel.trainingInputs.count == 2, "Failed extracting TrainingInput after encoding/decoding")
@@ -336,7 +330,18 @@ final class ModelTests: XCTestCase {
             }
         }
 
-        print(model.yaml!)
+        XCTAssert(model.inputs.count == 1, "Failed extracting Input")
+        XCTAssert(model.outputs.count == 1, "Failed extracting Output")
+        XCTAssert(model.trainingInputs.count == 2, "Failed extracting TrainingInput")
+        XCTAssert(model.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork")
+
+        // print(model.yaml!)
+        let decodedModel = Model(yaml: model.yaml!)
+
+        XCTAssert(decodedModel.inputs.count == 1, "Failed extracting Input after encoding/decoding")
+        XCTAssert(decodedModel.outputs.count == 1, "Failed extracting Output after encoding/decoding")
+        XCTAssert(decodedModel.trainingInputs.count == 2, "Failed extracting TrainingInput after encoding/decoding")
+        XCTAssert(decodedModel.neuralNetwork.layers.count == 1, "Failed extracting NeuralNetwork after encoding/decoding")
     }
 
     static var allTests = [
