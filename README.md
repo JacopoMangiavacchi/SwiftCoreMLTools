@@ -204,29 +204,7 @@ model.neuralNetwork.addLayer(InnerProduct(name: "layer1",
                                          updatable: true))
 ```
 
-## JSON Format model persistence (Codable)
-
-### Example code to Encode a CoreML model to JSON String
-
-```swift
-let model = Model(...){...}
-
-let encoder = JSONEncoder()
-encoder.outputFormatting = .prettyPrinted
-
-let jsonData = try! encoder.encode(model)
-let jsonModel = String(data: jsonData, encoding: .utf8)
-
-print(jsonModel!)
-```
-
-### Example code to Decode a JSON String to a CoreML model
-
-```swift
-let jsonModel = "{...}"
-let jsonData = Data(jsonModel.utf8)
-let model = try! JSONDecoder().decode(Model.self, from: jsonData)
-```
+## YAML / JSON Format model persistence (Codable)
 
 ### Example CoreML model in YAML format
 
