@@ -228,6 +228,76 @@ let jsonData = Data(jsonModel.utf8)
 let model = try! JSONDecoder().decode(Model.self, from: jsonData)
 ```
 
+### Example CoreML model in YAML format
+
+```yaml
+version: 4
+shortDescription: Trivial linear classifier
+author: Jacopo Mangiavacchi
+license: MIT
+userDefined:
+  SwiftCoremltoolsVersion: '0.1'
+inputs:
+  dense_input:
+    name: dense_input
+    shape:
+    - 1
+    featureType: float
+outputs:
+  output:
+    name: output
+    shape:
+    - 1
+    featureType: float
+trainingInputs:
+  dense_input:
+    name: dense_input
+    shape:
+    - 1
+    featureType: float
+  output_true:
+    name: output_true
+    shape:
+    - 1
+    featureType: float
+neuralNetwork:
+  losses:
+  - type: mse
+    base:
+      name: lossLayer
+      input: output
+      target: output_true
+  optimizer:
+    type: sgd
+    base:
+      learningRateDefault: 1e-2
+      learningRateMax: 3e-1
+      miniBatchSizeDefault: 5
+      miniBatchSizeRange:
+      - 5
+      momentumDefault: 0e+0
+      momentumMax: 1e+0
+  epochDefault: 2
+  epochSet:
+  - 2
+  shuffle: true
+  layers:
+  - type: innerProduct
+    base:
+      name: layer1
+      input:
+      - dense_input
+      output:
+      - output
+      weight:
+      - 0e+0
+      bias:
+      - 0e+0
+      inputChannels: 1
+      outputChannels: 1
+      updatable: true
+```
+
 ### Example CoreML model in JSON format
 
 ```json
